@@ -1,0 +1,28 @@
+{
+  "name": "github-requests-server",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "6.9.0"
+  },
+  "description": "Node JS server and api for the github-requests app",
+  "main": "server.js",
+  "scripts": {
+    "preinstall": "cd client && npm install",
+    "prestart": "cd client && npm run build",
+    "start": "node server.js",
+    "debug-server": "set PORT=4000 && nodemon --inspect server.js",
+    "debug": "nf start -p 3000"
+  },
+  "author": "Clément Bouscasse",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "file-stream-rotator": "0.0.7",
+    "foreman": "^2.0.0",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-azure-ad": "^3.0.0",
+    "request": "^2.75.0"
+  }
+}

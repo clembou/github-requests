@@ -1,0 +1,39 @@
+{
+    "groups": [
+        {
+            "name": "group 1",
+            "description": "These projects are related to each other.",
+            "projects": [
+                {
+                    "name": "Test 1",
+                    "tagName": "test1",
+                    "organisation": "resgroup",
+                    "repository": "test"
+                },
+                {
+                    "name": "Test 2",
+                    "tagName": "test_2",
+                    "organisation": "resgroup",
+                    "repository": "test"
+                }
+            ]
+        },
+        {
+            "name": "group 2",
+            "projects": [
+                {
+                    "name": "Test 3",
+                    "tagName": "test_3",
+                    "organisation": "resgroup",
+                    "repository": "test"
+                },
+                {
+                    "name": "Test 4",
+                    "tagName": "test_4",
+                    "organisation": "resgroup",
+                    "repository": "test"
+                }
+            ]
+        }
+    ]
+}

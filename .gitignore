@@ -1,0 +1,9 @@
+node_modules
+log/
+localhost.*
+*.env
+token.txt
+.vscode
+jsconfig.json
+typings
+npm-debug*

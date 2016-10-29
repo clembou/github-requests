@@ -1,0 +1,105 @@
+import React from 'react'
+import { Grid, PageHeader, FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock } from 'react-bootstrap'
+
+import ghClient from '../shared/githubClient';
+import quoteRequestBody from '../shared/requestUtils'
+import MarkdownBlock from '../shared/MarkdownBlock'
+
+
+class NewRequest extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      title: '',
+      body: '',
+      type: 'bug',
+      submissionInProgress: false
+    }
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    console.log(`submit new request For project ${this.props.params.orgName}/${this.props.params.repoName}. Title: ${this.state.title}. Body: ${this.state.body}.`)
+
+    this.createIssue({
+      title: this.state.title,
+      body: this.props.isAdmin ? this.state.body : quoteRequestBody(this.state.body, this.props.userProfile),
+      labels: ['request', this.state.type, this.props.params.tagName]
+    });
+  }
+
+  getValidationState() {
+    const length = this.state.title.length;
+    if (length > 0) return 'success';
+    else return 'error';
+  }
+
+  createIssue(issueData) {
+    this.setState({ submissionInProgress: true })
+    const issue = ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
+    issue.createIssue(issueData).then(response => {
+      console.log(response)
+      this.context.router.transitionTo(`/requests/${this.props.params.orgName}/${this.props.params.repoName}/${this.props.params.tagName}`)
+    }).catch(err => {
+      console.log(err)
+      this.setState({ submissionInProgress: false })
+    })
+  }
+
+  render() {
+    return (
+      <Grid>
+        <PageHeader>
+          {`Project Name here `}
+        </PageHeader>
+        <form onSubmit={this.handleSubmit} disabled={this.state.submissionInProgress}>
+          <FormGroup
+            controlId="formBasicText"
+            bsSize="large"
+            validationState={this.getValidationState()}
+            >
+            <ControlLabel>Request title</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.title}
+              placeholder="Enter request title"
+              onChange={(e) => this.setState({ title: e.target.value })}
+              required
+              />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup>
+            <FormControl
+              type="text"
+              componentClass="textarea"
+              value={this.state.body}
+              placeholder="Enter request description"
+              onChange={(e) => this.setState({ body: e.target.value })}
+              style={{ height: 200 }}
+              />
+              <HelpBlock>You can format your request using <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> syntax</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ButtonGroup>
+              <Button onClick={() => this.setState({ type: 'bug' })} active={this.state.type === 'bug'}>Bug</Button>
+              <Button onClick={() => this.setState({ type: 'enhancement' })} active={this.state.type !== 'bug'}>New Feature</Button>
+            </ButtonGroup>
+          </FormGroup>
+          <Button
+            disabled={this.state.submissionInProgress}
+            onClick={!this.state.submissionInProgress ? this.handleSubmit : null}>
+            {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}</Button>
+            <h3>Preview:</h3>
+          {this.props.userProfile && <MarkdownBlock body={this.state.body} />}
+        </form>
+      </Grid>
+    )
+  }
+}
+
+NewRequest.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
+
+export default NewRequest
