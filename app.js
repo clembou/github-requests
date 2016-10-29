@@ -4,20 +4,15 @@ var express = require('express')
 var fs = require('fs')
 var morgan = require('morgan')
 var path = require('path')
-
 var passport = require('passport');
 var OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
+const config = require('./config');
 
 var app = express()
 
 //Load passport and configure it to use Azure AD Bearer auth
 app.use(passport.initialize());
-passport.use(new OIDCBearerStrategy({
-  "identityMetadata": process.env.IDENTITY_METADATA,
-  //"audience": config.creds.audience,
-  "clientID": process.env.REACT_APP_CLIENT_ID,
-  "validateIssuer": false,
-}, function (token, done) {
+passport.use(new OIDCBearerStrategy(config.azure, function (token, done) {
   // console.log(token)
   return done(null, token, null);
 }));
