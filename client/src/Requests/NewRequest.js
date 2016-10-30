@@ -20,13 +20,7 @@ class NewRequest extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    console.log(`submit new request For project ${this.props.params.orgName}/${this.props.params.repoName}. Title: ${this.state.title}. Body: ${this.state.body}.`)
-
-    this.createIssue({
-      title: this.state.title,
-      body: this.props.isAdmin ? this.state.body : quoteRequestBody(this.state.body, this.props.userProfile),
-      labels: ['request', this.state.type, this.props.params.tagName]
-    });
+    this.createIssue()
   }
 
   getValidationState() {
@@ -35,9 +29,21 @@ class NewRequest extends React.Component {
     else return 'error';
   }
 
-  createIssue(issueData) {
+  createIssue() {
     this.setState({ submissionInProgress: true })
+
+    const labels = ['user request', this.state.type]
+    if (this.props.params.tagName !== this.props.params.repoName)
+      labels.push(this.props.params.tagName)
+
+    const issueData = {
+      title: this.state.title,
+      body: this.props.isAdmin ? this.state.body : quoteRequestBody(this.state.body, this.props.userProfile),
+      labels
+    };
+
     const issue = ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
+
     issue.createIssue(issueData).then(response => {
       console.log(response)
       this.context.router.transitionTo(`/requests/${this.props.params.orgName}/${this.props.params.repoName}/${this.props.params.tagName}`)
@@ -78,7 +84,7 @@ class NewRequest extends React.Component {
               onChange={(e) => this.setState({ body: e.target.value })}
               style={{ height: 200 }}
               />
-              <HelpBlock>You can format your request using <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> syntax</HelpBlock>
+            <HelpBlock>You can format your request using <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> syntax</HelpBlock>
           </FormGroup>
           <FormGroup>
             <ButtonGroup>
@@ -90,7 +96,7 @@ class NewRequest extends React.Component {
             disabled={this.state.submissionInProgress}
             onClick={!this.state.submissionInProgress ? this.handleSubmit : null}>
             {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}</Button>
-            <h3>Preview:</h3>
+          <h3>Preview:</h3>
           {this.props.userProfile && <MarkdownBlock body={this.state.body} />}
         </form>
       </Grid>

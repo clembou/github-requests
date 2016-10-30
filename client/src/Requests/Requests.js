@@ -15,7 +15,7 @@ class Requests extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['request', this.props.params.tagName].join(), state: 'all' })
+    this.getIssues({ labels: ['user request', this.props.params.tagName].join(), state: 'open' })
   }
 
   getIssues(issueOptions) {
