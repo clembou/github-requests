@@ -23,15 +23,22 @@ export default class AzureTest extends React.Component {
   }
 
   render() {
+    if (this.props.isAdmin !== undefined)
+      return (
+        <Grid>
+          <PageHeader>No action needed</PageHeader>
+          <p>This application has already been granted the permissions required to enable admin features.
+        </p>
+        </Grid>
+      )
+
     return (
       <Grid>
-        <Row>
-          <PageHeader>Enable Admin features</PageHeader>
-          <p>This application expose more features to users from a pre-configured Active Directory group. However, checking group membership
-          requires a one time approval form a directory administrator. If you are an administrator you can do so by clicking here: 
+        <PageHeader>Enable Admin features</PageHeader>
+        <p>This application expose more features to users from a pre-configured Active Directory group. However, checking group membership
+          requires a one time approval form a directory administrator. If you are an administrator you can do so by clicking here:
           <Button onClick={() => azureClient.grantAdminPermissions(this.props.location)}>Grant admin consent</Button>
-          </p>
-        </Row>
+        </p>
       </Grid>
     )
   }
