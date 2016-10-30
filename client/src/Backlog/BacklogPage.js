@@ -9,7 +9,7 @@ import TeamRepos from './TeamRepos'
     <Grid>
       <Match pattern={`${pathname}/:orgName/:teamId/:milestoneName`} component={TeamRepos}/>
       <Match pattern={`${pathname}/:orgName/:teamId`} component={TeamRepos}/>
-      <Match pattern={`${pathname}/:orgName/`} exactly component={TeamSelector}/>
+      <Match pattern={`${pathname}/:orgName`} exactly component={TeamSelector}/>
 
       <Match pattern={pathname} exactly component={OrgSelector}/>
     </Grid>
