@@ -1,7 +1,7 @@
 const azure = {
   identityMetadata: process.env.IDENTITY_METADATA,
   clientID: process.env.REACT_APP_CLIENT_ID,
-  validateIssuer: false,
+  validateIssuer: process.env.NODE_ENV == 'production' ? true : false
 }
 
 const github = {
@@ -13,10 +13,6 @@ const github = {
 const app = {
   groupConfigPath: process.env.GROUP_CONFIG_PATH
 }
-
-console.log(azure)
-console.log(github)
-console.log(app)
 
 function validateConfig(configObject) {
   for (let prop of Object.keys(configObject)) {

@@ -8,7 +8,6 @@ const config = require('./config');
 module.exports = function (app) {
 
   function loadProjects() {
-    console.log(`${__dirname}/${config.app.groupConfigPath}`)
     return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
   }
 
