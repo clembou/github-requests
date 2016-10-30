@@ -38,7 +38,7 @@ const AppNav = (props) => (
             )}
               <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>
             <MenuItem divider />
-            <Link to="/signout">{({ href, ...rest}) =>  <MenuItem href={href}>Sign Out</MenuItem>}</Link>
+            <Link to="/signout">{({ href, onClick, ...rest}) =>  <MenuItem onClick={onClick} href={href}>Sign Out</MenuItem>}</Link>
           </NavDropdown>
         )}
       </Nav>
