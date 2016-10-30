@@ -15,6 +15,12 @@
                     "tagName": "test_2",
                     "organisation": "resgroup",
                     "repository": "test"
+                },
+                {
+                    "name": "Test No tag",
+                    "tagName": "test",
+                    "organisation": "resgroup",
+                    "repository": "test"
                 }
             ]
         },
