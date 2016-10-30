@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, PageHeader, FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock } from 'react-bootstrap'
 
 import ghClient from '../shared/githubClient';
-import quoteRequestBody from '../shared/requestUtils'
+import quoteRequestBody, { getTitleFromTagName } from '../shared/requestUtils'
 import MarkdownBlock from '../shared/MarkdownBlock'
 
 
@@ -53,11 +53,17 @@ class NewRequest extends React.Component {
     })
   }
 
+  getTitle() {
+    // this should return the title from the user supplied config. 
+    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
+    return getTitleFromTagName(this.props.params.tagName)
+  }
+
   render() {
     return (
       <Grid>
         <PageHeader>
-          {`Project Name here `}
+          {this.getTitle() + ' '}
         </PageHeader>
         <form onSubmit={this.handleSubmit} disabled={this.state.submissionInProgress}>
           <FormGroup

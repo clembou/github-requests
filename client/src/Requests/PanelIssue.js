@@ -1,7 +1,7 @@
 import React from 'react'
 import { Panel } from 'react-bootstrap'
 import MarkdownBlock from '../shared/MarkdownBlock'
-import {getCreator, getContent} from '../shared/requestUtils'
+import { getCreator, getContent } from '../shared/requestUtils'
 
 const Issue = props => {
   return (

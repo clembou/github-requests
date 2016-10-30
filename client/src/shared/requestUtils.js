@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const qs = require('qs');
 
 export default function quoteRequestBody(body, userinfo) {
@@ -36,3 +38,7 @@ function parseUserInfoFromIssueBody(body) {
 
   return qs.parse(encodedUserDetails)
 }
+
+export function getTitleFromTagName(tagName) {
+    return _.capitalize(tagName.replace('-', ' ').replace('_', ' '))
+  }

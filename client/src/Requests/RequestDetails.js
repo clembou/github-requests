@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
 import PanelIssue from './PanelIssue'
+import { getTitleFromTagName } from '../shared/requestUtils'
 
 class RequestDetails extends React.Component {
   constructor() {
@@ -31,14 +32,20 @@ class RequestDetails extends React.Component {
       .catch(err => console.log(err))
   }
 
+  getTitle() {
+    // this should return the title from the user supplied config. 
+    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
+    return getTitleFromTagName(this.props.params.tagName)
+  }
+
   render() {
-    const {pathname} = this.props
+    const {params} = this.props
     const {request} = this.state
     return (
       <Grid>
         <PageHeader>
-          {`Project Name here `}
-          <Link to={`${pathname}/new/request`}>{
+          {this.getTitle() + ' '}
+          <Link to={`/requests/${params.orgName}/${params.repoName}/${params.tagName}/new/request`}>{
             ({isActive, location, href, onClick, transition}) =>
               <Button onClick={onClick}>
                 New Request

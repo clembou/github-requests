@@ -3,6 +3,7 @@ import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label }
 import { Link } from 'react-router'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
+import { getTitleFromTagName } from '../shared/requestUtils'
 
 class Requests extends React.Component {
   constructor() {
@@ -30,13 +31,19 @@ class Requests extends React.Component {
       .catch(err => console.log(err))
   }
 
+  getTitle() {
+    // this should return the title from the user supplied config. 
+    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
+    return getTitleFromTagName(this.props.params.tagName)
+  }
+
   render() {
     const {pathname} = this.props
     return (
       <Grid>
         <Row>
           <PageHeader>
-            {`Project Name here `}
+            {this.getTitle() + ' '}
             <Link to={`${this.props.location.pathname}/new/request`}>{
               ({isActive, location, href, onClick, transition}) =>
                 <Button onClick={onClick}>
