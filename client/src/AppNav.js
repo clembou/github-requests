@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import Link from 'react-router/Link'
+import { Link } from 'react-router'
 
 const AppNav = (props) => (
   <Navbar>
@@ -12,26 +12,33 @@ const AppNav = (props) => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <NavItem componentClass={Link} href="/" to="/">Home</NavItem>
-        <NavItem componentClass={Link} href="/requests" to="/requests">Requests</NavItem>
-        {(props.isAuthenticated && props.isAdmin) && (<NavItem componentClass={Link} href="/backlog" to="/backlog">Backlog</NavItem>)}
-        {!props.isAuthenticated && (
-          <NavItem componentClass={Link} href="/login/azure" to="/login/azure">Login</NavItem>
+        <Link to="/" activeOnlyWhenExact>{
+          ({isActive, location, href, onClick, transition}) =>
+            <NavItem onClick={onClick} href={href} active={isActive}>Home</NavItem>
+        }</Link>
+        <Link to="/requests">{
+          ({isActive, location, href, onClick, transition}) =>
+            <NavItem onClick={onClick} href={href} active={isActive}>Requests</NavItem>
+        }</Link>
+        {(props.isAuthenticated && props.isAdmin) && (
+          <Link to="/backlog">{
+            ({isActive, location, href, onClick, transition}) =>
+              <NavItem onClick={onClick} href={href} active={isActive}>Backlog</NavItem>
+          }</Link>
         )}
-        {(props.isAuthenticated && props.isAdmin == null) && (<NavItem componentClass={Link} href="/admin-consent" to="/admin-consent">Enable Admin features</NavItem>)}
       </Nav>
       <Nav pullRight>
         {(props.isAuthenticated && props.userProfile) && (
           <NavDropdown eventKey="5" title={`Signed in as ${props.userProfile.name}`} id="nav-dropdown-profile" pullRight>
             {(props.isAdmin && props.githubUserProfile) && (
-                <MenuItem>
-                  <img src={props.githubUserProfile.avatar_url} className="profile-pic-small" alt="github avatar" />
-        <strong> {props.githubUserProfile.login}</strong> on Github
+              <MenuItem>
+                <img src={props.githubUserProfile.avatar_url} className="profile-pic-small" alt="github avatar" />
+                <strong> {props.githubUserProfile.login}</strong> on Github
               </MenuItem>
             )}
-            <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>
+              <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>
             <MenuItem divider />
-            <MenuItem componentClass={Link} href="/signout" to="/signout">Sign Out</MenuItem>
+            <Link to="/signout">{({ href, ...rest}) =>  <MenuItem href={href}>Sign Out</MenuItem>}</Link>
           </NavDropdown>
         )}
       </Nav>
