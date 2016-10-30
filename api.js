@@ -22,6 +22,18 @@ module.exports = function (app) {
     }
   );
 
+
+  const genericErrorHandler = (error, response, body) => {
+    if (error.code === 'ECONNREFUSED') {
+      console.error('Refused connection');
+    } else if (error.code === 'ETIMEDOUT') {
+      console.error('Connection timed out');
+    }
+    else {
+      throw error;
+    }
+  };
+
   app.get('/api/projects', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
     res.json({ groups: projects.groups })
   })
@@ -36,7 +48,7 @@ module.exports = function (app) {
         client_secret: config.github.clientSecret,
         code: req.params.code
       }
-    })
+    }, genericErrorHandler)
     r.pipe(res);
   });
 
@@ -45,13 +57,13 @@ module.exports = function (app) {
     console.log(`listing issues on repository ${req.params.orgName}/${req.params.repoName}`);
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
-    req.pipe(r).pipe(res);
+    req.pipe(r, genericErrorHandler).pipe(res);
   });
 
   app.get('/api/repos/:orgName/:repoName/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
-    req.pipe(r).pipe(res);
+    req.pipe(r, genericErrorHandler).pipe(res);
   });
 
   app.post('/api/repos/:orgName/:repoName/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
@@ -61,6 +73,6 @@ module.exports = function (app) {
     proxyRequestOptions.json = req.body
 
     const r = request.post(proxyRequestOptions)
-    req.pipe(r).pipe(res);
+    req.pipe(r, genericErrorHandler).pipe(res);
   });
 }
