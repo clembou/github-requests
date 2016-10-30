@@ -36,7 +36,14 @@ const AppNav = (props) => (
                 <strong> {props.githubUserProfile.login}</strong> on Github
               </MenuItem>
             )}
-              <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>
+            {(props.isAuthenticated && props.isAdmin == null) && (
+              <Link to="/admin-consent">{
+                ({isActive, location, href, onClick, transition}) =>
+                  <MenuItem onClick={onClick} href={href} active={isActive}>Enable admin features</MenuItem>
+              }</Link>
+            )}
+            {(process.env.NODE_ENV !== 'production') &&
+              <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>}
             <MenuItem divider />
             <Link to="/signout">{({ href, ...rest}) =>  <MenuItem href={href}>Sign Out</MenuItem>}</Link>
           </NavDropdown>
