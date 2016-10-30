@@ -56,6 +56,9 @@ class Client {
   getToken(hash, cb) {
     // response contains: access_token,expires_in,id_token,scope,session_state,state,token_type
     const tokenInfo = this.extractTokenFromHash(hash)
+    if (tokenInfo.error)
+      return
+
     tokenInfo.requestDateTime = new Date().toISOString();
     sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
 
