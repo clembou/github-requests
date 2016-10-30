@@ -16,7 +16,6 @@ const app = {
 
 function validateConfig(configObject) {
   for (let prop of Object.keys(configObject)) {
-    console.log(configObject[prop])
     if (configObject[prop] === undefined)
       throw new Error(`Missing environment variable: ${prop}`)
   }
