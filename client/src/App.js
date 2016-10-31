@@ -52,7 +52,7 @@ class App extends React.Component {
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data })
       })
-    if (this.state.isAuthenticatedOnGithub){
+    if (this.state.isAuthenticatedOnGithub) {
       githubClient.gh.getUser().getProfile().then(resp => {
         this.setState({ githubUserProfile: resp.data })
       });
@@ -63,12 +63,12 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <AppNav 
-        isAuthenticated={this.state.isAuthenticated} 
-        isAdmin={this.state.isAdmin} 
-        userProfile={this.state.userProfile}
-        githubUserProfile={this.state.githubUserProfile}
-        onToggleAdmin={() => this.setState({ isAdmin: !this.state.isAdmin })} />
+        <AppNav
+          isAuthenticated={this.state.isAuthenticated}
+          isAdmin={this.state.isAdmin}
+          userProfile={this.state.userProfile}
+          githubUserProfile={this.state.githubUserProfile}
+          onToggleAdmin={() => this.setState({ isAdmin: !this.state.isAdmin })} />
 
         <Match exactly pattern="/" component={Home} />
         <MatchWhenGithubAuthorized pattern="/backlog" component={BacklogPage} />

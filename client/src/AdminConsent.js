@@ -4,11 +4,7 @@ import { Grid, PageHeader } from 'react-bootstrap'
 
 export default class AdminConsent extends React.Component {
 
-
-
-
   render() {
-
     let content;
 
     if (this.props.isAdmin !== null)

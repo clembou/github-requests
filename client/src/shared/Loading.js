@@ -8,7 +8,7 @@ export const Loading = (props) => (
 
 export const LoadingWithMessage = (props) => (
   <div>
-  <Loading />
-  <h2>{props.message}</h2>
+    <Loading />
+    <h2>{props.message}</h2>
   </div>
 )

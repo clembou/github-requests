@@ -12,7 +12,7 @@ ${body}`
 }
 
 export function getCreator(issue) {
-  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')){
+  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
     return parseUserInfoFromIssueBody(issue.body)
   } else {
     return issue.user
@@ -20,13 +20,13 @@ export function getCreator(issue) {
 }
 
 export function getContent(issue) {
-  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')){
+  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
     let lines = issue.body.split('\n')
-    lines.splice(0,2)
+    lines.splice(0, 2)
     return lines.join('\n')
   }
   else {
-  return issue.body
+    return issue.body
   }
 }
 
@@ -40,5 +40,5 @@ function parseUserInfoFromIssueBody(body) {
 }
 
 export function getTitleFromLabel(label) {
-    return _.capitalize(label.replace('-', ' ').replace('_', ' '))
-  }
+  return _.capitalize(label.replace('-', ' ').replace('_', ' '))
+}
