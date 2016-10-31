@@ -20,7 +20,7 @@ class Requests extends React.Component {
   }
 
   getIssues(issueOptions) {
-    return ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
+    return ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
       .listIssues(issueOptions)
       .then(response => {
         this.setState({

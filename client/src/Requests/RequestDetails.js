@@ -17,11 +17,11 @@ class RequestDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['request', this.props.params.label].join(), state: 'all' })
+    this.getIssues({ labels: ['user request', this.props.params.label].join(), state: 'all' })
   }
 
   getIssues() {
-    return ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
+    return ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
       .getIssue(this.props.params.issueNumber)
       .then(response => {
         this.setState({
@@ -45,7 +45,7 @@ class RequestDetails extends React.Component {
       <Grid>
         <PageHeader>
           {this.getTitle() + ' '}
-          <Link to={`/requests/${params.orgName}/${params.repoName}/${params.label}/new/request`}>{
+          <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new/request`}>{
             ({isActive, location, href, onClick, transition}) =>
               <Button onClick={onClick}>
                 New Request

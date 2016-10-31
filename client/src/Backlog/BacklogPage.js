@@ -7,9 +7,9 @@ import TeamRepos from './TeamRepos'
 
  const BacklogPage = ({pathname}) => (
     <Grid>
-      <Match pattern={`${pathname}/:orgName/:teamId/:milestoneName`} component={TeamRepos}/>
-      <Match pattern={`${pathname}/:orgName/:teamId`} component={TeamRepos}/>
-      <Match pattern={`${pathname}/:orgName`} exactly component={TeamSelector}/>
+      <Match pattern={`${pathname}/:organisation/:teamId/:milestoneName`} component={TeamRepos}/>
+      <Match pattern={`${pathname}/:organisation/:teamId`} component={TeamRepos}/>
+      <Match pattern={`${pathname}/:organisation`} exactly component={TeamSelector}/>
 
       <Match pattern={pathname} exactly component={OrgSelector}/>
     </Grid>

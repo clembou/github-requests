@@ -37,7 +37,7 @@ class TeamRepos extends Component {
 
     getRepoMilestones() {
         Promise.all(this.state.repos.map(repo => {
-            return ghClient.gh.getIssues(this.props.params.orgName, repo.name)
+            return ghClient.gh.getIssues(this.props.params.organisation, repo.name)
                 .listMilestones()
         })).then(responses => {
             let repoMilestones = Object.create(null);

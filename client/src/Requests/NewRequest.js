@@ -33,7 +33,7 @@ class NewRequest extends React.Component {
     this.setState({ submissionInProgress: true })
 
     const labels = ['user request', this.state.type]
-    if (this.props.params.label !== this.props.params.repoName)
+    if (this.props.params.label !== this.props.params.repo)
       labels.push(this.props.params.label)
 
     const issueData = {
@@ -42,10 +42,10 @@ class NewRequest extends React.Component {
       labels
     };
 
-    const issue = ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
+    const issue = ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
 
     issue.createIssue(issueData).then(response => {
-      this.context.router.transitionTo(`/requests/${this.props.params.orgName}/${this.props.params.repoName}/${this.props.params.label}`)
+      this.context.router.transitionTo(`/requests/${this.props.params.organisation}/${this.props.params.repo}/${this.props.params.label}`)
     }).catch(err => {
       console.log(err)
       this.setState({ submissionInProgress: false })

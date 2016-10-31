@@ -16,7 +16,7 @@ class TeamSelector extends React.Component {
     }
 
     getTeamsInOrganisation() {
-        const resgroup = client.gh.getOrganization(this.props.params.orgName);
+        const resgroup = client.gh.getOrganization(this.props.params.organisation);
         resgroup.getTeams()
             .then(resp => {
                 this.setState({ teams: resp.data });

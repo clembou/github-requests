@@ -11,9 +11,9 @@ import { Loading } from '../shared/Loading'
 
 const RequestsPage = ({ pathname, ...rest }) => (
   <div>
-    <Match pattern={`${pathname}/:orgName/:repoName/:label`} exactly render={(props) => <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
-    <Match pattern={`${pathname}/:orgName/:repoName/:label/new/request`} exactly render={(props) => <NewRequest {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
-    <Match pattern={`${pathname}/:orgName/:repoName/:label/:issueNumber`} exactly render={(props) => <RequestDetails {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:organisation/:repo/:label`} exactly render={(props) => <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:organisation/:repo/:label/new/request`} exactly render={(props) => <NewRequest {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:organisation/:repo/:label/:issueNumber`} exactly render={(props) => <RequestDetails {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
 
     <Match pattern={pathname} exactly render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
   </div>

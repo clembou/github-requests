@@ -53,21 +53,21 @@ module.exports = function (app) {
   });
 
   // proxy to github api end points
-  app.get('/api/repos/:orgName/:repoName/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    console.log(`listing issues on repository ${req.params.orgName}/${req.params.repoName}`);
+  app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  app.get('/api/repos/:orgName/:repoName/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+  app.get('/api/repos/:organisation/:repo/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  app.post('/api/repos/:orgName/:repoName/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    console.log(`creating issue on repository ${req.params.org}/${req.params.repo}`);
+  app.post('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
 
     proxyRequestOptions = getProxyRequestOptions(req.url)
     proxyRequestOptions.json = req.body

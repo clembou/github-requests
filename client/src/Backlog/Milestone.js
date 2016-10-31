@@ -23,7 +23,7 @@ class Milestone extends React.Component {
     }
 
     getMilestoneIssues() {
-        return ghClient.gh.getIssues(this.props.params.orgName, this.props.repo.name)
+        return ghClient.gh.getIssues(this.props.params.organisation, this.props.repo.name)
             .listIssues({ milestone: this.props.milestone.number, state: 'all' })
             .then(response => {
                 console.log(response)
