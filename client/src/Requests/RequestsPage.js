@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from "lodash"
 import { Grid, PageHeader, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import { Match, Link } from 'react-router';
 import NewRequest from './NewRequest'
@@ -10,9 +11,9 @@ import { Loading } from '../shared/Loading'
 
 const RequestsPage = ({ pathname, ...rest }) => (
   <div>
-    <Match pattern={`${pathname}/:orgName/:repoName/:tagName`} exactly render={(props) => <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
-    <Match pattern={`${pathname}/:orgName/:repoName/:tagName/new/request`} exactly render={(props) => <NewRequest {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
-    <Match pattern={`${pathname}/:orgName/:repoName/:tagName/:issueNumber`} exactly render={(props) => <RequestDetails {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:orgName/:repoName/:label`} exactly render={(props) => <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:orgName/:repoName/:label/new/request`} exactly render={(props) => <NewRequest {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match pattern={`${pathname}/:orgName/:repoName/:label/:issueNumber`} exactly render={(props) => <RequestDetails {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
 
     <Match pattern={pathname} exactly render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
   </div>
@@ -24,6 +25,7 @@ class RequestsPageHome extends React.Component {
 
   state = {
     groups: [],
+    projects: [],
     isLoading: true,
   }
 
@@ -37,8 +39,7 @@ class RequestsPageHome extends React.Component {
     }).then(checkStatus)
       .then(parseJSON)
       .then(json => {
-        console.log(json)
-        this.setState({ groups: json.groups, isLoading: false })
+        this.setState({ groups: json.groups, projects: json.projects, isLoading: false })
       }
       )
   }
@@ -57,7 +58,7 @@ class RequestsPageHome extends React.Component {
                   pathname={this.props.pathname}
                   name={pg.name}
                   description={pg.description}
-                  projects={pg.projects} />)
+                  projects={this.state.projects.filter(p => _.includes(p.groups, pg.key))} />)
               )}
             </div>
           )}
@@ -71,7 +72,7 @@ const ProjectGroup = (props) => (
     {props.description && props.description}
     <ListGroup fill>
       {props.projects.map(p => (
-        <Link key={p.tagName} to={`${props.pathname}/${p.organisation}/${p.repository}/${p.tagName}`}>{
+        <Link key={p.label} to={`${props.pathname}/${p.organisation}/${p.repository}/${p.label}`}>{
           ({isActive, location, href, onClick, transition}) =>
             <ListGroupItem onClick={onClick} href={href}>
               {p.name}

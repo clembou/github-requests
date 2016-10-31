@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
 import PanelIssue from './PanelIssue'
-import { getTitleFromTagName } from '../shared/requestUtils'
+import { getTitleFromLabel } from '../shared/requestUtils'
 
 class RequestDetails extends React.Component {
   constructor() {
@@ -17,7 +17,7 @@ class RequestDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['request', this.props.params.tagName].join(), state: 'all' })
+    this.getIssues({ labels: ['request', this.props.params.label].join(), state: 'all' })
   }
 
   getIssues() {
@@ -34,8 +34,8 @@ class RequestDetails extends React.Component {
 
   getTitle() {
     // this should return the title from the user supplied config. 
-    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
-    return getTitleFromTagName(this.props.params.tagName)
+    // For now let's approximate this by cleaning up the supplied label name since it is available on props.params
+    return getTitleFromLabel(this.props.params.label)
   }
 
   render() {
@@ -45,7 +45,7 @@ class RequestDetails extends React.Component {
       <Grid>
         <PageHeader>
           {this.getTitle() + ' '}
-          <Link to={`/requests/${params.orgName}/${params.repoName}/${params.tagName}/new/request`}>{
+          <Link to={`/requests/${params.orgName}/${params.repoName}/${params.label}/new/request`}>{
             ({isActive, location, href, onClick, transition}) =>
               <Button onClick={onClick}>
                 New Request

@@ -3,7 +3,7 @@ import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label }
 import { Link } from 'react-router'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
-import { getTitleFromTagName } from '../shared/requestUtils'
+import { getTitleFromLabel } from '../shared/requestUtils'
 
 class Requests extends React.Component {
   constructor() {
@@ -16,7 +16,7 @@ class Requests extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['user request', this.props.params.tagName].join(), state: 'open' })
+    this.getIssues({ labels: ['user request', this.props.params.label].join(), state: 'open' })
   }
 
   getIssues(issueOptions) {
@@ -33,8 +33,8 @@ class Requests extends React.Component {
 
   getTitle() {
     // this should return the title from the user supplied config. 
-    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
-    return getTitleFromTagName(this.props.params.tagName)
+    // For now let's approximate this by cleaning up the supplied label name since it is available on props.params
+    return getTitleFromLabel(this.props.params.label)
   }
 
   render() {

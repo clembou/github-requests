@@ -35,7 +35,7 @@ module.exports = function (app) {
   };
 
   app.get('/api/projects', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    res.json({ groups: projects.groups })
+    res.json(projects)
   })
 
   app.get('/api/authenticate/github/:code', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
