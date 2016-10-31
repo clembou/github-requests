@@ -2,44 +2,69 @@
     "groups": [
         {
             "name": "group 1",
-            "description": "These projects are related to each other.",
-            "projects": [
-                {
-                    "name": "Test 1",
-                    "tagName": "test1",
-                    "organisation": "resgroup",
-                    "repository": "test"
-                },
-                {
-                    "name": "Test 2",
-                    "tagName": "test_2",
-                    "organisation": "resgroup",
-                    "repository": "test"
-                },
-                {
-                    "name": "Test No tag",
-                    "tagName": "test",
-                    "organisation": "resgroup",
-                    "repository": "test"
-                }
-            ]
+            "key": "group1",
+            "description": "These projects are related to each other."
         },
         {
             "name": "group 2",
-            "projects": [
-                {
-                    "name": "Test 3",
-                    "tagName": "test_3",
-                    "organisation": "resgroup",
-                    "repository": "test"
-                },
-                {
-                    "name": "Test 4",
-                    "tagName": "test_4",
-                    "organisation": "resgroup",
-                    "repository": "test"
-                }
-            ]
+            "key": "group1"
+        }
+    ],
+    "projects": [
+        {
+            "name": "Test 1",
+            "label": "test 1",
+            "groups": [
+                "group1"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Test 2",
+            "label": "test_2",
+            "groups": [
+                "group1"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Test No tag",
+            "label": "test",
+            "groups": [
+                "group1"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Test 3",
+            "label": "test_3",
+            "groups": [
+                "group2"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Test 4",
+            "label": "test_4",
+            "groups": [
+                "group2"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Project in multiple groups",
+            "label": "test_5",
+            "groups": [
+                "group1",
+                "group2"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
         }
     ]
 }
