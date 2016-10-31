@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, PageHeader, FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock } from 'react-bootstrap'
 
 import ghClient from '../shared/githubClient';
-import quoteRequestBody, { getTitleFromTagName } from '../shared/requestUtils'
+import quoteRequestBody, { getTitleFromLabel } from '../shared/requestUtils'
 import MarkdownBlock from '../shared/MarkdownBlock'
 
 
@@ -33,8 +33,8 @@ class NewRequest extends React.Component {
     this.setState({ submissionInProgress: true })
 
     const labels = ['user request', this.state.type]
-    if (this.props.params.tagName !== this.props.params.repoName)
-      labels.push(this.props.params.tagName)
+    if (this.props.params.label !== this.props.params.repoName)
+      labels.push(this.props.params.label)
 
     const issueData = {
       title: this.state.title,
@@ -45,8 +45,7 @@ class NewRequest extends React.Component {
     const issue = ghClient.gh.getIssues(this.props.params.orgName, this.props.params.repoName)
 
     issue.createIssue(issueData).then(response => {
-      console.log(response)
-      this.context.router.transitionTo(`/requests/${this.props.params.orgName}/${this.props.params.repoName}/${this.props.params.tagName}`)
+      this.context.router.transitionTo(`/requests/${this.props.params.orgName}/${this.props.params.repoName}/${this.props.params.label}`)
     }).catch(err => {
       console.log(err)
       this.setState({ submissionInProgress: false })
@@ -55,8 +54,8 @@ class NewRequest extends React.Component {
 
   getTitle() {
     // this should return the title from the user supplied config. 
-    // For now let's approximate this by cleaning up the supplied tag name since it is available on props.params
-    return getTitleFromTagName(this.props.params.tagName)
+    // For now let's approximate this by cleaning up the supplied label name since it is available on props.params
+    return getTitleFromLabel(this.props.params.label)
   }
 
   render() {

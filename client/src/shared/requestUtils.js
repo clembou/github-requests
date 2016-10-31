@@ -39,6 +39,6 @@ function parseUserInfoFromIssueBody(body) {
   return qs.parse(encodedUserDetails)
 }
 
-export function getTitleFromTagName(tagName) {
-    return _.capitalize(tagName.replace('-', ' ').replace('_', ' '))
+export function getTitleFromLabel(label) {
+    return _.capitalize(label.replace('-', ' ').replace('_', ' '))
   }
