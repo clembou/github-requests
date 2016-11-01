@@ -24,13 +24,15 @@ module.exports = function (app) {
 
 
   const genericErrorHandler = (error, response, body) => {
-    if (error.code === 'ECONNREFUSED') {
-      console.error('Refused connection');
-    } else if (error.code === 'ETIMEDOUT') {
-      console.error('Connection timed out');
-    }
-    else {
-      throw error;
+    if (error) {
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Refused connection');
+      } else if (error.code === 'ETIMEDOUT') {
+        console.error('Connection timed out');
+      }
+      else {
+        throw error;
+      }
     }
   };
 
