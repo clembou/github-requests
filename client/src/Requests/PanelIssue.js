@@ -6,7 +6,7 @@ import { getCreator, getContent } from '../shared/requestUtils'
 const Issue = props => {
   return (
     <Panel
-      header={`${props.issue.title} from ${getCreator(props.issue).name || getCreator(props.issue).login}`}
+      header={`${props.issue.title} by ${getCreator(props.issue).name || getCreator(props.issue).login}`}
       eventKey={props.issue.id}>
       <MarkdownBlock body={getContent(props.issue)} />
     </Panel>

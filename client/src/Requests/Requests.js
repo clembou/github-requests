@@ -3,7 +3,7 @@ import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label }
 import { Link } from 'react-router'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
-import { getTitleFromLabel } from '../shared/requestUtils'
+import { getTitleFromLabel, getCreator } from '../shared/requestUtils'
 
 class Requests extends React.Component {
   constructor() {
@@ -16,7 +16,10 @@ class Requests extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['user request', this.props.params.label].join(), state: 'open' })
+    const labels = ['user request']
+    if (this.props.params.label !== this.props.params.repo)
+      labels.push(this.props.params.label)
+    this.getIssues({ labels: labels.join(), state: 'open' })
   }
 
   getIssues(issueOptions) {
@@ -79,8 +82,7 @@ export default Requests
 
 const IssueInfo = (props) => (
   <span>
-    {`${props.issue.title} - ${props.issue.user.login} `}
-    {props.issue.labels.map(l => <Tag key={l.name} label={l} />)}
+    {props.issue.title} {props.issue.labels.map(l => <Tag key={l.name} label={l} />)}<small>{` by ${getCreator(props.issue).name || getCreator(props.issue).login}`}</small>
   </span>
 )
 

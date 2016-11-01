@@ -30,10 +30,10 @@ class RequestsPageHome extends React.Component {
   }
 
   componentDidMount() {
-    this.getprojectGroups();
+    this.getProjectGroups();
   }
 
-  getprojectGroups() {
+  getProjectGroups() {
     fetch('/api/projects', {
       headers: getStandarHeaders(azureClient.idToken)
     }).then(checkStatus)
