@@ -45,7 +45,7 @@ class NewRequest extends React.Component {
     const issue = ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
 
     issue.createIssue(issueData).then(response => {
-      this.context.router.transitionTo(`/requests/${this.props.params.organisation}/${this.props.params.repo}/${this.props.params.label}`)
+      this.context.router.transitionTo(`/requests/${this.props.params.organisation}/${this.props.params.repo}/${this.props.params.label}/${response.data.number}`)
     }).catch(err => {
       console.log(err)
       this.setState({ submissionInProgress: false })
