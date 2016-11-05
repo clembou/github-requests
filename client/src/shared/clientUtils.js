@@ -14,7 +14,7 @@ export function parseJSON(response) {
   return response.json();
 }
 
-export function getStandarHeaders(bearerToken) {
+export function getStandardHeaders(bearerToken) {
   let headers = { 'Content-Type': 'application/json' };
 
   if (bearerToken)

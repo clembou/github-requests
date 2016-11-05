@@ -6,7 +6,7 @@ import NewRequest from './NewRequest'
 import Requests from './Requests'
 import RequestDetails from './RequestDetails'
 import azureClient from '../shared/azureClient'
-import { checkStatus, parseJSON, getStandarHeaders } from '../shared/clientUtils.js';
+import { checkStatus, parseJSON, getStandardHeaders } from '../shared/clientUtils.js';
 import { Loading } from '../shared/Loading'
 
 const RequestsPage = ({ pathname, ...rest }) => (
@@ -35,7 +35,7 @@ class RequestsPageHome extends React.Component {
 
   getProjectGroups() {
     fetch('/api/projects', {
-      headers: getStandarHeaders(azureClient.idToken)
+      headers: getStandardHeaders(azureClient.idToken)
     }).then(checkStatus)
       .then(parseJSON)
       .then(json => {

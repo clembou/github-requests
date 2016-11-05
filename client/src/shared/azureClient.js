@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import qs from 'qs';
-import { checkStatus, parseJSON, getStandarHeaders } from './clientUtils.js';
+import { checkStatus, parseJSON, getStandardHeaders } from './clientUtils.js';
 
 class Client {
   constructor() {
@@ -19,7 +19,7 @@ class Client {
       this.idToken = null
       this.isAuthenticated = false
       this.isAdmin = null
-      this.defaultHeaders = getStandarHeaders()
+      this.defaultHeaders = getStandardHeaders()
     }
   }
 
@@ -80,7 +80,7 @@ class Client {
     this.accessToken = tokenInfo.access_token
     this.idToken = tokenInfo.id_token
     this.isAuthenticated = true
-    this.defaultHeaders = getStandarHeaders(this.accessToken)
+    this.defaultHeaders = getStandardHeaders(this.accessToken)
   }
 
   extractTokenFromHash(hash) {

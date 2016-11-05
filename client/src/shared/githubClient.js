@@ -1,6 +1,6 @@
 import GitHub from 'github-api';
 import azureClient from './azureClient'
-import { checkStatus, parseJSON, getStandarHeaders } from './clientUtils.js';
+import { checkStatus, parseJSON, getStandardHeaders } from './clientUtils.js';
 
 class Client {
   constructor() {
@@ -41,7 +41,7 @@ class Client {
   }
 
   getToken(temporaryCode, state, callback) {
-    fetch(`${this.tokenProxyUrl}/${temporaryCode}`, { headers: getStandarHeaders(azureClient.idToken) })
+    fetch(`${this.tokenProxyUrl}/${temporaryCode}`, { headers: getStandardHeaders(azureClient.idToken) })
       .then(checkStatus)
       .then(parseJSON)
       .then(json => {
