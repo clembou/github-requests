@@ -27,8 +27,9 @@ class AzureAuthorisation extends React.Component {
         <Col md={4}>
           <p>
             You must log in to view the page at <code>{from.pathname}</code>
-            <br />
-            <Button onClick={() => azureClient.authenticate(from)}>Log in</Button>
+          </p>
+          <p>
+            <Button bsSize="large" onClick={() => azureClient.authenticate(from)}>Log in</Button>
           </p>
         </Col>
       )
