@@ -17,7 +17,7 @@ class RequestDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.getIssues({ labels: ['user request', this.props.params.label].join(), state: 'all' })
+      this.getIssues({ labels: ['user request', this.props.params.label].join(), state: 'all' })
   }
 
   getIssues() {
@@ -45,7 +45,7 @@ class RequestDetails extends React.Component {
       <Grid>
         <PageHeader>
           {this.getTitle() + ' '}
-          <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new/request`}>{
+          <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new`}>{
             ({isActive, location, href, onClick, transition}) =>
               <Button onClick={onClick}>
                 New Request

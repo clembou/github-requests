@@ -47,7 +47,7 @@ class Requests extends React.Component {
         <Row>
           <PageHeader>
             {this.getTitle() + ' '}
-            <Link to={`${this.props.location.pathname}/new/request`}>{
+            <Link to={`${this.props.location.pathname}/new`}>{
               ({isActive, location, href, onClick, transition}) =>
                 <Button onClick={onClick}>
                   New Request
