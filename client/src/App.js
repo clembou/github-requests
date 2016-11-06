@@ -8,7 +8,7 @@ import AdminConsent from './AdminConsent'
 import NoMatch from './NoMatch'
 import AzureLogin from './AzureLogin'
 import GithubLogin from './GithubLogin'
-import Signout from './Signout.js'
+import SignOut from './SignOut.js'
 import githubClient from './shared/githubClient'
 import azureClient from './shared/azureClient'
 import { MatchWhenAuthorized, MatchWhenGithubAuthorized } from './MatchWhenAuthorized'
@@ -45,6 +45,16 @@ class App extends React.Component {
         this.setState({ githubUserProfile: resp.data })
       });
     this.context.router.transitionTo(state)
+  }
+
+  handleSignOut = () => {
+    this.setState({
+      isAuthenticated: false,
+      isAdmin: null,
+      isAuthenticatedOnGithub: false,
+      userProfile: null,
+      githubUserProfile: null
+    })
   }
 
   componentDidMount() {
@@ -88,7 +98,7 @@ class App extends React.Component {
 
         <Match pattern="/login/github" component={GithubLogin} />
         <Match pattern="/login/azure" component={AzureLogin} />
-        <Match pattern="/signout" component={Signout} />
+        <Match pattern="/signout" render={(props) => <SignOut {...props} onSignOut={this.handleSignOut} />} />
 
         <Match exactly pattern="/callback/github" render={(props) => <GithubLogin {...props} onAuth={this.handleGithubAuth} />} />
         <Match exactly pattern="/callback/azure" render={(props) => <AzureLogin {...props} onAuth={this.handleAuth} />} />

@@ -92,6 +92,16 @@ class Client {
       .value();
   }
 
+  SignOut() {
+    sessionStorage.removeItem('azureToken')
+    sessionStorage.removeItem('isAdmin')
+      this.accessToken = null
+      this.idToken = null
+      this.isAuthenticated = false
+      this.isAdmin = null
+      this.defaultHeaders = getStandardHeaders()
+  }
+
   getUser() {
     return fetch('https://graph.microsoft.com/v1.0/me', {
       method: 'get',

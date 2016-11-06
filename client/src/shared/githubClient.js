@@ -20,7 +20,6 @@ class Client {
     }
     else {
       this.gh = null;
-      console.log(this.gh)
     }
   }
 
@@ -53,6 +52,12 @@ class Client {
           throw new Error('Problem while attempting to retrieve token from temporary access code');
         }
       });
+  }
+
+  SignOut() {
+    sessionStorage.removeItem('githubToken')
+    this.gh = null
+    this.isAuthenticated = false
   }
 }
 
