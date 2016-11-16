@@ -46,11 +46,9 @@ class Client {
       client_id: this.clientId,
       redirect_uri: window.location.origin + '/admin-consent',
       state: state.pathname || state,
-      //scope: "openid https://graph.microsoft.com/user.read.all https://graph.microsoft.com/directory.read.all",
-      //scope: "openid https://graph.microsoft.com/user.read https://graph.microsoft.com/group.read.all"
+      scope: "openid https://graph.microsoft.com/user.read",
     }
     window.location.href = `https://login.microsoftonline.com/${this.tenantId}/adminconsent?${qs.stringify(params)}`
-    // window.location.href = `https://login.microsoftonline.com/${this.tenantId}/oauth2/v2.0/authorize?${qs.stringify(params)}`
   }
 
   getToken(hash, cb) {
