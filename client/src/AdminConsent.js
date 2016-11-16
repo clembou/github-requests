@@ -13,6 +13,11 @@ export default class AdminConsent extends React.Component {
         </p>
       )
 
+    if (this.props.location.query && this.props.location.query.force_consent_prompt !== undefined)
+      content = (
+        <p><a href="#" onClick={() => azureClient.grantAdminPermissions(this.props.location)}>follow this link to trigger the consent flow again</a></p>
+      )
+    
     if (this.props.location.query && this.props.location.query.admin_consent === 'True')
       content = (
         <p>The admin features have been successfuly activated! It may take a few minutes before they can be used.</p>
