@@ -1,6 +1,7 @@
 import React from 'react'
 import Match from 'react-router/Match'
 import Miss from 'react-router/Miss'
+import moment from 'moment'
 import Home from './Home'
 import BacklogPage from './Backlog/BacklogPage'
 import RequestsPage from './Requests/RequestsPage'
@@ -58,10 +59,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.isAuthenticated)
+    if (this.state.isAuthenticated) {
+      // Azure tokens are only valid for an hour
+      // The easiest for now is just to log people out when the token expires
+      setTimeout(() => this.context.router.transitionTo('/signout'), azureClient.tokenValidUntil.diff(moment()))
+
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data })
       })
+    }
+    
     if (this.state.isAuthenticatedOnGithub) {
       githubClient.gh.getUser().getProfile().then(resp => {
         this.setState({ githubUserProfile: resp.data })

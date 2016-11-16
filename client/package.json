@@ -17,6 +17,7 @@
     "history": "^4.3.0",
     "lodash": "^4.16.4",
     "marked": "^0.3.6",
+    "moment": "^2.16.0",
     "qs": "^6.3.0",
     "react": "^15.3.2",
     "react-bootstrap": "^0.30.5",

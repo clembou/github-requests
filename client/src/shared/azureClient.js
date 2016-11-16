@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import qs from 'qs';
+import moment from 'moment'
 import { checkStatus, parseJSON, getStandardHeaders } from './clientUtils.js';
 
 class Client {
@@ -57,7 +58,8 @@ class Client {
     if (tokenInfo.error)
       return
 
-    tokenInfo.requestDateTime = new Date().toISOString();
+    const tokenValidUntil =  new moment().add(tokenInfo.expires_in, 'seconds')
+    tokenInfo.tokenValidUntil = tokenValidUntil.toISOString();
     sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
 
     this.processToken(tokenInfo);
@@ -79,6 +81,7 @@ class Client {
     this.idToken = tokenInfo.id_token
     this.isAuthenticated = true
     this.defaultHeaders = getStandardHeaders(this.accessToken)
+    this.tokenValidUntil = moment(tokenInfo.tokenValidUntil)
   }
 
   extractTokenFromHash(hash) {
