@@ -1,8 +1,8 @@
 import React from 'react'
 import azureClient from './shared/azureClient'
 import Redirect from 'react-router/Redirect'
-import { Grid, Row, Col, Jumbotron, Button, PageHeader } from 'react-bootstrap'
-
+import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
+import SignInButton from './SignInButton'
 
 const Home = (props) => {
   if (azureClient.isAuthenticated) {
@@ -14,14 +14,7 @@ const Home = (props) => {
       <PageHeader>Welcome!</PageHeader>
       <Row>
         <Col md={4}>
-          <Jumbotron>
-            <p>You are not logged in.</p>
-            <Button
-              bsSize="large"
-              onClick={() => azureClient.authenticate()}
-              >Sign in
-            </Button>
-          </Jumbotron>
+          <SignInButton />
         </Col>
       </Row>
     </Grid>
