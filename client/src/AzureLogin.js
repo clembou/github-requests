@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
+import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
 import azureClient from './shared/azureClient'
 import { LoadingWithMessage } from './shared/Loading'
 import SignInButton from './SignInButton'
@@ -29,12 +29,13 @@ class AzureAuthorisation extends React.Component {
           <p>
             You must log in to view the page at <code>{from.pathname}</code>
           </p>
-          <SignInButton from={from}/>
+          <SignInButton from={from} />
         </Col>
       )
 
     return (
       <Grid>
+        <PageHeader>Sign in</PageHeader>
         <Row>
           {content}
         </Row>
