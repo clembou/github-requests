@@ -9,7 +9,7 @@ const SigninButton = (props) => {
   return (
     <Jumbotron>
       <p>You are not logged in.</p>
-      < OverlayTrigger placement="left" overlay={tooltip} >
+      < OverlayTrigger placement="right" overlay={tooltip} >
         <Button
           bsSize="large"
           onClick={() => azureClient.authenticate(props.from)}
