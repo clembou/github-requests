@@ -1,6 +1,9 @@
+// Polyfill needed by ie 11
+import 'string.prototype.startswith';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Router from 'react-router/BrowserRouter'
+import Router from 'react-router/BrowserRouter';
 import App from './App';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
