@@ -47,6 +47,7 @@ module.exports = function (app) {
     return sg.API(request)
   }
 
+  // Utility functions
   const getProxyRequestOptions = url => (
     {
       url: GITHUB_API_ROOT + url.replace('/api', ''),
@@ -75,6 +76,15 @@ module.exports = function (app) {
     }
   };
 
+  const validateRepository = (organisation, repo) => {
+    if (projects.filter(p => p.organisation == organisation && p.repository == repo).length == 0) {
+      console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
+      return false;
+    }
+    return true;
+  }
+
+  // App end points
   app.get('/api/projects', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
     res.json(appData)
   })
@@ -93,6 +103,9 @@ module.exports = function (app) {
 
   // proxy to github api end points
   app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo))
+      res.status(403).send({ error: 'Invalid repository name' });
+
     console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
@@ -111,12 +124,18 @@ module.exports = function (app) {
   });
 
   app.get('/api/repos/:organisation/:repo/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo))
+      res.status(403).send({ error: 'Invalid repository name' });
+
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
   app.post('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo))
+      res.status(403).send({ error: 'Invalid repository name' });
+
     console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
     const r = request.post(getProxyRequestOptions(req.url));
     req.pipe(r, genericErrorHandler).pipe(res);
