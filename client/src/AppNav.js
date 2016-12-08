@@ -6,7 +6,7 @@ const AppNav = (props) => (
   <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
-        <Link to="/">Github-Requests</Link>
+        <Link to="/">Software Requests</Link>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
