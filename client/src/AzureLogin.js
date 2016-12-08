@@ -22,10 +22,10 @@ class AzureAuthorisation extends React.Component {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
 
     const content = (this.props.location.hash) ? (
-      <Col md={4}>
+      <Col md={6}>
         <LoadingWithMessage message="Azure authentication in progress..." />
       </Col>) : (
-        <Col md={4}>
+        <Col md={6}>
           <p>
             You must log in to view the page at <code>{from.pathname}</code>
           </p>

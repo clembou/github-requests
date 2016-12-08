@@ -13,7 +13,7 @@ const Home = (props) => {
     <Grid>
       <PageHeader>Welcome!</PageHeader>
       <Row>
-        <Col md={4}>
+        <Col md={6}>
           <SignInButton />
         </Col>
       </Row>
