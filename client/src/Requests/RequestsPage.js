@@ -11,64 +11,36 @@ import { Loading } from '../shared/Loading'
 
 const RequestsPage = ({ pathname, ...rest }) => (
   <div>
-    <Match pattern={`${pathname}/:organisation/:repo/:label`} exactly render={(props) => <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Match 
+    pattern={`${pathname}/:organisation/:repo/:label`} exactly 
+    render={(props) => (
+      <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>
+    )} />
     <Match pattern={`${pathname}/:organisation/:repo/:label/:issueNumber`} exactly render={(outerProps) => (
       <div>
-        <Match pattern={`${pathname}/:organisation/:repo/:label/new`} exactly render={(props) => <NewRequest {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
-        <Miss render={(props) => <RequestDetails {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+        <Match pattern={`${pathname}/:organisation/:repo/:label/new`} exactly render={(props) => <NewRequest {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>} />
+        <Miss render={(props) => <RequestDetails {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>} />
       </div>
     )} />
 
-    <Miss render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} />} />
+    <Miss render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects} groups={rest.groups} />} />
   </div>
 )
 
 export default RequestsPage
 
-class RequestsPageHome extends React.Component {
-
-  state = {
-    groups: [],
-    projects: [],
-    isLoading: true,
-  }
-
-  componentDidMount() {
-    this.getProjectGroups();
-  }
-
-  getProjectGroups() {
-    fetch('/api/projects', {
-      headers: getStandardHeaders(azureClient.idToken)
-    }).then(checkStatus)
-      .then(parseJSON)
-      .then(json => {
-        this.setState({ groups: json.groups, projects: json.projects, isLoading: false })
-      }
-      )
-  }
-
-  render() {
-    return (
-      <Grid>
-        {(this.state.isLoading) ? (
-          <Loading />
-        ) : (
-            <div>
-              <PageHeader>Please select a project: </PageHeader>
-              {this.state.groups.length > 0 && this.state.groups.map(pg => (
-                <ProjectGroup
-                  key={pg.name}
-                  name={pg.name}
-                  description={pg.description}
-                  projects={this.state.projects.filter(p => _.includes(p.groups, pg.key))} />)
-              )}
-            </div>
-          )}
-      </Grid>
-    )
-  }
-}
+const RequestsPageHome = (props) => (
+  <Grid>
+    <PageHeader>Please select a project: </PageHeader>
+    {props.groups.length > 0 && props.groups.map(pg => (
+      <ProjectGroup
+        key={pg.name}
+        name={pg.name}
+        description={pg.description}
+        projects={props.projects.filter(p => _.includes(p.groups, pg.key))} />)
+    )}
+  </Grid>
+)
 
 const ProjectGroup = (props) => (
   <Panel collapsible defaultExpanded header={props.name}>

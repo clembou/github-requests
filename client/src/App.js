@@ -9,11 +9,13 @@ import AdminConsent from './AdminConsent'
 import NoMatch from './NoMatch'
 import AzureLogin from './AzureLogin'
 import GithubLogin from './GithubLogin'
-import SignOut from './SignOut.js'
+import SignOut from './SignOut'
 import githubClient from './shared/githubClient'
 import azureClient from './shared/azureClient'
 import { MatchWhenAuthorized, MatchWhenGithubAuthorized } from './MatchWhenAuthorized'
 import AppNav from './AppNav'
+import { checkStatus, parseJSON, getStandardHeaders } from './shared/clientUtils';
+import { Loading } from './shared/Loading'
 
 class App extends React.Component {
   state = {
@@ -21,7 +23,10 @@ class App extends React.Component {
     isAdmin: azureClient.isAdmin,
     isAuthenticatedOnGithub: githubClient.isAuthenticated,
     userProfile: null,
-    githubUserProfile: null
+    githubUserProfile: null,
+    isLoading: true,
+    projects: [],
+    groups: []
   }
 
   handleAuth = (isAuthenticated, isAdmin, state) => {
@@ -67,14 +72,26 @@ class App extends React.Component {
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data })
       })
+
+      this.getProjects();
     }
-    
+
     if (this.state.isAuthenticatedOnGithub) {
       githubClient.gh.getUser().getProfile().then(resp => {
         this.setState({ githubUserProfile: resp.data })
-      });
+      })
     }
 
+  }
+
+  getProjects() {
+    fetch('/api/projects', {
+      headers: getStandardHeaders(azureClient.idToken)
+    }).then(checkStatus)
+      .then(parseJSON)
+      .then(json => {
+        this.setState({ groups: json.groups, projects: json.projects, isLoading: false })
+      })
   }
 
   render() {
@@ -89,12 +106,19 @@ class App extends React.Component {
 
         <Match exactly pattern="/" component={Home} />
         <MatchWhenGithubAuthorized pattern="/backlog" component={BacklogPage} />
+
+
         <MatchWhenAuthorized
           pattern="/requests"
-          component={RequestsPage}
+          component={props => (this.state.isLoading) ? <Loading /> : (
+            <RequestsPage {...props} />
+          )}
           isAuthenticated={this.state.isAuthenticated}
           isAdmin={this.state.isAdmin}
-          userProfile={this.state.userProfile} />
+          userProfile={this.state.userProfile}
+          projects={this.state.projects}
+          groups={this.state.groups}
+          />
 
         <MatchWhenAuthorized
           pattern="/admin-consent"

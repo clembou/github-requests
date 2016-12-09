@@ -17,10 +17,16 @@ export const MatchWhenGithubAuthorized = ({ component: Component, ...rest }) => 
   )} />
 )
 
-export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isAdmin, userProfile, ...rest }) => (
+export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isAdmin, userProfile, projects, groups, ...rest }) => (
   <Match {...rest} render={props => (
     isAuthenticated ? (
-      <Component {...props} isAuthenticated={isAuthenticated} isAdmin={isAdmin} userProfile={userProfile} />
+      <Component {...props} 
+      isAuthenticated={isAuthenticated}
+      isAdmin={isAdmin}
+      userProfile={userProfile}
+      projects={projects}
+      groups={groups}
+       />
     ) : (
         <Redirect to={{
           pathname: '/login/azure',
@@ -30,6 +36,6 @@ export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isA
   )} />
 )
 
-export const MatchWithUserInfo = ({ component: Component, isAdmin, userProfile, ...rest }) => (
-  <Match {...rest} render={props => <Component {...props} isAdmin={isAdmin} userProfile={userProfile} />} />
-)
+// export const MatchWithUserInfo = ({ component: Component, isAdmin, userProfile, ...rest }) => (
+//   <Match {...rest} render={props => <Component {...props} isAdmin={isAdmin} userProfile={userProfile} />} />
+// )
