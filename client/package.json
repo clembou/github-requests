@@ -7,7 +7,7 @@
   },
   "author": "Clément Bouscasse",
   "devDependencies": {
-    "react-scripts": "0.8.2"
+    "react-scripts": "0.8.3"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
