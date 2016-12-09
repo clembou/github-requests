@@ -21,6 +21,7 @@ IDENTITY_METADATA=https://login.microsoftonline.com/common/v2.0/.well-known/open
 # Front end only
 REACT_APP_ADMIN_GROUP_ID=*guid of Azure AD group containing admins*
 REACT_APP_GITHUB_BOT_LOGIN=*name of the bot account used to proxy requests*
+REACT_APP_DOMAIN_HINT= *your-domain.com - if known in advance, specifying this environment variable will ensure the Azure log in page automatically select the correct account if a user is logged in in multiple directories*
 # Front end in development only
 HTTPS=true
 ```

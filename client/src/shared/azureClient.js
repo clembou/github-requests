@@ -8,6 +8,7 @@ class Client {
     this.tenantId = process.env.REACT_APP_TENANT_ID
     this.clientId = process.env.REACT_APP_CLIENT_ID
     this.adminGroupId = process.env.REACT_APP_ADMIN_GROUP_ID
+    this.domainHint = process.env.REACT_APP_DOMAIN_HINT
     this.redirectUrl = window.location.origin + '/callback/azure'
 
     const token = JSON.parse(sessionStorage.getItem('azureToken'));
@@ -34,10 +35,12 @@ class Client {
       state: state.pathname || state,
       scope: "openid https://graph.microsoft.com/user.read",
       response_mode: 'fragment',
-      nonce: '678910'
+      nonce: '678910',
+      domain_hint: this.domainHint,
+      resource: 'https://graph.microsoft.com'
     }
 
-    window.location.href = `https://login.microsoftonline.com/${this.tenantId}/oauth2/v2.0/authorize?${qs.stringify(params)}`
+    window.location.href = `https://login.microsoftonline.com/${this.tenantId}/oauth2/authorize?${qs.stringify(params)}`
   }
 
   grantAdminPermissions(from) {
@@ -52,13 +55,40 @@ class Client {
     window.location.href = `https://login.microsoftonline.com/${this.tenantId}/adminconsent?${qs.stringify(params)}`
   }
 
+
   getToken(hash, cb) {
     // response contains: access_token,expires_in,id_token,scope,session_state,state,token_type
     const tokenInfo = this.extractTokenFromHash(hash)
     if (tokenInfo.error)
       return
 
-    const tokenValidUntil =  new moment().add(tokenInfo.expires_in, 'seconds')
+    const tokenValidUntil = new moment().add(tokenInfo.expires_in, 'seconds')
+    tokenInfo.tokenValidUntil = tokenValidUntil.toISOString();
+    sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
+
+    this.processToken(tokenInfo);
+    this.checkIfUserIsAdmin()
+      .then(isAdmin => {
+        this.isAdmin = isAdmin
+        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
+      })
+      .catch(err => {
+        this.isAdmin = null
+        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
+      })
+  }
+
+
+
+  getTokenOld(hash, cb) {
+    // response contains: access_token,expires_in,id_token,scope,session_state,state,token_type
+    const tokenInfo = this.extractTokenFromHash(hash)
+    if (tokenInfo.error)
+      return
+
+    const tokenValidUntil = new moment().add(tokenInfo.expires_in, 'seconds')
     tokenInfo.tokenValidUntil = tokenValidUntil.toISOString();
     sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
 
@@ -96,11 +126,11 @@ class Client {
   SignOut() {
     sessionStorage.removeItem('azureToken')
     sessionStorage.removeItem('isAdmin')
-      this.accessToken = null
-      this.idToken = null
-      this.isAuthenticated = false
-      this.isAdmin = null
-      this.defaultHeaders = getStandardHeaders()
+    this.accessToken = null
+    this.idToken = null
+    this.isAuthenticated = false
+    this.isAdmin = null
+    this.defaultHeaders = getStandardHeaders()
   }
 
   getUser() {
