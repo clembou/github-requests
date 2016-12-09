@@ -1,10 +1,11 @@
 import React from 'react'
+import { Grid, PageHeader } from 'react-bootstrap'
 
 const NoMatch = ({ location }) => (
-  <div>
-    <h2>Whoops</h2>
-    <p>Sorry but {location.pathname} didn’t match any pages</p>
-  </div>
+  <Grid>
+    <PageHeader>Whoops</PageHeader>
+    <p>Sorry but <code>{location.pathname}</code> didn’t match any pages</p>
+  </Grid>
 )
 
 export default NoMatch
