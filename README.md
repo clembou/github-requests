@@ -18,6 +18,7 @@ REACT_APP_GITHUB_CLIENT_ID=*some value*
 GITHUB_CLIENT_SECRET=*some value*
 GITHUB_BOT_TOKEN=*bot account token with the 'repo' scope and allowed to access the configured repositories*
 IDENTITY_METADATA=https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
+GROUP_CONFIG_PATH='projects.json' *path to project configuration file. This should live in an folder ignored by git or out of the github repository used by azure deployments*
 # Front end only
 REACT_APP_ADMIN_GROUP_ID=*guid of Azure AD group containing admins*
 REACT_APP_GITHUB_BOT_LOGIN=*name of the bot account used to proxy requests*
