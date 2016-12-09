@@ -15,7 +15,6 @@ import azureClient from './shared/azureClient'
 import { MatchWhenAuthorized, MatchWhenGithubAuthorized } from './MatchWhenAuthorized'
 import AppNav from './AppNav'
 import { checkStatus, parseJSON, getStandardHeaders } from './shared/clientUtils';
-import { Loading } from './shared/Loading'
 
 class App extends React.Component {
   state = {
@@ -110,9 +109,7 @@ class App extends React.Component {
 
         <MatchWhenAuthorized
           pattern="/requests"
-          component={props => (this.state.isLoading) ? <Loading /> : (
-            <RequestsPage {...props} />
-          )}
+          component={RequestsPage}
           isAuthenticated={this.state.isAuthenticated}
           isAdmin={this.state.isAdmin}
           userProfile={this.state.userProfile}

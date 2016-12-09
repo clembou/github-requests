@@ -2,30 +2,27 @@ import React from 'react'
 import _ from "lodash"
 import { Grid, PageHeader, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import { Match, Miss, Link } from 'react-router';
-import NewRequest from './NewRequest'
 import Requests from './Requests'
-import RequestDetails from './RequestDetails'
-import azureClient from '../shared/azureClient'
-import { checkStatus, parseJSON, getStandardHeaders } from '../shared/clientUtils.js';
-import { Loading } from '../shared/Loading'
 
-const RequestsPage = ({ pathname, ...rest }) => (
-  <div>
-    <Match 
-    pattern={`${pathname}/:organisation/:repo/:label`} exactly 
-    render={(props) => (
-      <Requests {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>
-    )} />
-    <Match pattern={`${pathname}/:organisation/:repo/:label/:issueNumber`} exactly render={(outerProps) => (
+const findProject = (projects, params) => {
+  return _.find(projects, p => p.organisation === params.organisation && p.repository === params.repo && p.label === params.label) || {}
+}
+
+const RequestsPage = ({ pathname, ...rest }) => rest.projects.length > 0 && (
       <div>
-        <Match pattern={`${pathname}/:organisation/:repo/:label/new`} exactly render={(props) => <NewRequest {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>} />
-        <Miss render={(props) => <RequestDetails {...outerProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects}/>} />
+        <Match
+          pattern={`${pathname}/:organisation/:repo/:label`}
+          render={(props) => (
+            <Requests
+              key={`${pathname}/:organisation/:repo/:label`}
+              {...props}
+              isAdmin={rest.isAdmin}
+              userProfile={rest.userProfile}
+              project={findProject(rest.projects, props.params)} />
+          )} />
+        <Miss render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects} groups={rest.groups} />} />
       </div>
-    )} />
-
-    <Miss render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects} groups={rest.groups} />} />
-  </div>
-)
+    )
 
 export default RequestsPage
 
