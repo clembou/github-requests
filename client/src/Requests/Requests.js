@@ -66,7 +66,7 @@ class Requests extends React.Component {
             <Loading />
           ) : (
               <div>
-                <Match pattern={`${pathname}/:issueNumber`} exactly render={(matchProps) => (
+                <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={(matchProps) => (
                   <div>
                     <Match pattern={`${pathname}/new`} exactly render={(childProps) => (
                       <NewRequest {...matchProps} isAdmin={rest.isAdmin} userProfile={rest.userProfile} project={rest.project} />
