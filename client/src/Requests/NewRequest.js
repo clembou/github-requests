@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock } from 'react-bootstrap'
+import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap'
 
 import ghClient from '../shared/githubClient';
 import quoteRequestBody from '../shared/requestUtils'
@@ -45,7 +45,8 @@ class NewRequest extends React.Component {
     const issue = ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
 
     issue.createIssue(issueData).then(response => {
-      this.context.router.transitionTo(`/requests/${this.props.params.organisation}/${this.props.params.repo}/${this.props.params.label}/${response.data.number}`)
+      this.props.onIssueCreated()
+      this.context.router.transitionTo(`/requests/${this.props.params.organisation}/${this.props.params.repo}/${this.props.params.label}`)
     }).catch(err => {
       console.log(err)
       this.setState({ submissionInProgress: false })
@@ -92,7 +93,11 @@ class NewRequest extends React.Component {
           onClick={!this.state.submissionInProgress ? this.handleSubmit : null}>
           {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}</Button>
         <h3>Preview:</h3>
-        {this.props.userProfile && <MarkdownBlock body={this.state.body} />}
+        {this.props.userProfile && (
+          <Panel header={this.state.title}>
+            <MarkdownBlock body={this.state.body} />
+          </Panel>
+        )}
       </form>
     )
   }
