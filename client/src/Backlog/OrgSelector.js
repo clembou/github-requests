@@ -1,5 +1,5 @@
 import React from 'react'
-import { PageHeader, Row } from 'react-bootstrap'
+import { PageHeader, Row, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { Link } from 'react-router'
 import client from '../shared/githubClient';
 
@@ -22,9 +22,19 @@ class OrgSelector extends React.Component {
     return (
       <Row>
         <PageHeader>Please select an organisation: </PageHeader>
-        <ul>
-          {this.state.orgs.map(o => <li key={o.id}><Link to={`${pathname}/${o.login}`}>{o.login}</Link></li>)}
-        </ul>
+        <Panel collapsible defaultExpanded header="Your Organisations">
+          <ListGroup fill>
+            {this.state.orgs.map(org => (
+              <Link key={org.login} to={`${pathname}/${org.login}`}>{
+                ({isActive, location, href, onClick, transition}) =>
+                  <ListGroupItem onClick={onClick} href={href}>
+                    {org.login}
+                  </ListGroupItem>
+              }</Link>
+            )
+            )}
+          </ListGroup>
+        </Panel>
       </Row>
     )
   }
