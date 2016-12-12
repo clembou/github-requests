@@ -8,7 +8,7 @@ const SigninButton = (props) => {
   );
   return (
     <Jumbotron>
-      <p>You are not logged in.</p>
+      <p>{props.message}</p>
       < OverlayTrigger placement="right" overlay={tooltip} >
         <Button
           bsSize="large"
@@ -18,6 +18,9 @@ const SigninButton = (props) => {
       </OverlayTrigger >
     </Jumbotron>
   )
+}
+SigninButton.defaultProps = {
+  message: 'You are not logged in.'
 }
 
 export default SigninButton

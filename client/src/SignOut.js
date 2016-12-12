@@ -2,6 +2,7 @@ import React from 'react'
 import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
 import azureClient from './shared/azureClient'
 import githubClient from './shared/githubClient'
+import SignInButton from './SignInButton'
 
 class SignOut extends React.Component {
   state = {
@@ -15,17 +16,17 @@ class SignOut extends React.Component {
   }
 
   render() {
-    // const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
 
     const content = (
-      <p>You have been signed out.</p>
+        <SignInButton message="Your session expired and you have been signed out." from={from} />
     )
 
     return (
       <Grid>
         <PageHeader>Goodbye!</PageHeader>
         <Row>
-          <Col md={4}>
+          <Col md={6}>
             {content}
           </Col>
         </Row>
