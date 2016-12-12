@@ -7,6 +7,7 @@ import ghClient from '../shared/githubClient'
 import { getCreator } from '../shared/requestUtils'
 import NewRequest from './NewRequest'
 import PanelIssue from './PanelIssue'
+import moment from 'moment'
 
 class Requests extends React.Component {
   constructor() {
@@ -141,7 +142,7 @@ const RequestPanel = props => (
 
 const IssueInfo = (props) => (
   <span>
-    {props.issue.title} {props.issue.labels.map(l => <Tag key={l.name} label={l} />)}<small>{` by ${getCreator(props.issue).name || getCreator(props.issue).login}`}</small>
+    {props.issue.title} {props.issue.labels.map(l => <Tag key={l.name} label={l} />)}<small>{` by ${getCreator(props.issue).name || getCreator(props.issue).login}`}, submitted {moment(props.issue.created_at).fromNow()}</small>
   </span>
 )
 
