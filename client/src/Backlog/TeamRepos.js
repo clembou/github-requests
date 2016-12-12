@@ -23,7 +23,7 @@ class TeamRepos extends Component {
     })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getTeamRepos();
   }
 

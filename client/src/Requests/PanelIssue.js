@@ -4,6 +4,9 @@ import MarkdownBlock from '../shared/MarkdownBlock'
 import { getCreator, getContent } from '../shared/requestUtils'
 
 const Issue = props => {
+  if (!props.issue)
+    return null
+
   return (
     <Panel
       header={`${props.issue.title} by ${getCreator(props.issue).name || getCreator(props.issue).login}`}
