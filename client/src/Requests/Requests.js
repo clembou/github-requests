@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label, Breadcrumb } from 'react-bootstrap'
+import { Grid, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label, Breadcrumb } from 'react-bootstrap'
 import { Match, Miss, Link } from 'react-router';
 import _ from 'lodash'
 import { Loading } from '../shared/Loading'
@@ -55,8 +55,7 @@ class Requests extends React.Component {
               </Button>
       }</Link>
     )
-    const isActive = true
-    const href = 'clem'
+    
     return (
       <Grid>
         <div>

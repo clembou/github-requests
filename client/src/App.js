@@ -1,8 +1,8 @@
 import React from 'react'
 import Match from 'react-router/Match'
 import Miss from 'react-router/Miss'
+import Redirect from 'react-router/Redirect'
 import moment from 'moment'
-import Home from './Home'
 import BacklogPage from './Backlog/BacklogPage'
 import RequestsPage from './Requests/RequestsPage'
 import AdminConsent from './AdminConsent'
@@ -103,7 +103,7 @@ class App extends React.Component {
           githubUserProfile={this.state.githubUserProfile}
           onToggleAdmin={() => this.setState({ isAdmin: !this.state.isAdmin })} />
 
-        <Match exactly pattern="/" component={Home} />
+        <Match exactly pattern="/" render={() => <Redirect to="/requests"/>} />
         <MatchWhenGithubAuthorized pattern="/backlog" component={BacklogPage} />
 
 

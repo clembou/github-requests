@@ -12,10 +12,6 @@ const AppNav = (props) => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <Link to="/" activeOnlyWhenExact>{
-          ({isActive, location, href, onClick, transition}) =>
-            <NavItem onClick={onClick} href={href} active={isActive}>Home</NavItem>
-        }</Link>
         <Link to="/requests">{
           ({isActive, location, href, onClick, transition}) =>
             <NavItem onClick={onClick} href={href} active={isActive}>Requests</NavItem>
