@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
+import { Grid, Row, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label, Breadcrumb } from 'react-bootstrap'
 import { Match, Miss, Link } from 'react-router';
 import _ from 'lodash'
 import { Loading } from '../shared/Loading'
@@ -27,6 +27,9 @@ class Requests extends React.Component {
   }
 
   getIssues(issueOptions) {
+    this.setState({
+          isLoading: true
+        });
     return ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
       .listIssues(issueOptions)
       .then(response => {
@@ -52,15 +55,33 @@ class Requests extends React.Component {
               </Button>
       }</Link>
     )
-
+    const isActive = true
+    const href = 'clem'
     return (
       <Grid>
-        <Row>
+        <div>
+          <Breadcrumb>
+            <Link to="/requests">{
+              ({isActive, location, href, onClick, transition}) =>
+                <Breadcrumb.Item href={href} onClick={onClick}>
+                  Home
+          </Breadcrumb.Item>
+            }
+            </Link>
+            <Link activeOnlyWhenExact to={pathname}>{
+              ({isActive, location, href, onClick, transition}) =>
+                <Breadcrumb.Item href={href} onClick={onClick} active={isActive}>
+                  {rest.project.name}
+                </Breadcrumb.Item>
+            }
+            </Link>
+          </Breadcrumb>
           <PageHeader>
-            {this.props.project.name + ' '}
+            {this.props.project.name}
+            {' '}
             {newRequestButton}
           </PageHeader>
-        </Row>
+        </div>
         {
           (this.state.isLoading) ? (
             <Loading />
@@ -92,7 +113,7 @@ class Requests extends React.Component {
               </div>
             )
         }
-      </Grid>)
+      </Grid >)
   }
 }
 
