@@ -56,7 +56,7 @@ class Requests extends React.Component {
               </Button>
       }</Link>
     )
-    
+
     return (
       <Grid>
         <div>
@@ -78,6 +78,8 @@ class Requests extends React.Component {
           </Breadcrumb>
           <PageHeader>
             {this.props.project.name}
+            {' '}
+            {rest.isAdmin &&  <a href={`http://github.com/${params.organisation}/${params.repo}`}><i className="fa fa-github fa-lg" /></a>}
             {' '}
             {newRequestButton}
           </PageHeader>
