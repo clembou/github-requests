@@ -8,6 +8,7 @@ import App from './App';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 ReactDOM.render((
   <Router>

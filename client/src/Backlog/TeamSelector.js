@@ -1,7 +1,8 @@
 import React from 'react'
-import { PageHeader, Row } from 'react-bootstrap'
+import { PageHeader, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { Link } from 'react-router'
 import client from '../shared/githubClient';
+import { Loading } from '../shared/Loading'
 
 class TeamSelector extends React.Component {
   constructor() {
@@ -25,13 +26,29 @@ class TeamSelector extends React.Component {
 
   render() {
     const {pathname} = this.props.location
+    const content = this.state.teams.length > 0 ? (
+      <Panel collapsible defaultExpanded header={`Teams in ${this.props.params.organisation}`}>
+        <ListGroup fill>
+          {this.state.teams.map(team => (
+            <Link key={team.id} to={`${pathname}/${team.id}`}>{
+              ({isActive, location, href, onClick, transition}) =>
+                <ListGroupItem onClick={onClick} href={href}>
+                  {team.name}
+                </ListGroupItem>
+            }</Link>
+          )
+          )}
+        </ListGroup>
+      </Panel>
+    ) : (
+        <Loading />
+      )
+
     return (
-      <Row>
+      <div>
         <PageHeader>Please select a team: </PageHeader>
-        <ul>
-          {this.state.teams.map(t => <li key={t.id}><Link to={`${pathname}/${t.id}`}>{t.name}</Link></li>)}
-        </ul>
-      </Row>
+        {content}
+      </div>
     )
   }
 }
