@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import ghClient from '../shared/githubClient';
 import { Grid, Row, Col, FormGroup, ControlLabel, FormControl, Accordion } from 'react-bootstrap';
 import Repository from './Repository';
@@ -66,12 +67,12 @@ class TeamIssues extends Component {
     console.log(this.state.issues)
     return (
       <Grid>
-        <ul>
-          {this.state.issues.map((issue) => (
-            <li key={issue.url} >{issue.title}</li>
-          )
-          )}
-        </ul>
+        <BootstrapTable data={this.state.issues} search={ true } striped hover>
+          <TableHeaderColumn isKey hidden dataField='url' searchable={false}>Url</TableHeaderColumn>
+          <TableHeaderColumn dataField='repository' dataSort={ true }>Repository</TableHeaderColumn>
+          <TableHeaderColumn dataField='title'>Title</TableHeaderColumn>
+          <TableHeaderColumn dataField='dateCreated' dataSort={ true }>Date Created</TableHeaderColumn>
+        </BootstrapTable>
       </Grid>
     );
   }
