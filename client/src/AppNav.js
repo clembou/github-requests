@@ -3,7 +3,7 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { Link } from 'react-router'
 
 const AppNav = (props) => (
-  <Navbar>
+  <Navbar inverse fixedTop>
     <Navbar.Header>
       <Navbar.Brand>
         <Link to="/">Software Requests</Link>

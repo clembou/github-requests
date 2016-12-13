@@ -2,3 +2,11 @@
     height: 32px;
     width: 32px;
 }
+
+body {
+  padding-top: 70px;
+}
+
+h1 a {
+    color: black;
+}
