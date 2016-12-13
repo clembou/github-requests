@@ -29,8 +29,8 @@ class Requests extends React.Component {
 
   getIssues(issueOptions) {
     this.setState({
-          isLoading: true
-        });
+      isLoading: true
+    });
     return ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
       .listIssues(issueOptions)
       .then(response => {
@@ -51,7 +51,7 @@ class Requests extends React.Component {
     const newRequestButton = params && (!params.issueNumber || params.issueNumber !== 'new') && (
       <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new`}>{
         ({isActive, location, href, onClick, transition}) =>
-          <Button onClick={onClick}>
+          <Button onClick={onClick} bsStyle="default" bsSize="large">
             New Request
               </Button>
       }</Link>
@@ -78,10 +78,13 @@ class Requests extends React.Component {
           </Breadcrumb>
           <PageHeader>
             {this.props.project.name}
-            {' '}
-            {rest.isAdmin &&  <a href={`http://github.com/${params.organisation}/${params.repo}`}><i className="fa fa-github fa-lg" /></a>}
-            {' '}
-            {newRequestButton}
+            <span className="pull-right">
+              {' '}
+              {newRequestButton}
+              {' '}
+              {rest.isAdmin && <a href={`http://github.com/${params.organisation}/${params.repo}`}><i className="fa fa-github fa-lg" /></a>}
+              {' '}
+            </span>
           </PageHeader>
         </div>
         {
@@ -126,7 +129,7 @@ Requests.defaultProps = {
 export default Requests
 
 const RequestPanel = props => (
-  <Panel defaultExpanded header={`${props.issues.length} open issues`}>
+  <Panel defaultExpanded header={`${props.issues.length} open issues`} bsStyle="default">
     <ListGroup fill>
       {props.issues.map(i => (
         <Link key={i.number} to={`${props.pathname}/${i.number}`}>{
@@ -144,14 +147,14 @@ const RequestPanel = props => (
 
 const IssueInfo = (props) => (
   <span>
-    {props.issue.title} {props.issue.labels.map(l => <Tag key={l.name} label={l} />)}<small>{` by ${getCreator(props.issue).name || getCreator(props.issue).login}`}, submitted {moment(props.issue.created_at).fromNow()}</small>
+    <strong>{props.issue.title}</strong><small className="text-muted"> submitted <i>{moment(props.issue.created_at).fromNow()}</i> by <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i></small><span className="text pull-right">{props.issue.labels.map(l => <Tag key={l.name} label={l} />)}</span>
   </span>
 )
 
 const Tag = props => {
   const {label} = props
-  if (label.name === "bug") return <Label bsStyle="danger" style={{ backgroundColor: label.color }}>{label.name}</Label>
-  if (label.name === "enhancement") return <Label style={{ backgroundColor: label.color }}>{label.name}</Label>
+  if (label.name === "bug") return <Label bsStyle="danger">{label.name}</Label>
+  if (label.name === "enhancement") return <Label bsStyle="success">{label.name}</Label>
 
   return null
 }

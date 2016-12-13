@@ -80,7 +80,7 @@ class NewRequest extends React.Component {
             onChange={(e) => this.setState({ body: e.target.value })}
             style={{ height: 200 }}
             />
-          <HelpBlock>You can format your request using <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> syntax</HelpBlock>
+          <HelpBlock className="pull-right">You can format your request using <a target="_blank" href="https://guides.github.com/features/mastering-markdown/">Markdown</a> syntax</HelpBlock>
         </FormGroup>
         <FormGroup>
           <ButtonGroup>
@@ -89,6 +89,7 @@ class NewRequest extends React.Component {
           </ButtonGroup>
         </FormGroup>
         <Button
+          bsSize="large"
           disabled={this.state.submissionInProgress}
           onClick={!this.state.submissionInProgress ? this.handleSubmit : null}>
           {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}</Button>
