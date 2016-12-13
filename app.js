@@ -5,10 +5,13 @@ var fs = require('fs')
 var morgan = require('morgan')
 var path = require('path')
 var passport = require('passport');
+var cors = require('cors');
 var OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
 const config = require('./config');
 
 var app = express()
+
+app.use(cors())
 
 //Load passport and configure it to use Azure AD Bearer auth
 app.use(passport.initialize());
@@ -32,13 +35,5 @@ var accessLogStream = FileStreamRotator.getStream({
 
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
-
-// Convenience for allowing CORS on routes - GET only
-app.all('*', function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
 
 module.exports = app;

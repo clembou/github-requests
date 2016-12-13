@@ -16,6 +16,7 @@
   },
   "author": "Clément Bouscasse",
   "dependencies": {
+    "cors": "^2.8.1",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "file-stream-rotator": "0.0.7",
