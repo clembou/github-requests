@@ -4,6 +4,9 @@ import azureClient from './shared/azureClient'
 import { LoadingWithMessage } from './shared/Loading'
 import SignInButton from './SignInButton'
 
+const AUTO_LOGIN = process.env.NODE_ENV === 'production'
+//const AUTO_LOGIN = true
+
 class AzureAuthorisation extends React.Component {
   state = {
     message: ''
@@ -16,14 +19,24 @@ class AzureAuthorisation extends React.Component {
         (isAuthenticated, isAdmin, state) => this.props.onAuth(isAuthenticated, isAdmin, state)
       )
     }
+
+    if (!this.props.location.hash) { //} && AUTO_LOGIN) {
+      // Automatically initiate authentication in production
+      azureClient.authenticate(this.getFromState())
+    }
+  }
+
+  getFromState() {
+    console.log(this.props.location.state)
+    return (this.props.location.state && this.props.location.state.from) || { pathname: '/' }
   }
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const from = this.getFromState()
 
-    const content = (this.props.location.hash) ? (
+    const content = (AUTO_LOGIN || this.props.location.hash) ? (
       <Col md={6}>
-        <LoadingWithMessage message="Azure authentication in progress..." />
+        <LoadingWithMessage message="Authentication in progress..." />
       </Col>) : (
         <Col md={6}>
           <p>
@@ -35,7 +48,6 @@ class AzureAuthorisation extends React.Component {
 
     return (
       <Grid>
-        <PageHeader>Sign in</PageHeader>
         <Row>
           {content}
         </Row>

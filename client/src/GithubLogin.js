@@ -37,7 +37,6 @@ class GithubAuthorisation extends React.Component {
 
     return (
       <Grid>
-        <PageHeader>Sign in</PageHeader>
         <Row>
           {content}
         </Row>
