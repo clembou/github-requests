@@ -172,13 +172,14 @@ class Client {
       })
       )
   }
-  
+
   isUserInAnAdminGroup(groups) {
     console.log(this.adminGroupIds)
 
     return _(groups)
       .keyBy('id')
       .at(this.adminGroupIds)
+      .compact()
       .value()
       .length > 0
   }
