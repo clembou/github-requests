@@ -40,7 +40,7 @@ const AppNav = (props) => (
             )}
             {(process.env.NODE_ENV !== 'production') &&
               <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>}
-            <MenuItem divider />
+            {(process.env.NODE_ENV !== 'production') && <MenuItem divider />}
             <Link to="/signout">{({ href, onClick, ...rest}) =>  <MenuItem onClick={onClick} href={href}>Sign Out</MenuItem>}</Link>
           </NavDropdown>
         )}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
+import { Grid, Row, Col } from 'react-bootstrap'
 import azureClient from './shared/azureClient'
 import { LoadingWithMessage } from './shared/Loading'
 import SignInButton from './SignInButton'
@@ -20,14 +20,13 @@ class AzureAuthorisation extends React.Component {
       )
     }
 
-    if (!this.props.location.hash) { //} && AUTO_LOGIN) {
+    if (!this.props.location.hash && AUTO_LOGIN) {
       // Automatically initiate authentication in production
       azureClient.authenticate(this.getFromState())
     }
   }
 
   getFromState() {
-    console.log(this.props.location.state)
     return (this.props.location.state && this.props.location.state.from) || { pathname: '/' }
   }
 

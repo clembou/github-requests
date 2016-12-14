@@ -140,7 +140,6 @@ class Client {
     }).then(checkStatus)
       .then(parseJSON)
       .then(json => new Promise((resolve, reject) => {
-        // console.log(json)
         const user = {
           name: json.displayName,
           email: json.mail,

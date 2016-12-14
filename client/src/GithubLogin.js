@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Col, Button, PageHeader } from 'react-bootstrap'
+import { Grid, Row, Col, Button } from 'react-bootstrap'
 import githubClient from './shared/githubClient'
 import { LoadingWithMessage } from './shared/Loading'
 
