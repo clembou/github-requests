@@ -29,10 +29,12 @@ class App extends React.Component {
   }
 
   handleAuth = (isAuthenticated, isAdmin, state) => {
-    if (isAuthenticated)
+    if (isAuthenticated) {
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data })
       })
+      this.getProjects()
+    }
 
     this.setState({ isAuthenticated, isAdmin })
     if (isAuthenticated && isAdmin)
@@ -103,7 +105,7 @@ class App extends React.Component {
           githubUserProfile={this.state.githubUserProfile}
           onToggleAdmin={() => this.setState({ isAdmin: !this.state.isAdmin })} />
 
-        <Match exactly pattern="/" render={() => <Redirect to="/requests"/>} />
+        <Match exactly pattern="/" render={() => <Redirect to="/requests" />} />
         <MatchWhenGithubAuthorized pattern="/backlog" component={BacklogPage} />
 
 
