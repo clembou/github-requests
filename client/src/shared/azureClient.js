@@ -7,7 +7,7 @@ class Client {
   constructor() {
     this.tenantId = process.env.REACT_APP_TENANT_ID
     this.clientId = process.env.REACT_APP_CLIENT_ID
-    this.adminGroupId = process.env.REACT_APP_ADMIN_GROUP_ID
+    this.adminGroupIds = this.getAdminGroupIds(process.env.REACT_APP_ADMIN_GROUP_ID)
     this.domainHint = process.env.REACT_APP_DOMAIN_HINT
     this.redirectUrl = window.location.origin + '/callback/azure'
 
@@ -133,6 +133,13 @@ class Client {
     this.defaultHeaders = getStandardHeaders()
   }
 
+  getAdminGroupIds(groupIdsString) {
+    if (typeof groupIdsString !== 'string')
+      return null
+
+    return groupIdsString.split(';')
+  }
+
   getUser() {
     return fetch('https://graph.microsoft.com/v1.0/me', {
       method: 'get',
@@ -159,11 +166,21 @@ class Client {
       .then(parseJSON)
       .then(json => new Promise((resolve, reject) => {
         if (json && json.value)
-          resolve(_.filter(json.value, { id: this.adminGroupId }).length === 1)
+          resolve(this.isUserInAnAdminGroup(json.value))
         else
           reject('problem', json);
       })
       )
+  }
+  
+  isUserInAnAdminGroup(groups) {
+    console.log(this.adminGroupIds)
+
+    return _(groups)
+      .keyBy('id')
+      .at(this.adminGroupIds)
+      .value()
+      .length > 0
   }
   // getDirectoryName() {
   //   return fetch('https://graph.microsoft.com/v1.0/organization', {
