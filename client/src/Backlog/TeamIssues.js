@@ -15,7 +15,7 @@ const titleFormatter = (cell, row, enumObject, index) => {
 
 const IssueInfo = (props) => (
   <span>
-    <a href={props.url}><i className="fa fa-github fa-lg" /> {props.title}</a> {props.labels.map(l => <Tag key={l.name} label={l} />)}
+    <a href={props.url} target="_blank"><i className="fa fa-github fa-lg" /> {props.title}</a> {props.labels.map(l => <Tag key={l.name} label={l} />)}
   </span>
 )
 
