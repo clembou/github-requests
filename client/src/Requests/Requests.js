@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label, Breadcrumb } from 'react-bootstrap'
+import { Grid, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
 import { Match, Miss, Link } from 'react-router';
 import _ from 'lodash'
 import { Loading } from '../shared/Loading'
@@ -60,23 +60,10 @@ class Requests extends React.Component {
     return (
       <Grid>
         <div>
-          <Breadcrumb>
-            <Link to="/requests">{
-              ({isActive, location, href, onClick, transition}) =>
-                <Breadcrumb.Item href={href} onClick={onClick}>
-                  Home
-          </Breadcrumb.Item>
-            }
-            </Link>
-            <Link activeOnlyWhenExact to={pathname}>{
-              ({isActive, location, href, onClick, transition}) =>
-                <Breadcrumb.Item href={href} onClick={onClick} active={isActive}>
-                  {rest.project.name}
-                </Breadcrumb.Item>
-            }
-            </Link>
-          </Breadcrumb>
           <PageHeader>
+            <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={({params}) => <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}`}><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
+            <Match pattern={`/requests/:organisation/:repo/:label`} exactly render={() => <Link to="/requests"><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
+            { }
             {this.props.project.name}
             <span className="pull-right">
               {' '}

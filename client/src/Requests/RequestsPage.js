@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from "lodash"
-import { Grid, PageHeader, ListGroup, ListGroupItem, Panel, Breadcrumb } from 'react-bootstrap'
+import { Grid, PageHeader, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import { Match, Miss, Link } from 'react-router';
 import Requests from './Requests'
 
@@ -28,15 +28,6 @@ export default RequestsPage
 
 const RequestsPageHome = (props) => (
   <Grid>
-    <Breadcrumb>
-      <Link to="/requests">{
-        ({isActive, location, href, onClick, transition}) =>
-          <Breadcrumb.Item href={href} onClick={onClick}>
-            Home
-          </Breadcrumb.Item>
-      }
-      </Link>
-    </Breadcrumb>
     <PageHeader>Please select a project: </PageHeader>
     {props.groups.length > 0 && props.groups.map(pg => (
       <ProjectGroup
