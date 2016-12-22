@@ -1,5 +1,7 @@
 // Polyfill needed by ie 11
 import 'string.prototype.startswith';
+// ie 10
+import 'location-origin'
 
 import 'font-awesome/css/font-awesome.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';

@@ -15,6 +15,7 @@
     "font-awesome": "^4.7.0",
     "github-api": "github:clembou/github",
     "history": "^4.4.1",
+    "location-origin": "^1.1.4",
     "lodash": "^4.17.2",
     "marked": "^0.3.6",
     "moment": "^2.17.1",
