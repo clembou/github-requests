@@ -28,7 +28,7 @@ module.exports = function (app) {
   const rewriteResponseHeaders = (request, response) => {
     if (response.headers.link) {
       const localApiRootUrl = process.env.NODE_ENV == 'production' ? url.format({
-        protocol: request.protocol,
+        protocol: 'https', // request.protocol returns http for now since the node server itself is only using http. However the api is used over https thanks to azure / IIS
         host: request.hostname,
         port: request.port,
         pathname: '/api'
