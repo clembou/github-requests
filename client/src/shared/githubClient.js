@@ -11,7 +11,7 @@ class Client {
 
     this.isAuthenticated = false;
 
-    const token = JSON.parse(sessionStorage.getItem('githubToken'));
+    const token = JSON.parse(localStorage.getItem('githubToken'));
     if (token !== null) {
       this.setUp(token)
     }
@@ -25,7 +25,7 @@ class Client {
 
   setUp(token) {
     this.gh = new GitHub({ token });
-    sessionStorage.setItem('githubToken', JSON.stringify(token));
+    localStorage.setItem('githubToken', JSON.stringify(token));
     this.isAuthenticated = true;
   }
 
@@ -55,7 +55,7 @@ class Client {
   }
 
   SignOut() {
-    sessionStorage.removeItem('githubToken')
+    localStorage.removeItem('githubToken')
     this.gh = null
     this.isAuthenticated = false
   }

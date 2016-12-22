@@ -11,10 +11,10 @@ class Client {
     this.domainHint = process.env.REACT_APP_DOMAIN_HINT
     this.redirectUrl = window.location.origin + '/callback/azure'
 
-    const token = JSON.parse(sessionStorage.getItem('azureToken'));
+    const token = JSON.parse(localStorage.getItem('azureToken'));
     if (token !== null) {
       this.processToken(token)
-      this.isAdmin = JSON.parse(sessionStorage.getItem('isAdmin'));
+      this.isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
     }
     else {
       this.accessToken = null
@@ -64,18 +64,18 @@ class Client {
 
     const tokenValidUntil = new moment().add(tokenInfo.expires_in, 'seconds')
     tokenInfo.tokenValidUntil = tokenValidUntil.toISOString();
-    sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
+    localStorage.setItem('azureToken', JSON.stringify(tokenInfo))
 
     this.processToken(tokenInfo);
     this.checkIfUserIsAdmin()
       .then(isAdmin => {
         this.isAdmin = isAdmin
-        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        localStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
         cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
       })
       .catch(err => {
         this.isAdmin = null
-        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        localStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
         cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
       })
   }
@@ -90,18 +90,18 @@ class Client {
 
     const tokenValidUntil = new moment().add(tokenInfo.expires_in, 'seconds')
     tokenInfo.tokenValidUntil = tokenValidUntil.toISOString();
-    sessionStorage.setItem('azureToken', JSON.stringify(tokenInfo))
+    localStorage.setItem('azureToken', JSON.stringify(tokenInfo))
 
     this.processToken(tokenInfo);
     this.checkIfUserIsAdmin()
       .then(isAdmin => {
         this.isAdmin = isAdmin
-        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        localStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
         cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
       })
       .catch(err => {
         this.isAdmin = null
-        sessionStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
+        localStorage.setItem('isAdmin', JSON.stringify(this.isAdmin))
         cb(this.isAuthenticated, this.isAdmin, decodeURIComponent(tokenInfo.state))
       })
   }
@@ -124,8 +124,8 @@ class Client {
   }
 
   SignOut() {
-    sessionStorage.removeItem('azureToken')
-    sessionStorage.removeItem('isAdmin')
+    localStorage.removeItem('azureToken')
+    localStorage.removeItem('isAdmin')
     this.accessToken = null
     this.idToken = null
     this.isAuthenticated = false
