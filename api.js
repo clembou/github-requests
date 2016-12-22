@@ -1,11 +1,14 @@
 const fs = require('fs');
 const qs = require('qs');
 const https = require('https');
+const url = require('url');
 const request = require('request');
 const passport = require('passport');
 const config = require('./config');
 
 module.exports = function (app) {
+
+  const GITHUB_API_ROOT = 'https://api.github.com';
 
   function loadProjects() {
     return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
@@ -15,13 +18,25 @@ module.exports = function (app) {
 
   const getProxyRequestOptions = url => (
     {
-      url: 'https://api.github.com' + url.replace('/api', ''),
+      url: GITHUB_API_ROOT + url.replace('/api', ''),
       headers: {
         'Authorization': `token ${config.github.botToken}`
       }
     }
   );
 
+  const rewriteResponseHeaders = (request, response) => {
+    if (response.headers.link) {
+      const localApiRootUrl = process.env.NODE_ENV == 'production' ? url.format({
+        protocol: request.protocol,
+        host: request.hostname,
+        port: request.port,
+        pathname: '/api'
+      }) : 'https://localhost:3000/api'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
+
+      response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, localApiRootUrl)
+    }
+  }
 
   const genericErrorHandler = (error, response, body) => {
     if (error) {
@@ -41,8 +56,6 @@ module.exports = function (app) {
   })
 
   app.get('/api/authenticate/github/:code', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    console.log('authenticating code:' + req.params.code);
-
     const r = request.post({
       url: 'https://github.com/login/oauth/access_token',
       json: {
@@ -59,7 +72,18 @@ module.exports = function (app) {
     console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
     const r = request(getProxyRequestOptions(req.url))
     console.log('Proxied request options: ', getProxyRequestOptions(req.url))
-    req.pipe(r, genericErrorHandler).pipe(res);
+    req.pipe(r, genericErrorHandler)
+      .on('response', response => rewriteResponseHeaders(req, response))
+      .pipe(res);
+  });
+
+  app.get('/api/repositories/:repoId/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    console.log(`going through pages on repository ${req.params.repoId}`);
+    const r = request(getProxyRequestOptions(req.url))
+    console.log('Proxied request options: ', getProxyRequestOptions(req.url))
+    req.pipe(r, genericErrorHandler)
+      .on('response', response => rewriteResponseHeaders(req, response))
+      .pipe(res);
   });
 
   app.get('/api/repos/:organisation/:repo/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
