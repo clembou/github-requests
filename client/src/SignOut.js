@@ -1,7 +1,5 @@
 import React from 'react'
 import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
-import azureClient from './shared/azureClient'
-import githubClient from './shared/githubClient'
 import SignInButton from './SignInButton'
 
 class SignOut extends React.Component {
@@ -10,8 +8,6 @@ class SignOut extends React.Component {
   }
 
   componentDidMount() {
-    azureClient.SignOut()
-    githubClient.SignOut()
     this.props.onSignOut()
   }
 

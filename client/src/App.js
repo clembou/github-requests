@@ -54,7 +54,9 @@ class App extends React.Component {
     this.context.router.transitionTo(state)
   }
 
-  handleSignOut = () => {
+  signOut = () => {
+    azureClient.signOut()
+    githubClient.SignOut()
     this.setState({
       isAuthenticated: false,
       isAdmin: null,
@@ -65,8 +67,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    if (this.state.isAuthenticated && azureClient.tokenValidUntil.diff(moment()) < 0) {
+      // An outdated token from a previous session is currently stored in local storage. 
+      // Delete it by calling signOut() , MatchWhenAuthorized will then kick off auth again
+      // and redirect to the correct page
+      this.signOut();
+      return;
+    }
+
     if (this.state.isAuthenticated) {
-      // Azure tokens are only valid for an hour
+      // Azure tokens are only valid for an hour.
       // The easiest for now is just to log people out when the token expires
       setTimeout(() => this.context.router.transitionTo('/signout'), azureClient.tokenValidUntil.diff(moment()))
 
@@ -128,7 +138,7 @@ class App extends React.Component {
 
         <Match pattern="/login/github" component={GithubLogin} />
         <Match pattern="/login/azure" component={AzureLogin} />
-        <Match pattern="/signout" render={(props) => <SignOut {...props} onSignOut={this.handleSignOut} />} />
+        <Match pattern="/signout" render={(props) => <SignOut {...props} onSignOut={this.signOut} />} />
 
         <Match exactly pattern="/callback/github" render={(props) => <GithubLogin {...props} onAuth={this.handleGithubAuth} />} />
         <Match exactly pattern="/callback/azure" render={(props) => <AzureLogin {...props} onAuth={this.handleAuth} />} />

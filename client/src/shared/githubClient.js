@@ -54,7 +54,7 @@ class Client {
       });
   }
 
-  SignOut() {
+  signOut() {
     localStorage.removeItem('githubToken')
     this.gh = null
     this.isAuthenticated = false

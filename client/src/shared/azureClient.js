@@ -123,7 +123,7 @@ class Client {
       .value();
   }
 
-  SignOut() {
+  signOut() {
     localStorage.removeItem('azureToken')
     localStorage.removeItem('isAdmin')
     this.accessToken = null
