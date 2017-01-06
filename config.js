@@ -11,7 +11,9 @@ const github = {
 }
 
 const app = {
-  groupConfigPath: process.env.GROUP_CONFIG_PATH
+  groupConfigPath: process.env.GROUP_CONFIG_PATH,
+  sendGridApiKey: process.env.SENDGRID_API_KEY,
+  emailSender: process.env.SENDGRID_EMAIL_SENDER
 }
 
 function validateConfig(configObject) {
