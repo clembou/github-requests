@@ -101,4 +101,10 @@ module.exports = function (app) {
     const r = request.post(proxyRequestOptions)
     req.pipe(r, genericErrorHandler).pipe(res);
   });
+
+  // handle github web hooks
+  app.post('/api/github-webhooks', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
+    console.log(`received web hook:\n${req.body}`);
+    res.json({ message: 'received web hook' });
+  });
 }
