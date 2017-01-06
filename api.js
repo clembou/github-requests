@@ -5,6 +5,10 @@ const url = require('url');
 const request = require('request');
 const passport = require('passport');
 const config = require('./config');
+var bodyParser = require('body-parser');
+var helper = require('sendgrid').mail;
+var sg = require('sendgrid')(config.app.sendGridApiKey);
+var requestUtils = require('./client/src/shared/requestUtils');
 
 module.exports = function (app) {
 
@@ -15,6 +19,22 @@ module.exports = function (app) {
   }
 
   const projects = loadProjects();
+
+  const sendMail = (to, title, body) => {
+    const from_email = new helper.Email(config.app.emailSender);
+    const to_email = new helper.Email(to);
+    const subject = title;
+    const content = new helper.Content('text/plain', body);
+    const mail = new helper.Mail(from_email, subject, to_email, content);
+
+    const request = sg.emptyRequest({
+      method: 'POST',
+      path: '/v3/mail/send',
+      body: mail.toJSON(),
+    });
+
+    return sg.API(request)
+  }
 
   const getProxyRequestOptions = url => (
     {
@@ -96,15 +116,32 @@ module.exports = function (app) {
     console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
 
     proxyRequestOptions = getProxyRequestOptions(req.url)
-    proxyRequestOptions.json = req.body
 
     const r = request.post(proxyRequestOptions)
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
   // handle github web hooks
-  app.post('/api/github-webhooks', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    console.log(`received web hook:\n${req.body}`);
-    res.json({ message: 'received web hook' });
+  app.post('/api/github-webhooks', [passport.authenticate('oauth-bearer', { session: false }), bodyParser.json()], function (req, res) {
+    console.log(`received web hook: ${req.headers['x-github-event']}`);
+    if (req.body && req.body.issue) {
+      const recipient = requestUtils.getCreator(req.body.issue);
+      const content = JSON.stringify(req.body, null, 4);
+      const subject = req.headers['x-github-event'];
+
+      sendMail(recipient, subject, content)
+        .then(response => {
+          console.log(response.statusCode, `Email notification sent successfully to ${recipient}`);
+          console.log(response.body);
+          console.log(response.headers);
+        })
+        .catch(error => {
+          //error is an instance of SendGridError
+          //The full response is attached to error.response
+          console.log(error.response.statusCode);
+        });
+
+      res.json({ message: 'web hook processed' });
+    }
   });
 }
