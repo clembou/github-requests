@@ -57,37 +57,33 @@ module.exports = function (context, data) {
                 'client_secret': AAD_REQUESTS_APP_CLIENT_SECRET,
                 'resource': AAD_REQUESTS_APP_CLIENT_ID
             },
+            timeout: 2000
         },
         function (error, response, body) {
             if (error) {
                 context.log('failed to get authorization token:', error);
+                context.done(error);
             }
             else {
-                const jsonBody = JSON.parse(body);
-                const auth = jsonBody.token_type + ' ' + jsonBody.access_token;
-                //context.log('Authorization:', auth);
+                const tokenResponse = JSON.parse(body);
 
                 request.post({
                     url: REQUESTS_APP_WEBHOOKS_ENDPOINT,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': auth,
                         'Cache-Control': 'no-cache',
                         'X-GitHub-Event': gitHubEvent
                     },
-                    json: data
-                }, function (error1, response1, body1) {
-                    if (error1) {
-                        context.log(
-                            `POST to '${REQUESTS_APP_WEBHOOKS_ENDPOINT}' failed:`,
-                            error1,
-                            response1.statusCode,
-                            response1.statusMessage);
-                    }
-                    context.log(gitHubEvent, issueCreatorLogin, response1.statusCode, response1.statusMessage);
+                    auth: {
+                        bearer: tokenResponse.access_token,
+                        sendImmediately: true
+                    },
+                    json: data,
+                    timeout: 2000
                 });
+
+                context.done();
             }
-            context.done();
         }
     );
 };
