@@ -13,9 +13,18 @@
     "projects": [
         {
             "name": "Test 1",
-            "label": "test 1",
+            "label": "test1",
             "groups": [
                 "group1"
+            ],
+            "organisation": "resgroup",
+            "repository": "test"
+        },
+        {
+            "name": "Test 1 with space in label",
+            "label": "test 1",
+            "groups": [
+                "group2"
             ],
             "organisation": "resgroup",
             "repository": "test"
@@ -40,9 +49,9 @@
         },
         {
             "name": "Test 3",
-            "label": "test_3",
+            "label": "test 3",
             "groups": [
-                "group2"
+                "group1"
             ],
             "organisation": "resgroup",
             "repository": "test"

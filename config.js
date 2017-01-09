@@ -7,11 +7,14 @@ const azure = {
 const github = {
   clientID: process.env.REACT_APP_GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  botToken: process.env.GITHUB_BOT_TOKEN
+  botToken: process.env.GITHUB_BOT_TOKEN,
+  botLogin: process.env.REACT_APP_GITHUB_BOT_LOGIN
 }
 
 const app = {
-  groupConfigPath: process.env.GROUP_CONFIG_PATH
+  groupConfigPath: process.env.GROUP_CONFIG_PATH,
+  sendGridApiKey: process.env.SENDGRID_API_KEY,
+  emailSender: process.env.SENDGRID_EMAIL_SENDER
 }
 
 function validateConfig(configObject) {

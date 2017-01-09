@@ -1,8 +1,6 @@
-import _ from 'lodash';
-
 const qs = require('qs');
 
-export default function quoteRequestBody(body, userinfo) {
+const quoteRequestBody = function (body, userinfo) {
   if (!(userinfo.name && userinfo.id && (userinfo.email || userinfo.upn)))
     throw new Error(`User information must at least contain a name, an id, and either an email or upn property. The received value was ${JSON.stringify(userinfo)}`)
 
@@ -11,7 +9,7 @@ export default function quoteRequestBody(body, userinfo) {
 ${body}`
 }
 
-export function getCreator(issue) {
+const getCreator = function (issue) {
   if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
     return parseUserInfoFromIssueBody(issue.body)
   } else {
@@ -19,7 +17,7 @@ export function getCreator(issue) {
   }
 }
 
-export function getContent(issue) {
+const getContent = function (issue) {
   if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
     let lines = issue.body.split('\n')
     lines.splice(0, 2)
@@ -37,4 +35,10 @@ function parseUserInfoFromIssueBody(body) {
   encodedUserDetails = encodedUserDetails.split(')):')[0]
 
   return qs.parse(encodedUserDetails)
+}
+
+module.exports = {
+  getCreator,
+  getContent,
+  quoteRequestBody
 }
