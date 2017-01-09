@@ -60,6 +60,10 @@ module.exports = function (context, data) {
         return;
     }
 
+    const gitHubDelivery = context.req.headers['x-github-delivery'] || context.req.headers['X-GitHub-Delivery'];
+
+    context.log(gitHubEvent, issueCreatorLogin, gitHubDelivery);
+
     request.post(
         {
             url: `https://login.windows.net/${AAD_TENANT_GUID}/oauth2/token`,
