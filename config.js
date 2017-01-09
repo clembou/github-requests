@@ -7,7 +7,8 @@ const azure = {
 const github = {
   clientID: process.env.REACT_APP_GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  botToken: process.env.GITHUB_BOT_TOKEN
+  botToken: process.env.GITHUB_BOT_TOKEN,
+  botLogin: process.env.REACT_APP_GITHUB_BOT_LOGIN
 }
 
 const app = {
