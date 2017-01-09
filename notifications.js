@@ -4,20 +4,29 @@ const processIssues = (action, issue, projectName, requestLink) => {
   switch (action) {
     case 'opened':
       return {
-        subject: `# Request Created # ${projectName} | ${issue.title}`,
-        content: `Thanks for submitting a <a href="${requestLink}">new request</a>. You will be notified when it is resolved.`
+        subject: `[Request] [Created] [${projectName}] - ${issue.title}`,
+        content: `
+<p>Thanks for submitting a new request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>You will be notified when it is resolved.</p>`
       }
       break;
     case 'closed':
       return {
-        subject: `# Request Closed # ${projectName} | ${issue.title}`,
-        content: `Your <a href="${requestLink}">request</a> has been closed, and the fix will be included in the next release.`
+        subject: `[Request] [Closed] [${projectName}] - ${issue.title}`,
+        content: `
+<p>Your request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>has been closed. The fix will be included in the next release.</p>`
       }
       break;
     case 'reopened':
       return {
-        subject: `# Request Reopened # ${projectName} | ${issue.title}`,
-        content: `Your <a href="${requestLink}">request</a> has been reopened.`
+        subject: `[Request] [Reopened] [${projectName}] - ${issue.title}`,
+        content: `
+<p>Your request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>has been reopened.<p>`
       }
       break;
     default:
@@ -30,29 +39,32 @@ const processComment = (action, issue, comment, projectName, requestLink) => {
   switch (action) {
     case 'created':
       return {
-        subject: `# Request Comment # ${projectName} | ${issue.title}`,
-        content: `A new comment has been posted on your <a href="${requestLink}">new request</a>.
-
-From <i>${comment.user.login}</i>:
-${comment.body}`
+        subject: `[Request] [New Comment] [${projectName}] - ${issue.title}`,
+        content: `
+<p>A new comment has been posted on your request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>From <i>${comment.user.login}</i>:</p>
+<p>${comment.body}<p>`
       }
       break;
     case 'edited':
       return {
-        subject: `# Request Comment # ${projectName} | ${issue.title}`,
-        content: `A comment has been edited on your <a href="${requestLink}">new request</a>.
-
-From <i>${comment.user.login}</i>:
-${comment.body}`
+        subject: `[Request] [Edited Comment] [${projectName}] - ${issue.title}`,
+        content: `
+A comment has been edited on your request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>From <i>${comment.user.login}</i>:</p>
+<p>${comment.body}<p>`
       }
       break;
     case 'deleted':
       return {
-        subject: `# Request Comment # ${projectName} | ${issue.title}`,
-        content: `A comment has been deleted on your <a href="${requestLink}">new request</a>.
-
-From <i>${comment.user.login}</i>:
-${comment.body}`
+        subject: `[Request] [Deleted Comment] [${projectName}] - ${issue.title}`,
+        content: `
+A comment has been deleted on your request for <b>${projectName}</b>:</p>
+<p><a href="${requestLink}">${issue.title}</a></p>
+<p>From <i>${comment.user.login}</i>:</p>
+<p>${comment.body}<p>`
       }
       break;
     default:
