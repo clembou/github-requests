@@ -9,22 +9,31 @@ var bodyParser = require('body-parser');
 var helper = require('sendgrid').mail;
 var sg = require('sendgrid')(config.app.sendGridApiKey);
 var requestUtils = require('./client/src/shared/requestUtils');
+var notifications = require('./notifications');
 
 module.exports = function (app) {
 
   const GITHUB_API_ROOT = 'https://api.github.com';
 
-  function loadProjects() {
+  const localAppRootUrl = process.env.NODE_ENV == 'production' ? url.format({
+    protocol: 'https', // request.protocol returns http for now since the node server itself is only using http. However the api is used over https thanks to azure / IIS
+    host: request.hostname,
+    port: request.port,
+    pathname: ''
+  }) : 'https://localhost:3000'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
+
+
+  function loadAppData() {
     return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
   }
 
-  const projects = loadProjects();
+  const appData = loadAppData();
 
   const sendMail = (to, title, body) => {
     const from_email = new helper.Email(config.app.emailSender);
     const to_email = new helper.Email(to);
     const subject = title;
-    const content = new helper.Content('text/plain', body);
+    const content = new helper.Content('text/html', body);
     const mail = new helper.Mail(from_email, subject, to_email, content);
 
     const request = sg.emptyRequest({
@@ -47,14 +56,7 @@ module.exports = function (app) {
 
   const rewriteResponseHeaders = (request, response) => {
     if (response.headers.link) {
-      const localApiRootUrl = process.env.NODE_ENV == 'production' ? url.format({
-        protocol: 'https', // request.protocol returns http for now since the node server itself is only using http. However the api is used over https thanks to azure / IIS
-        host: request.hostname,
-        port: request.port,
-        pathname: '/api'
-      }) : 'https://localhost:3000/api'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
-
-      response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, localApiRootUrl)
+      response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, localAppRootUrl + '/api')
     }
   }
 
@@ -72,7 +74,7 @@ module.exports = function (app) {
   };
 
   app.get('/api/projects', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    res.json(projects)
+    res.json(appData)
   })
 
   app.get('/api/authenticate/github/:code', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
@@ -124,24 +126,42 @@ module.exports = function (app) {
   // handle github web hooks
   app.post('/api/github-webhooks', [passport.authenticate('oauth-bearer', { session: false }), bodyParser.json()], function (req, res) {
     console.log(`received web hook: ${req.headers['x-github-event']}`);
-    if (req.body && req.body.issue) {
-      const recipient = requestUtils.getCreator(req.body.issue);
-      const content = JSON.stringify(req.body, null, 4);
-      const subject = req.headers['x-github-event'];
+    const eventType = req.headers['x-github-event'];
+    if (
+      eventType && ['issues', 'issue_comment'].includes(eventType) &&
+      req.body && req.body.issue &&
+      req.body.issue.user.login === config.github.botLogin
+    ) {
+      const { email } = requestUtils.getCreator(req.body.issue);
 
-      sendMail(recipient, subject, content)
-        .then(response => {
-          console.log(response.statusCode, `Email notification sent successfully to ${recipient}`);
-          console.log(response.body);
-          console.log(response.headers);
+      try {
+        const project = notifications.findProject(req.body, appData.projects);
+        const requestUrl = notifications.getRequestUrl(req.body.issue.number, project, localAppRootUrl);
+        const { subject, content } = notifications.getNotificationText(eventType, req.body, project.name, requestUrl);
+        
+        if (email && subject && content) {
+          sendMail(email, subject, content)
+            .then(response => {
+              console.log(response.statusCode, `Email notification sent successfully to ${email}`);
+            })
+            .catch(error => {
+              //error is an instance of SendGridError
+              //The full response is attached to error.response
+              console.log(error.response);
+            });
+        }
+      }
+      catch (error) {
+        console.log('An error occcured while attempting to process the following github webhook:');
+        console.log(error);
+        console.log('webhook data:')
+        console.dir(req.body);
+        res.json({
+          message: 'An error occcured while attempting to process a github webhook',
+          webhook: req.body
         })
-        .catch(error => {
-          //error is an instance of SendGridError
-          //The full response is attached to error.response
-          console.log(error.response.statusCode);
-        });
-
-      res.json({ message: 'web hook processed' });
+      }
     }
+    res.json({ message: 'web hook processed' });
   });
 }
