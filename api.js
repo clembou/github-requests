@@ -15,14 +15,16 @@ module.exports = function (app) {
 
   const GITHUB_API_ROOT = 'https://api.github.com';
 
-  const localAppRootUrl = process.env.NODE_ENV == 'production' ? url.format({
-    protocol: 'https', // request.protocol returns http for now since the node server itself is only using http. However the api is used over https thanks to azure / IIS
-    host: request.hostname,
-    port: request.port,
-    pathname: ''
-  }) : 'https://localhost:3000'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
+  const getlocalAppRootUrl = (request) => {
+    return process.env.NODE_ENV == 'production' ? url.format({
+      protocol: 'https', // request.protocol returns http for now since the node server itself is only using http. However the api is used over https thanks to azure / IIS
+      host: request.hostname,
+      // port: request.port,
+      pathname: ''
+    }) : 'https://localhost:3000'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
 
 
+  }
   function loadAppData() {
     return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
   }
@@ -56,7 +58,7 @@ module.exports = function (app) {
 
   const rewriteResponseHeaders = (request, response) => {
     if (response.headers.link) {
-      response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, localAppRootUrl + '/api')
+      response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, getlocalAppRootUrl(request) + '/api')
     }
   }
 
@@ -136,9 +138,9 @@ module.exports = function (app) {
 
       try {
         const project = notifications.findProject(req.body, appData.projects);
-        const requestUrl = notifications.getRequestUrl(req.body.issue.number, project, localAppRootUrl);
+        const requestUrl = notifications.getRequestUrl(req.body.issue.number, project, getlocalAppRootUrl(req));
         const { subject, content } = notifications.getNotificationText(eventType, req.body, project.name, requestUrl);
-        
+
         if (email && subject && content) {
           sendMail(email, subject, content)
             .then(response => {
