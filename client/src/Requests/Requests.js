@@ -6,7 +6,7 @@ import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
 import { getCreator } from '../shared/requestUtils'
 import NewRequest from './NewRequest'
-import PanelIssue from './PanelIssue'
+import RequestDetails from './RequestDetails'
 import moment from 'moment'
 
 const issueVisibilityText = (showOpen) => showOpen ? 'open' : 'closed'
@@ -69,7 +69,9 @@ class Requests extends React.Component {
       <Grid>
         <div>
           <PageHeader>
-            <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={({params}) => <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}`}><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
+            <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={({params}) => (
+              <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}`}><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>
+            )} />
             <Match pattern={`/requests/:organisation/:repo/:label`} exactly render={() => <Link to="/requests"><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
             {}
             {this.props.project.name}
@@ -98,7 +100,7 @@ class Requests extends React.Component {
                         onIssueCreated={this.getIssues} />
                     )} />
                     <Miss render={() => (
-                      <PanelIssue
+                      <RequestDetails
                         {...matchProps}
                         isAdmin={rest.isAdmin}
                         userProfile={rest.userProfile}
@@ -108,12 +110,12 @@ class Requests extends React.Component {
                   </div>
                 )} />
                 <Match pattern={pathname} exactly render={() => (
-                  <RequestPanel
+                  <RequestList
                     {...this.props}
                     isAdmin={rest.isAdmin}
                     userProfile={rest.userProfile}
                     project={rest.project}
-                    issues={this.state.issues.filter(i => i.state == issueVisibilityText(this.state.showOpen))}
+                    issues={this.state.issues.filter(i => i.state === issueVisibilityText(this.state.showOpen))}
                     shown={issueVisibilityText(this.state.showOpen)}
                     hidden={issueVisibilityText(!this.state.showOpen)}
                     onVisibilityToggle={this.toggleShowOpen} />
@@ -131,7 +133,7 @@ Requests.defaultProps = {
 
 export default Requests
 
-const RequestPanel = props => {
+const RequestList = props => {
   const header = <span>{props.issues.length} {props.shown} issues <a href='#' className="text pull-right" onClick={props.onVisibilityToggle}>Show {props.hidden} issues</a></span>
 
   return (
@@ -154,7 +156,7 @@ const RequestPanel = props => {
 
 const IssueInfo = (props) => (
   <span>
-    <strong>{props.issue.title}</strong><small className="text-muted"> submitted <i>{moment(props.issue.created_at).fromNow()}</i> by <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i></small><span className="text pull-right">{props.issue.labels.map(l => <Tag key={l.name} label={l} />)}</span>
+    <strong>{props.issue.title} </strong><small className="text-muted"> submitted <i>{moment(props.issue.created_at).fromNow()}</i> by <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i></small><span className="text pull-right">{props.issue.labels.map(l => <Tag key={l.name} label={l} />)}</span>
   </span>
 )
 
