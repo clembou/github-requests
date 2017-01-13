@@ -56,7 +56,7 @@ class App extends React.Component {
 
   signOut = () => {
     azureClient.signOut()
-    githubClient.SignOut()
+    githubClient.signOut()
     this.setState({
       isAuthenticated: false,
       isAdmin: null,
