@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
-import { Match, Miss, Link } from 'react-router';
+import { Match, Miss, Link, Redirect } from 'react-router';
 import _ from 'lodash'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
@@ -28,7 +28,10 @@ class Requests extends React.Component {
     const labels = ['user request']
     if (this.props.params.label !== this.props.params.repo)
       labels.push(this.props.params.label)
-    this.getIssues({ labels: labels.join(), state: 'all' })
+
+    if (this.props.project && !_.isEmpty(this.props.project)) {
+      this.getIssues({ labels: labels.join(), state: 'all' })
+    }
   }
 
   getIssues(issueOptions) {
@@ -56,6 +59,12 @@ class Requests extends React.Component {
 
   render() {
     const {pathname, params, ...rest} = this.props
+
+    if (rest.project && _.isEmpty(rest.project)) {
+      //url parameters did not match the list of configured projects.
+      return <Redirect to="/requests" />
+    }
+
     const newRequestButton = params && (!params.issueNumber || params.issueNumber !== 'new') && (
       <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new`}>{
         ({isActive, location, href, onClick, transition}) =>
