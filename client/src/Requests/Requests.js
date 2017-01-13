@@ -147,18 +147,22 @@ const RequestList = props => {
 
   return (
     <Panel defaultExpanded header={header} bsStyle="default">
-      <ListGroup fill>
-        {props.issues.map(i => (
-          <Link key={i.number} to={`${props.pathname}/${i.number}`}>{
-            ({isActive, location, href, onClick, transition}) => (
-              <ListGroupItem onClick={onClick} href={href}>
-                <IssueInfo issue={i} />
-              </ListGroupItem>
-            )
-          }</Link>
-        )
-        )}
-      </ListGroup>
+      {props.issues && props.issues.length > 0 ? (
+        <ListGroup fill>
+          {props.issues.map(i => (
+            <Link key={i.number} to={`${props.pathname}/${i.number}`}>{
+              ({isActive, location, href, onClick, transition}) => (
+                <ListGroupItem onClick={onClick} href={href}>
+                  <IssueInfo issue={i} />
+                </ListGroupItem>
+              )
+            }</Link>
+          )
+          )}
+        </ListGroup>) :
+        <div className="text text-center"><p><i className="fa fa-check fa-4x" aria-hidden="true"></i></p>
+          This project does not have any issues!
+        </div>}
     </Panel>
   )
 }
