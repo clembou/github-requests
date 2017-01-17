@@ -2,7 +2,7 @@ import React from 'react'
 import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap'
 
 import ghClient from '../shared/githubClient';
-import quoteRequestBody from '../shared/requestUtils'
+import { quoteRequestBody } from '../shared/requestUtils'
 import MarkdownBlock from '../shared/MarkdownBlock'
 
 
