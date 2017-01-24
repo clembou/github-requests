@@ -118,10 +118,7 @@ module.exports = function (app) {
 
   app.post('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
     console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
-
-    proxyRequestOptions = getProxyRequestOptions(req.url)
-
-    const r = request.post(proxyRequestOptions)
+    const r = request.post(getProxyRequestOptions(req.url));
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
