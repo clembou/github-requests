@@ -28,5 +28,8 @@
     "passport-azure-ad": "^3.0.3",
     "request": "^2.79.0",
     "sendgrid": "^4.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
