@@ -2,24 +2,38 @@ import React from 'react'
 import { Grid, Row, Col, Button } from 'react-bootstrap'
 import githubClient from './shared/githubClient'
 import { LoadingWithMessage } from './shared/Loading'
+import qs from 'qs'
 
 class GithubAuthorisation extends React.Component {
   state = {
-    message: ''
+    error: ''
   }
 
   componentDidMount() {
-    if (this.props.location.query && this.props.location.query.code && this.props.location.query.state) {
-      githubClient.getToken(this.props.location.query.code, this.props.location.query.state, (isAuthenticated, state) => {
-        this.props.onAuth(isAuthenticated, state)
-      })
+    if (this.props.location.search) {
+      try {
+        const {code, state} = qs.parse(this.props.location.search.substring(1))
+        githubClient.getToken(code, state, (isAuthenticated, state) => {
+          this.props.onAuth(isAuthenticated, state)
+        }, (error) => this.setState({ error }))
+      } catch (e) {
+        this.setState({
+          error: 'An error occured while processing response from github. Did you grant the app permission to access your repos?'
+        })
+      }
     }
   }
 
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
 
-    const content = (this.props.location.query && this.props.location.query.code) ? (
+    let content;
+    if (this.state.error) {
+      content = (<Col md={4}>
+        {this.state.error}
+      </Col>)
+    }
+    content = (this.props.location.search && !this.state.error) ? (
       <Col md={4}>
         <LoadingWithMessage message="Github authentication in progress..." />
       </Col>) : (
@@ -44,8 +58,5 @@ class GithubAuthorisation extends React.Component {
     )
   }
 }
-GithubAuthorisation.contextTypes = {
-  router: React.PropTypes.object.isRequired
-};
 
 export default GithubAuthorisation
