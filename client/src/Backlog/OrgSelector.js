@@ -1,6 +1,6 @@
 import React from 'react'
-import { PageHeader, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { PageHeader, Panel, ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import client from '../shared/githubClient';
 import { Loading } from '../shared/Loading'
 
@@ -25,12 +25,12 @@ class OrgSelector extends React.Component {
       <Panel collapsible defaultExpanded header="Your Organisations">
         <ListGroup fill>
           {this.state.orgs.map(org => (
-            <Link key={org.login} to={`${pathname}/${org.login}`}>{
-              ({isActive, location, href, onClick, transition}) =>
-                <ListGroupItem onClick={onClick} href={href}>
-                  {org.login}
-                </ListGroupItem>
-            }</Link>
+            <Link
+              key={org.login}
+              to={`${pathname}/${org.login}`}
+              className="list-group-item"
+              >{org.login}
+            </Link>
           )
           )}
         </ListGroup>

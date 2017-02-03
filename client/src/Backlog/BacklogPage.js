@@ -1,18 +1,21 @@
 import React from 'react';
-import { Match } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 import { Grid } from 'react-bootstrap'
 import OrgSelector from './OrgSelector'
 import TeamSelector from './TeamSelector'
 import TeamIssues from './TeamIssues'
 
-const BacklogPage = ({pathname}) => (
+const BacklogPage = ({path}) => {
+  return (
   <Grid>
-    <Match pattern={`${pathname}/:organisation/:teamId/:milestoneName`} component={TeamIssues} />
-    <Match pattern={`${pathname}/:organisation/:teamId`} component={TeamIssues} />
-    <Match pattern={`${pathname}/:organisation`} exactly component={TeamSelector} />
+  <Switch>
+    <Route path={`${path}/:organisation/:teamId/:milestoneName`} component={TeamIssues} />
+    <Route path={`${path}/:organisation/:teamId`} component={TeamIssues} />
+    <Route path={`${path}/:organisation`} exact component={TeamSelector} />
 
-    <Match pattern={pathname} exactly component={OrgSelector} />
+    <Route component={OrgSelector} />
+    </Switch>
   </Grid>
-)
+)}
 
 export default BacklogPage;

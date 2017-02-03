@@ -1,26 +1,39 @@
 import React from 'react'
 import _ from "lodash"
-import { Grid, PageHeader, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
-import { Match, Miss, Link } from 'react-router';
+import { Grid, PageHeader, ListGroup, Panel } from 'react-bootstrap'
+import { Route, Switch, Link } from 'react-router-dom';
 import Requests from './Requests'
 
 const findProject = (projects, params) => {
   return _.find(projects, p => p.organisation === params.organisation && p.repository === params.repo && p.label === params.label) || {}
 }
 
-const RequestsPage = ({ pathname, ...rest }) => rest.projects.length > 0 && (
+const RequestsPage = ({ match, ...rest }) => rest.projects.length > 0 && (
   <div>
-    <Match
-      pattern={`${pathname}/:organisation/:repo/:label`}
-      render={(props) => (
-        <Requests
-          key={`${pathname}/:organisation/:repo/:label`}
+    <Switch>
+      <Route
+        path={`${match.path}/:organisation/:repo/:label`}
+        render={(props) => (
+          <Requests
+            key={`${match.path}/:organisation/:repo/:label`}
+            {...props}
+            isAdmin={rest.isAdmin}
+            userProfile={rest.userProfile}
+            project={findProject(rest.projects, props.match.params)} />
+        )}
+        />
+      <Route render={(props) => (
+        <RequestsPageHome
           {...props}
           isAdmin={rest.isAdmin}
           userProfile={rest.userProfile}
-          project={findProject(rest.projects, props.params)} />
-      )} />
-    <Miss render={(props) => <RequestsPageHome {...props} isAdmin={rest.isAdmin} userProfile={rest.userProfile} projects={rest.projects} groups={rest.groups} />} />
+          projects={rest.projects}
+          groups={rest.groups}
+          />
+      )}
+        />
+      />
+    </Switch>
   </div>
 )
 
@@ -44,13 +57,12 @@ const ProjectGroup = (props) => (
     {props.description && props.description}
     <ListGroup fill>
       {props.projects.map(p => (
-        <Link key={p.label} to={`/requests/${p.organisation}/${p.repository}/${p.label}`}>{
-          ({isActive, location, href, onClick, transition}) =>
-            <ListGroupItem onClick={onClick} href={href}>
-              {p.name}
-            </ListGroupItem>
-        }</Link>
-      )
+        <Link
+          key={p.label}
+          to={`/requests/${p.organisation}/${p.repository}/${p.label}`}
+          className="list-group-item"
+          >{p.name}
+        </Link>)
       )}
     </ListGroup>
   </Panel>

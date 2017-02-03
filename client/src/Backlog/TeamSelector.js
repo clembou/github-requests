@@ -1,6 +1,6 @@
 import React from 'react'
-import { PageHeader, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { PageHeader, Panel, ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import client from '../shared/githubClient';
 import { Loading } from '../shared/Loading'
 
@@ -17,7 +17,7 @@ class TeamSelector extends React.Component {
   }
 
   getTeamsInOrganisation() {
-    const org = client.gh.getOrganization(this.props.params.organisation);
+    const org = client.gh.getOrganization(this.props.match.params.organisation);
     org.getTeams()
       .then(resp => {
         this.setState({ teams: resp.data });
@@ -27,15 +27,12 @@ class TeamSelector extends React.Component {
   render() {
     const {pathname} = this.props.location
     const content = this.state.teams.length > 0 ? (
-      <Panel collapsible defaultExpanded header={`Teams in ${this.props.params.organisation}`}>
+      <Panel collapsible defaultExpanded header={`Teams in ${this.props.match.params.organisation}`}>
         <ListGroup fill>
           {this.state.teams.map(team => (
-            <Link key={team.id} to={`${pathname}/${team.id}`}>{
-              ({isActive, location, href, onClick, transition}) =>
-                <ListGroupItem onClick={onClick} href={href}>
-                  {team.name}
-                </ListGroupItem>
-            }</Link>
+            <Link key={team.id} to={`${pathname}/${team.id}`} className="list-group-item">
+              {team.name}
+            </Link>
           )
           )}
         </ListGroup>

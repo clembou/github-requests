@@ -1,6 +1,20 @@
 import React from 'react'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
+import { Route, Link } from 'react-router-dom'
+
+const MenuLink = ({ label, to, activeOnlyWhenExact }) => (
+  <Route path={to} exact={activeOnlyWhenExact} children={({ match }) => (
+    <li className={match ? 'active' : ''}>
+      <Link to={to}>{label}</Link>
+    </li>
+  )} />
+)
+
+const MenuItemLink = ({ label, to, active }) => (
+  <li>
+    <Link to={to}>{label}</Link>
+  </li>
+)
 
 const AppNav = (props) => (
   <Navbar inverse fixedTop>
@@ -12,15 +26,9 @@ const AppNav = (props) => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <Link to="/requests">{
-          ({isActive, location, href, onClick, transition}) =>
-            <NavItem onClick={onClick} href={href} active={isActive}>Requests</NavItem>
-        }</Link>
+        <MenuLink activeOnlyWhenExact={true} to="/requests" label="Requests" />
         {(props.isAuthenticated && props.isAdmin) && (
-          <Link to="/backlog">{
-            ({isActive, location, href, onClick, transition}) =>
-              <NavItem onClick={onClick} href={href} active={isActive}>Backlog</NavItem>
-          }</Link>
+          <MenuLink activeOnlyWhenExact={true} to="/backlog" label="Backlog" />
         )}
       </Nav>
       <Nav pullRight>
@@ -33,15 +41,12 @@ const AppNav = (props) => (
               </MenuItem>
             )}
             {(props.isAuthenticated && props.isAdmin == null) && (
-              <Link to="/admin-consent">{
-                ({isActive, location, href, onClick, transition}) =>
-                  <MenuItem onClick={onClick} href={href} active={isActive}>Enable admin features</MenuItem>
-              }</Link>
+              <MenuItemLink to="/admin-consent" label="Enable admin features" />
             )}
             {(process.env.NODE_ENV !== 'production') &&
               <MenuItem onClick={() => props.onToggleAdmin()}>Toggle Admin</MenuItem>}
             {(process.env.NODE_ENV !== 'production') && <MenuItem divider />}
-            <Link to="/signout">{({ href, onClick, ...rest}) =>  <MenuItem onClick={onClick} href={href}>Sign Out</MenuItem>}</Link>
+            <MenuItemLink to="/signout" label="Sign Out" />
           </NavDropdown>
         )}
       </Nav>
