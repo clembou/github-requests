@@ -145,7 +145,7 @@ Requests.defaultProps = {
 export default Requests
 
 const RequestList = props => {
-  const header = <span>{props.issues.length} {props.shown} issues <a href='#' className="text pull-right" onClick={props.onVisibilityToggle}>Show {props.hidden} issues</a></span>
+  const header = <span>{props.issues.length} {props.shown} issues <a role="button" className="text pull-right" onClick={props.onVisibilityToggle}>Show {props.hidden} issues</a></span>
 
   return (
     <Panel defaultExpanded header={header} bsStyle="default">
