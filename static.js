@@ -1,5 +1,5 @@
-var path = require('path');
-var express = require('express');
+const path = require('path');
+const express = require('express');
 
 module.exports = function (app) {
   // Serve static assets

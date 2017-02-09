@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 const processIssues = (action, issue, projectName, requestLink) => {
   switch (action) {

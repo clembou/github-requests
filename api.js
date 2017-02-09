@@ -5,11 +5,11 @@ const url = require('url');
 const request = require('request');
 const passport = require('passport');
 const config = require('./config');
-var bodyParser = require('body-parser');
-var helper = require('sendgrid').mail;
-var sg = require('sendgrid')(config.app.sendGridApiKey);
-var requestUtils = require('./client/src/shared/requestUtils');
-var notifications = require('./notifications');
+const bodyParser = require('body-parser');
+const helper = require('sendgrid').mail;
+const sg = require('sendgrid')(config.app.sendGridApiKey);
+const requestUtils = require('./client/src/shared/requestUtils');
+const notifications = require('./notifications');
 
 module.exports = function (app) {
 

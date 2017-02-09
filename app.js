@@ -1,14 +1,14 @@
-var FileStreamRotator = require('file-stream-rotator')
-var express = require('express')
-var fs = require('fs')
-var morgan = require('morgan')
-var path = require('path')
-var passport = require('passport');
-var cors = require('cors');
-var OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
+const FileStreamRotator = require('file-stream-rotator')
+const express = require('express')
+const fs = require('fs')
+const morgan = require('morgan')
+const path = require('path')
+const passport = require('passport');
+const cors = require('cors');
+const OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
 const config = require('./config');
 
-var app = express()
+const app = express()
 
 app.use(cors())
 
@@ -19,13 +19,13 @@ passport.use(new OIDCBearerStrategy(config.azure, function (token, done) {
   return done(null, token, null);
 }));
 
-var logDirectory = path.join(__dirname, 'log')
+const logDirectory = path.join(__dirname, 'log')
 
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
 // create a rotating write stream
-var accessLogStream = FileStreamRotator.getStream({
+const accessLogStream = FileStreamRotator.getStream({
   date_format: 'YYYYMMDD',
   filename: path.join(logDirectory, 'access-%DATE%.log'),
   frequency: 'daily',
