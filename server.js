@@ -1,5 +1,12 @@
 'use strict';
-require('dotenv').config({path: './client/.env'})
+const path = require('path');
+const fs = require('fs');
+
+const envPath = path.resolve(__dirname, 'client', '.env')
+if (fs.existsSync(envPath)) {
+    require('dotenv').config({path: envPath})
+}
+
 const app = require('./app');
 
 // remove the automatically added `X-Powered-By` header
