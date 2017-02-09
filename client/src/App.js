@@ -1,7 +1,5 @@
 import React from 'react'
-import Match from 'react-router/Match'
-import Miss from 'react-router/Miss'
-import Redirect from 'react-router/Redirect'
+import { Route, Redirect, Switch } from 'react-router-dom'
 import moment from 'moment'
 import BacklogPage from './Backlog/BacklogPage'
 import RequestsPage from './Requests/RequestsPage'
@@ -41,7 +39,7 @@ class App extends React.Component {
       githubClient.authenticate({ pathname: state })
     else {
       githubClient.setUpProxy(azureClient.idToken)
-      this.context.router.transitionTo(state)
+      this.context.router.push(state)
     }
   }
 
@@ -51,7 +49,7 @@ class App extends React.Component {
       githubClient.gh.getUser().getProfile().then(resp => {
         this.setState({ githubUserProfile: resp.data })
       });
-    this.context.router.transitionTo(state)
+    this.context.router.push(state)
   }
 
   signOut = () => {
@@ -78,7 +76,7 @@ class App extends React.Component {
     if (this.state.isAuthenticated) {
       // Azure tokens are only valid for an hour.
       // The easiest for now is just to log people out when the token expires
-      setTimeout(() => this.context.router.transitionTo('/signout'), azureClient.tokenValidUntil.diff(moment()))
+      setTimeout(() => this.context.router.push('/signout'), azureClient.tokenValidUntil.diff(moment()))
 
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data })
@@ -115,34 +113,36 @@ class App extends React.Component {
           githubUserProfile={this.state.githubUserProfile}
           onToggleAdmin={() => this.setState({ isAdmin: !this.state.isAdmin })} />
 
-        <Match exactly pattern="/" render={() => <Redirect to="/requests" />} />
-        <MatchWhenGithubAuthorized pattern="/backlog" component={BacklogPage} />
+        <Switch>
+          <Route exact path="/" render={() => <Redirect to="/requests" />} />
+          <MatchWhenGithubAuthorized path="/backlog" component={BacklogPage} />
 
 
-        <MatchWhenAuthorized
-          pattern="/requests"
-          component={RequestsPage}
-          isAuthenticated={this.state.isAuthenticated}
-          isAdmin={this.state.isAdmin}
-          userProfile={this.state.userProfile}
-          projects={this.state.projects}
-          groups={this.state.groups}
-          />
+          <MatchWhenAuthorized
+            path="/requests"
+            component={RequestsPage}
+            isAuthenticated={this.state.isAuthenticated}
+            isAdmin={this.state.isAdmin}
+            userProfile={this.state.userProfile}
+            projects={this.state.projects}
+            groups={this.state.groups}
+            />
 
-        <MatchWhenAuthorized
-          pattern="/admin-consent"
-          component={AdminConsent}
-          isAuthenticated={this.state.isAuthenticated}
-          isAdmin={this.state.isAdmin}
-          userProfile={this.state.userProfile} />
+          <MatchWhenAuthorized
+            path="/admin-consent"
+            component={AdminConsent}
+            isAuthenticated={this.state.isAuthenticated}
+            isAdmin={this.state.isAdmin}
+            userProfile={this.state.userProfile} />
 
-        <Match pattern="/login/github" component={GithubLogin} />
-        <Match pattern="/login/azure" component={AzureLogin} />
-        <Match pattern="/signout" render={(props) => <SignOut {...props} onSignOut={this.signOut} />} />
+          <Route path="/login/github" component={GithubLogin} />
+          <Route path="/login/azure" component={AzureLogin} />
+          <Route path="/signout" render={(props) => <SignOut {...props} onSignOut={this.signOut} />} />
 
-        <Match exactly pattern="/callback/github" render={(props) => <GithubLogin {...props} onAuth={this.handleGithubAuth} />} />
-        <Match exactly pattern="/callback/azure" render={(props) => <AzureLogin {...props} onAuth={this.handleAuth} />} />
-        <Miss component={NoMatch} />
+          <Route exact path="/callback/github" render={(props) => <GithubLogin {...props} onAuth={this.handleGithubAuth} />} />
+          <Route exact path="/callback/azure" render={(props) => <AzureLogin {...props} onAuth={this.handleAuth} />} />
+          <Route component={NoMatch} />
+        </Switch>
       </div>
     )
   }

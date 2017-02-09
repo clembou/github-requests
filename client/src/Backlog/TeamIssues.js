@@ -45,7 +45,7 @@ class TeamIssues extends Component {
   }
 
   getTeamRepos() {
-    ghClient.gh.getTeam(this.props.params.teamId).listRepos()
+    ghClient.gh.getTeam(this.props.match.params.teamId).listRepos()
       .then(resp => {
         this.setState({ repos: _.filter(resp.data, { permissions: { admin: true }, fork: false }) });
         this.getRepoIssues()
@@ -54,7 +54,7 @@ class TeamIssues extends Component {
 
   getRepoIssues() {
     Promise.all(this.state.repos.map(repo => {
-      return ghClient.gh.getIssues(this.props.params.organisation, repo.name)
+      return ghClient.gh.getIssues(this.props.match.params.organisation, repo.name)
         .listIssues()
     })).then(responses => {
       const issues = responses.map((r, i) => {

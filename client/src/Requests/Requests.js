@@ -1,6 +1,6 @@
 import React from 'react'
-import { Grid, Button, PageHeader, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
-import { Match, Miss, Link, Redirect } from 'react-router';
+import { Grid, Button, PageHeader, Panel, ListGroup, Label } from 'react-bootstrap'
+import { Route, Switch, Link, Redirect } from 'react-router-dom';
 import _ from 'lodash'
 import { Loading } from '../shared/Loading'
 import ghClient from '../shared/githubClient'
@@ -25,9 +25,10 @@ class Requests extends React.Component {
   }
 
   componentDidMount() {
+    const {params} = this.props.match
     const labels = ['user request']
-    if (this.props.params.label !== this.props.params.repo)
-      labels.push(this.props.params.label)
+    if (params.label !== params.repo)
+      labels.push(params.label)
 
     if (this.props.project && !_.isEmpty(this.props.project)) {
       this.getIssues({ labels: labels.join(), state: 'all' })
@@ -38,7 +39,7 @@ class Requests extends React.Component {
     this.setState({
       isLoading: true
     });
-    return ghClient.gh.getIssues(this.props.params.organisation, this.props.params.repo)
+    return ghClient.gh.getIssues(this.props.match.params.organisation, this.props.match.params.repo)
       .listIssues(issueOptions)
       .then(response => {
         this.setState({
@@ -58,7 +59,7 @@ class Requests extends React.Component {
   }
 
   render() {
-    const {pathname, params, ...rest} = this.props
+    const {match: {path, params}, ...rest} = this.props
 
     if (rest.project && _.isEmpty(rest.project)) {
       //url parameters did not match the list of configured projects.
@@ -66,22 +67,23 @@ class Requests extends React.Component {
     }
 
     const newRequestButton = params && (!params.issueNumber || params.issueNumber !== 'new') && (
-      <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}/new`}>{
-        ({isActive, location, href, onClick, transition}) =>
-          <Button onClick={onClick} bsStyle="default" bsSize="large">
-            New Request
-              </Button>
-      }</Link>
+      <Button
+        onClick={() => this.props.push(`/requests/${params.organisation}/${params.repo}/${params.label}/new`)}
+        bsStyle="default"
+        bsSize="large"
+        >
+        New Request
+    </Button>
     )
 
     return (
       <Grid>
         <div>
           <PageHeader>
-            <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={({params}) => (
+            <Route path={`/requests/:organisation/:repo/:label/:issueNumber`} exact render={({match: {params}}) => (
               <Link to={`/requests/${params.organisation}/${params.repo}/${params.label}`}><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>
             )} />
-            <Match pattern={`/requests/:organisation/:repo/:label`} exactly render={() => <Link to="/requests"><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
+            <Route path={`/requests/:organisation/:repo/:label`} exact render={() => <Link to="/requests"><small className="back-link-container"><i className="fa fa-chevron-circle-left" /></small></Link>} />
             {}
             {this.props.project.name}
             <span className="pull-right">
@@ -98,9 +100,9 @@ class Requests extends React.Component {
             <Loading />
           ) : (
               <div>
-                <Match pattern={`/requests/:organisation/:repo/:label/:issueNumber`} exactly render={(matchProps) => (
-                  <div>
-                    <Match pattern={`${pathname}/new`} exactly render={(childProps) => (
+                <Route path={`/requests/:organisation/:repo/:label/:issueNumber`} exact render={(matchProps) => (
+                  <Switch>
+                    <Route path={`${path}/new`} exact render={(childProps) => (
                       <NewRequest
                         {...matchProps}
                         isAdmin={rest.isAdmin}
@@ -108,17 +110,17 @@ class Requests extends React.Component {
                         project={rest.project}
                         onIssueCreated={this.getIssues} />
                     )} />
-                    <Miss render={() => (
+                    <Route render={() => (
                       <RequestDetails
                         {...matchProps}
                         isAdmin={rest.isAdmin}
                         userProfile={rest.userProfile}
                         project={rest.project}
-                        issue={this.findIssue(matchProps.params.issueNumber)} />
+                        issue={this.findIssue(matchProps.match.params.issueNumber)} />
                     )} />
-                  </div>
+                  </Switch>
                 )} />
-                <Match pattern={pathname} exactly render={() => (
+                <Route path={path} exact render={() => (
                   <RequestList
                     {...this.props}
                     isAdmin={rest.isAdmin}
@@ -143,20 +145,19 @@ Requests.defaultProps = {
 export default Requests
 
 const RequestList = props => {
-  const header = <span>{props.issues.length} {props.shown} issues <a href='#' className="text pull-right" onClick={props.onVisibilityToggle}>Show {props.hidden} issues</a></span>
+  const header = <span>{props.issues.length} {props.shown} issues <a role="button" className="text pull-right" onClick={props.onVisibilityToggle}>Show {props.hidden} issues</a></span>
 
   return (
     <Panel defaultExpanded header={header} bsStyle="default">
       {props.issues && props.issues.length > 0 ? (
         <ListGroup fill>
           {props.issues.map(i => (
-            <Link key={i.number} to={`${props.pathname}/${i.number}`}>{
-              ({isActive, location, href, onClick, transition}) => (
-                <ListGroupItem onClick={onClick} href={href}>
-                  <IssueInfo issue={i} />
-                </ListGroupItem>
-              )
-            }</Link>
+            <Link
+              key={i.number}
+              to={`${props.location.pathname}/${i.number}`}
+              className="list-group-item"
+              ><IssueInfo issue={i} />
+            </Link>
           )
           )}
         </ListGroup>) :

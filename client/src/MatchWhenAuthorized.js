@@ -1,11 +1,10 @@
 import React from 'react'
-import Redirect from 'react-router/Redirect'
-import Match from 'react-router/Match'
+import {Route, Redirect} from 'react-router-dom'
 import githubClient from './shared/githubClient'
 
 
 export const MatchWhenGithubAuthorized = ({ component: Component, ...rest }) => (
-  <Match {...rest} render={props => (
+  <Route {...rest} render={props => (
     githubClient.isAuthenticated ? (
       <Component {...props} />
     ) : (
@@ -18,7 +17,7 @@ export const MatchWhenGithubAuthorized = ({ component: Component, ...rest }) => 
 )
 
 export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isAdmin, userProfile, projects, groups, ...rest }) => (
-  <Match {...rest} render={props => (
+  <Route {...rest} render={props => (
     isAuthenticated ? (
       <Component {...props} 
       isAuthenticated={isAuthenticated}
@@ -35,7 +34,3 @@ export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isA
       )
   )} />
 )
-
-// export const MatchWithUserInfo = ({ component: Component, isAdmin, userProfile, ...rest }) => (
-//   <Match {...rest} render={props => <Component {...props} isAdmin={isAdmin} userProfile={userProfile} />} />
-// )

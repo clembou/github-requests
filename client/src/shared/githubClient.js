@@ -1,6 +1,6 @@
 import GitHub from 'github-api';
 import azureClient from './azureClient'
-import { checkStatus, parseJSON, getStandardHeaders } from './clientUtils.js';
+import { checkStatus, parseJSON, getStandardHeaders } from './clientUtils.js'
 
 class Client {
   constructor() {
@@ -39,17 +39,21 @@ class Client {
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&scope=read:org%20repo&state=${encodedState}`
   }
 
-  getToken(temporaryCode, state, callback) {
+  getToken(temporaryCode, state, successCallback, errorCallback) {
     fetch(`${this.tokenProxyUrl}/${temporaryCode}`, { headers: getStandardHeaders(azureClient.idToken) })
       .then(checkStatus)
       .then(parseJSON)
       .then(json => {
         if (!json.error) {
           //access_token, token_type, scope
+          if (json.scope.indexOf("read:org") === -1 || json.scope.indexOf("repo") === -1){
+            errorCallback('The received Github token does not have the required Scopes. Did you grant  the app access to your repositories and organisations?')
+          }
           this.setUp(json.access_token)
-          callback(this.isAuthenticated, state)
+          successCallback(this.isAuthenticated, state)
         } else {
-          throw new Error('Problem while attempting to retrieve token from temporary access code');
+          const msg = 'Problem while attempting to retrieve token from temporary access code';
+          errorCallback(msg);
         }
       });
   }

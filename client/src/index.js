@@ -8,7 +8,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Router from 'react-router/BrowserRouter';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 
 // use default bootstrap theme unless a custom one is provided by the user
