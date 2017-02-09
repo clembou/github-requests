@@ -1,4 +1,3 @@
-require('dotenv').config()
 var FileStreamRotator = require('file-stream-rotator')
 var express = require('express')
 var fs = require('fs')
