@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config()
+require('dotenv').config({path: './client/.env'})
 const app = require('./app');
 
 // remove the automatically added `X-Powered-By` header
