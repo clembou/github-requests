@@ -9,9 +9,9 @@ The app uses Azure Active Directory to authenticate users, and unlocks more func
 To enable this, you need to create  OAuth applications on Azure and Github, and pass the relevant parameters to the app (see below).
 
 ## Configure development environment
-to run this application, you need to provide secrets and constants as environment variables.
+to run this application, you need to provide secrets and constants as environment variables. An easy way to do this during development is to do it via a [`.env`](https://www.npmjs.com/package/dotenv) file. You will need to create the file in `./client/.env`.
 
-An easy way to do this during development is to do it via an `.env` file.
+in production, you will need to setup the environment variables before building and starting the application.
 
 See below for an example `.env` file containing the definition for all the variables needed by both the front end and back end code:
 ```
@@ -36,9 +36,6 @@ REACT_APP_APPLICATION_STYLES_PATH='../../app_data/index.css'
 # Front end in development only
 HTTPS=true
 ```
-For the time being, you will need to copy your .env file to `client/.env` manually before starting the development server, since the front end code expect to see its own .env file.
-
-in production, you will need to setup the environment variables before building and starting the application.
 
 # Install
 run `npm install` to install the required back end and front end dependencies.
