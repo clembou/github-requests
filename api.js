@@ -25,12 +25,14 @@ module.exports = function (app) {
 
 
   }
+
   function loadAppData() {
     return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
   }
 
   const appData = loadAppData();
 
+  // Utility functions
   const sendMail = (to, title, body) => {
     const from_email = new helper.Email(config.app.emailSender);
     const to_email = new helper.Email(to);
@@ -47,7 +49,6 @@ module.exports = function (app) {
     return sg.API(request)
   }
 
-  // Utility functions
   const getProxyRequestOptions = url => (
     {
       url: GITHUB_API_ROOT + url.replace('/api', ''),
@@ -76,7 +77,7 @@ module.exports = function (app) {
     }
   };
 
-  const validateRepository = (organisation, repo) => {
+  const validateRepository = (organisation, repo, projects) => {
     if (projects.filter(p => p.organisation == organisation && p.repository == repo).length == 0) {
       console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
       return false;
@@ -103,7 +104,7 @@ module.exports = function (app) {
 
   // proxy to github api end points
   app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    if (!validateRepository(req.params.organisation, req.params.repo))
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
     console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
@@ -124,7 +125,7 @@ module.exports = function (app) {
   });
 
   app.get('/api/repos/:organisation/:repo/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    if (!validateRepository(req.params.organisation, req.params.repo))
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
     const r = request(getProxyRequestOptions(req.url))
@@ -133,7 +134,7 @@ module.exports = function (app) {
   });
 
   app.post('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function (req, res) {
-    if (!validateRepository(req.params.organisation, req.params.repo))
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
     console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
