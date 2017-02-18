@@ -132,6 +132,6 @@ class RequestDetails extends React.Component {
   }
 }
 
-const LinkIfAdmin = props => props.isAdmin ? <a href={props.href} target="_blank">{props.text}</a> : props.text;
+const LinkIfAdmin = props => props.isAdmin ? <a href={props.href} target="_blank">{props.text}</a> : <span>{props.text}</span>;
 
 export default RequestDetails;
