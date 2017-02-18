@@ -113,7 +113,7 @@ class Requests extends React.Component {
         </div>
         {this.state.isLoading
           ? <Loading />
-          : <div>
+          : <Switch>
               <Route
                 path={`/requests/:organisation/:repo/:label/:issueNumber`}
                 exact
@@ -147,8 +147,6 @@ class Requests extends React.Component {
                 )}
               />
               <Route
-                path={path}
-                exact
                 render={() => (
                   <RequestList
                     {...this.props}
@@ -162,7 +160,7 @@ class Requests extends React.Component {
                   />
                 )}
               />
-            </div>}
+            </Switch>}
       </Grid>
     );
   }
