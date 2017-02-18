@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 
-module.exports = function (app) {
+module.exports = function(app) {
   // Serve static assets
   app.use(express.static(path.resolve(__dirname, 'client', 'build')));
 
@@ -9,4 +9,4 @@ module.exports = function (app) {
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
-}
+};

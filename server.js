@@ -2,9 +2,9 @@
 const path = require('path');
 const fs = require('fs');
 
-const envPath = path.resolve(__dirname, 'client', '.env')
+const envPath = path.resolve(__dirname, 'client', '.env');
 if (fs.existsSync(envPath)) {
-    require('dotenv').config({path: envPath})
+  require('dotenv').config({ path: envPath });
 }
 
 const app = require('./app');
@@ -13,8 +13,7 @@ const app = require('./app');
 app.disable('x-powered-by');
 
 // this needs to be added first so that headers are added to all subsequent responses
-app.use(function (req, res, next) {
-
+app.use(function(req, res, next) {
   // disable caching
   res.header('Cache-Control', 'no-cache, must-revalidate, max-age=0');
   res.header('Pragma', 'no-cache');
