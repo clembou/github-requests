@@ -1,8 +1,5 @@
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap';
-
-import ghClient from '../shared/githubClient';
-import { quoteRequestBody } from '../shared/requestUtils';
+import { FormGroup, FormControl, Button, HelpBlock, Panel } from 'react-bootstrap';
 import MarkdownBlock from '../shared/MarkdownBlock';
 
 class NewRequestComment extends React.Component {
