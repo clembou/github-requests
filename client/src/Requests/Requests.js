@@ -104,7 +104,7 @@ class Requests extends React.Component {
               {newRequestButton}
               {' '}
               {rest.isAdmin &&
-                <a href={`http://github.com/${params.organisation}/${params.repo}`} target="_blank">
+                <a href={`http://github.com/${params.organisation}/${params.repo}/issues`} target="_blank">
                   <i className="fa fa-github fa-lg" />
                 </a>}
               {' '}
