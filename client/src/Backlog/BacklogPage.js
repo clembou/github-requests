@@ -5,13 +5,13 @@ import OrgSelector from './OrgSelector'
 import TeamSelector from './TeamSelector'
 import TeamIssues from './TeamIssues'
 
-const BacklogPage = ({path}) => {
+const BacklogPage = ({location: {pathname}}) => {
   return (
   <Grid>
   <Switch>
-    <Route path={`${path}/:organisation/:teamId/:milestoneName`} component={TeamIssues} />
-    <Route path={`${path}/:organisation/:teamId`} component={TeamIssues} />
-    <Route path={`${path}/:organisation`} exact component={TeamSelector} />
+    <Route path={`/backlog/:organisation/:teamId/:milestoneName`} component={TeamIssues} />
+    <Route path={`/backlog/:organisation/:teamId`} component={TeamIssues} />
+    <Route path={`/backlog/:organisation`} exact component={TeamSelector} />
 
     <Route component={OrgSelector} />
     </Switch>

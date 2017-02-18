@@ -26,7 +26,7 @@ const Tag = props => {
   if (label.name === "enhancement") return <Label bsStyle="primary">{label.name}</Label>
   if (label.name === "user request") return <Label bsStyle="success">{label.name}</Label>
 
-  return <Label style={{ backgroundColor: label.color }}>{label.name}</Label>
+  return <Label style={{ backgroundColor: `#${label.color}` }}>{label.name}</Label>
 }
 
 class TeamIssues extends Component {
