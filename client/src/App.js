@@ -10,7 +10,7 @@ import GithubLogin from './GithubLogin';
 import SignOut from './SignOut';
 import githubClient from './shared/githubClient';
 import azureClient from './shared/azureClient';
-import { MatchWhenAuthorized, MatchWhenGithubAuthorized } from './MatchWhenAuthorized';
+import { AuthenticatedRoute, GithubAuthenticatedRoute } from './AuthenticatedRoute';
 import AppNav from './AppNav';
 import { checkStatus, parseJSON, getStandardHeaders } from './shared/clientUtils';
 
@@ -66,7 +66,7 @@ class App extends React.Component {
   componentDidMount() {
     if (this.state.isAuthenticated && azureClient.tokenValidUntil.diff(moment()) < 0) {
       // An outdated token from a previous session is currently stored in local storage.
-      // Delete it by calling signOut() , MatchWhenAuthorized will then kick off auth again
+      // Delete it by calling signOut() , AuthenticatedRoute will then kick off auth again
       // and redirect to the correct page
       this.signOut();
       return;
@@ -115,9 +115,9 @@ class App extends React.Component {
 
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/requests" />} />
-          <MatchWhenGithubAuthorized path="/backlog" component={BacklogPage} />
+          <GithubAuthenticatedRoute path="/backlog" component={BacklogPage} />
 
-          <MatchWhenAuthorized
+          <AuthenticatedRoute
             path="/requests"
             component={RequestsPage}
             isAuthenticated={this.state.isAuthenticated}
@@ -127,7 +127,7 @@ class App extends React.Component {
             groups={this.state.groups}
           />
 
-          <MatchWhenAuthorized
+          <AuthenticatedRoute
             path="/admin-consent"
             component={AdminConsent}
             isAuthenticated={this.state.isAuthenticated}

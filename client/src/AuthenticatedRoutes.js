@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import githubClient from './shared/githubClient';
 
-export const MatchWhenGithubAuthorized = ({ component: Component, ...rest }) => (
+export const GithubAuthenticatedRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => githubClient.isAuthenticated
@@ -16,7 +16,7 @@ export const MatchWhenGithubAuthorized = ({ component: Component, ...rest }) => 
   />
 );
 
-export const MatchWhenAuthorized = ({ component: Component, isAuthenticated, isAdmin, userProfile, projects, groups, ...rest }) => (
+export const AuthenticatedRoute = ({ component: Component, isAuthenticated, isAdmin, userProfile, projects, groups, ...rest }) => (
   <Route
     {...rest}
     render={props => isAuthenticated
