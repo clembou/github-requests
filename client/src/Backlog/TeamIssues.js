@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import ghClient from '../shared/githubClient';
-import { Grid, PageHeader, Label } from 'react-bootstrap';
+import { Grid, PageHeader } from 'react-bootstrap';
 import { Loading } from '../shared/Loading';
+import { IssueTags } from '../shared/IssueHelpers';
 import moment from 'moment';
 
 const dateFormatter = (cell, row, enumObject, index) => cell.fromNow();
@@ -15,19 +16,9 @@ const IssueInfo = props => (
   <span>
     <a href={props.url} target="_blank"><i className="fa fa-github fa-lg" /> {props.title}</a>
     {' '}
-    {props.labels.map(l => <span><Tag key={l.name} label={l} />{' '}</span>)}
+    <IssueTags labels={props.labels} />
   </span>
 );
-
-const Tag = props => {
-  const { label } = props;
-
-  if (label.name === 'bug') return <Label bsStyle="danger">{label.name}</Label>;
-  if (label.name === 'enhancement') return <Label bsStyle="primary">{label.name}</Label>;
-  if (label.name === 'user request') return <Label bsStyle="success">{label.name}</Label>;
-
-  return <Label style={{ backgroundColor: `#${label.color}` }}>{label.name}</Label>;
-};
 
 class TeamIssues extends Component {
   constructor() {
