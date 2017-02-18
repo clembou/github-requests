@@ -13,21 +13,21 @@ const quoteRequestBody = function(body, userinfo) {
 ${body}`;
 };
 
-const getCreator = function(issue) {
-  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
-    return parseUserInfoFromIssueBody(issue.body);
+const getCreator = function(issueOrComment) {
+  if (issueOrComment.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issueOrComment.body.startsWith('> From')) {
+    return parseUserInfoFromIssueBody(issueOrComment.body);
   } else {
-    return issue.user;
+    return issueOrComment.user;
   }
 };
 
-const getContent = function(issue) {
-  if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
-    let lines = issue.body.split('\n');
+const getContent = function(issueOrComment) {
+  if (issueOrComment.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issueOrComment.body.startsWith('> From')) {
+    let lines = issueOrComment.body.split('\n');
     lines.splice(0, 2);
     return lines.join('\n');
   } else {
-    return issue.body;
+    return issueOrComment.body;
   }
 };
 

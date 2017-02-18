@@ -2,18 +2,24 @@ import React from 'react';
 import { Panel, Label } from 'react-bootstrap';
 import { includes, upperFirst } from 'lodash';
 import MarkdownBlock from '../shared/MarkdownBlock';
-import { getContent } from '../shared/requestUtils';
+import { getContent, quoteRequestBody } from '../shared/requestUtils';
 import ghClient from '../shared/githubClient';
 import { IssueTags, CreatedBy } from '../shared/IssueHelpers';
 import { Loading } from '../shared/Loading';
+import NewRequestComment from './NewRequestComment';
 
 class RequestDetails extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       isLoading: true,
-      comments: []
+      comments: [],
+      newComment: '',
+      commentSubmissionInProgress: false,
+      errorMessage: ''
     };
+    this.handleNewCommentText = this.handleNewCommentText.bind(this);
+    this.handleNewCommentSubmission = this.handleNewCommentSubmission.bind(this);
   }
 
   getIssueComments() {
@@ -30,6 +36,41 @@ class RequestDetails extends React.Component {
         });
       })
       .catch(err => console.log(err));
+  }
+
+  submitNewComment() {
+    return ghClient.gh
+      .getIssues(this.props.match.params.organisation, this.props.match.params.repo)
+      .createIssueComment(
+        parseInt(this.props.match.params.issueNumber, 10),
+        this.props.isAdmin ? this.state.newComment : quoteRequestBody(this.state.newComment, this.props.userProfile)
+      );
+  }
+
+  handleNewCommentText(e) {
+    this.setState({ newComment: e.target.value });
+  }
+
+  handleNewCommentSubmission() {
+    this.setState({
+      commentSubmissionInProgress: true
+    });
+    this
+      .submitNewComment(this.state.newComment)
+      .then(comment => {
+        this.setState({
+          newComment: '',
+          comments: [...this.state.comments, comment.data],
+          commentSubmissionInProgress: false
+        });
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          commentSubmissionInProgress: false,
+          errorMessage: 'A problem occured while attempting to post your comment. Please try again.'
+        });
+      });
   }
 
   componentDidMount() {
@@ -79,6 +120,13 @@ class RequestDetails extends React.Component {
                 <MarkdownBlock body={getContent(comment)} />
               </Panel>
             ))}
+        <NewRequestComment
+          newComment={this.state.newComment}
+          onCommentUpdate={this.handleNewCommentText}
+          onSubmit={this.handleNewCommentSubmission}
+          submissionInProgress={this.state.commentSubmissionInProgress}
+          userName={this.props.userProfile.name}
+        />
       </div>
     );
   }
