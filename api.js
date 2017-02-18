@@ -106,16 +106,15 @@ module.exports = function(app) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
-    console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
     const r = request(getProxyRequestOptions(req.url));
-    console.log('Proxied request options: ', getProxyRequestOptions(req.url));
+    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
     req.pipe(r, genericErrorHandler).on('response', response => rewriteResponseHeaders(req, response)).pipe(res);
   });
 
   app.get('/api/repositories/:repoId/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
     console.log(`going through pages on repository ${req.params.repoId}`);
     const r = request(getProxyRequestOptions(req.url));
-    console.log('Proxied request options: ', getProxyRequestOptions(req.url));
+    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
     req.pipe(r, genericErrorHandler).on('response', response => rewriteResponseHeaders(req, response)).pipe(res);
   });
 
@@ -124,7 +123,7 @@ module.exports = function(app) {
       res.status(403).send({ error: 'Invalid repository name' });
 
     const r = request(getProxyRequestOptions(req.url));
-    console.log('Proxied request options: ', getProxyRequestOptions(req.url));
+    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
@@ -133,6 +132,24 @@ module.exports = function(app) {
       res.status(403).send({ error: 'Invalid repository name' });
 
     console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
+    const r = request.post(getProxyRequestOptions(req.url));
+    req.pipe(r, genericErrorHandler).pipe(res);
+  });
+
+  app.get('/api/repos/:organisation/:repo/issues/:issueId/comments', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+      res.status(403).send({ error: 'Invalid repository name' });
+
+    const r = request(getProxyRequestOptions(req.url));
+    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
+    req.pipe(r, genericErrorHandler).pipe(res);
+  });
+
+  app.post('/api/repos/:organisation/:repo/issues/:issueId/comments', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+      res.status(403).send({ error: 'Invalid repository name' });
+
+    console.log(`adding comment on issue in repository ${req.params.organisation}/${req.params.repo}`);
     const r = request.post(getProxyRequestOptions(req.url));
     req.pipe(r, genericErrorHandler).pipe(res);
   });

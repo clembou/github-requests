@@ -4,10 +4,9 @@ import { Route, Switch, Link, Redirect } from 'react-router-dom';
 import _ from 'lodash';
 import { Loading } from '../shared/Loading';
 import ghClient from '../shared/githubClient';
-import { getCreator } from '../shared/requestUtils';
+import { CreatedBy } from '../shared/IssueHelpers';
 import NewRequest from './NewRequest';
 import RequestDetails from './RequestDetails';
-import moment from 'moment';
 
 const issueVisibilityText = showOpen => showOpen ? 'open' : 'closed';
 
@@ -19,7 +18,6 @@ class Requests extends React.Component {
       issues: [],
       showOpen: true
     };
-    this.getIssues = this.getIssues.bind(this);
     this.findIssue = this.findIssue.bind(this);
     this.toggleShowOpen = this.toggleShowOpen.bind(this);
   }
@@ -203,14 +201,10 @@ const RequestList = props => {
   );
 };
 
-const IssueInfo = props => (
+export const IssueInfo = props => (
   <span>
-    <strong>{props.issue.title} </strong>
-    <small className="text-muted">
-      {' '}submitted{' '}
-      <i>{moment(props.issue.created_at).fromNow()}</i>
-      {' '}by{' '}
-      <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i>
+    <strong>{props.issue.title}</strong>
+    <small className="text-muted"><CreatedBy issueOrComment={props.issue} />
     </small>
     <span className="text pull-right">{props.issue.labels.map(l => <Tag key={l.name} label={l} />)}</span>
   </span>
