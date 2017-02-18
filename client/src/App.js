@@ -10,7 +10,7 @@ import GithubLogin from './GithubLogin';
 import SignOut from './SignOut';
 import githubClient from './shared/githubClient';
 import azureClient from './shared/azureClient';
-import { AuthenticatedRoute, GithubAuthenticatedRoute } from './AuthenticatedRoute';
+import { AuthenticatedRoute, GithubAuthenticatedRoute } from './AuthenticatedRoutes';
 import AppNav from './AppNav';
 import { checkStatus, parseJSON, getStandardHeaders } from './shared/clientUtils';
 
