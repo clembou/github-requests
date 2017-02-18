@@ -17,7 +17,8 @@ export function parseJSON(response) {
 export function getStandardHeaders(bearerToken) {
   let headers = { 'Content-Type': 'application/json' };
 
-  if (bearerToken)
-    headers.Authorization = 'Bearer ' + bearerToken
+  if (bearerToken) {
+    headers.Authorization = 'Bearer ' + bearerToken;
+  }
   return headers;
 }

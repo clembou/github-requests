@@ -1,44 +1,47 @@
 const qs = require('qs');
 
-const quoteRequestBody = function (body, userinfo) {
+const quoteRequestBody = function(body, userinfo) {
   if (!(userinfo.name && userinfo.id && (userinfo.email || userinfo.upn)))
-    throw new Error(`User information must at least contain a name, an id, and either an email or upn property. The received value was ${JSON.stringify(userinfo)}`)
+    throw new Error(
+      `User information must at least contain a name, an id, and either an email or upn property. The received value was ${JSON.stringify(
+        userinfo
+      )}`
+    );
 
   return `> From **[${userinfo.name}](mailto:${userinfo.email})** ([info](/userinfo?${qs.stringify(userinfo)})):
 
-${body}`
-}
+${body}`;
+};
 
-const getCreator = function (issue) {
+const getCreator = function(issue) {
   if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
-    return parseUserInfoFromIssueBody(issue.body)
+    return parseUserInfoFromIssueBody(issue.body);
   } else {
-    return issue.user
+    return issue.user;
   }
-}
+};
 
-const getContent = function (issue) {
+const getContent = function(issue) {
   if (issue.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issue.body.startsWith('> From')) {
-    let lines = issue.body.split('\n')
-    lines.splice(0, 2)
-    return lines.join('\n')
+    let lines = issue.body.split('\n');
+    lines.splice(0, 2);
+    return lines.join('\n');
+  } else {
+    return issue.body;
   }
-  else {
-    return issue.body
-  }
-}
+};
 
 function parseUserInfoFromIssueBody(body) {
   // TODO a regex would be more elegant here
-  let encodedUserDetails = body.split('\n')[0]
-  encodedUserDetails = encodedUserDetails.split('([info](/userinfo?')[1]
-  encodedUserDetails = encodedUserDetails.split(')):')[0]
+  let encodedUserDetails = body.split('\n')[0];
+  encodedUserDetails = encodedUserDetails.split('([info](/userinfo?')[1];
+  encodedUserDetails = encodedUserDetails.split(')):')[0];
 
-  return qs.parse(encodedUserDetails)
+  return qs.parse(encodedUserDetails);
 }
 
 module.exports = {
   getCreator,
   getContent,
   quoteRequestBody
-}
+};

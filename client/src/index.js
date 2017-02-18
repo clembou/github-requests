@@ -1,7 +1,7 @@
 // Polyfill needed by ie 11
 import 'string.prototype.startswith';
 // ie 10
-import 'location-origin'
+import 'location-origin';
 
 import 'font-awesome/css/font-awesome.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -26,10 +26,9 @@ if (!process.env.REACT_APP_APPLICATION_STYLES_PATH) {
   require(`${process.env.REACT_APP_APPLICATION_STYLES_PATH}`);
 }
 
-ReactDOM.render((
+ReactDOM.render(
   <Router>
     <App />
-  </Router>
-),
+  </Router>,
   document.getElementById('root')
 );

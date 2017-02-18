@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import marked from 'marked';
 
 marked.setOptions({
@@ -12,9 +12,6 @@ marked.setOptions({
   smartypants: false
 });
 
-const MarkdownBlock = (props) => (
-  <div dangerouslySetInnerHTML={{ __html: marked(props.body) }} />
-)
+const MarkdownBlock = props => <div dangerouslySetInnerHTML={{ __html: marked(props.body) }} />;
 
 export default MarkdownBlock;
-

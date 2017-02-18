@@ -1,40 +1,38 @@
-import React from 'react'
-import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap'
+import React from 'react';
+import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap';
 
 import ghClient from '../shared/githubClient';
-import { quoteRequestBody } from '../shared/requestUtils'
-import MarkdownBlock from '../shared/MarkdownBlock'
-
+import { quoteRequestBody } from '../shared/requestUtils';
+import MarkdownBlock from '../shared/MarkdownBlock';
 
 class NewRequest extends React.Component {
   constructor(props, context) {
-    super(props, context)
+    super(props, context);
     this.state = {
       title: '',
       body: '',
       type: 'bug',
       submissionInProgress: false
-    }
-    this.handleSubmit = this.handleSubmit.bind(this)
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
-    e.preventDefault()
-    this.createIssue()
+    e.preventDefault();
+    this.createIssue();
   }
 
   getValidationState() {
-    const length = this.state.title.length;
-    if (length > 0) return 'success';
-    else return 'error';
+    return this.state.title.length > 0 ? 'success' : 'error';
   }
 
   createIssue() {
-    this.setState({ submissionInProgress: true })
+    this.setState({ submissionInProgress: true });
 
-    const labels = ['user request', this.state.type]
-    if (this.props.match.params.label !== this.props.match.params.repo)
-      labels.push(this.props.match.params.label)
+    const labels = ['user request', this.state.type];
+    if (this.props.match.params.label !== this.props.match.params.repo) {
+      labels.push(this.props.match.params.label);
+    }
 
     const issueData = {
       title: this.state.title,
@@ -42,33 +40,34 @@ class NewRequest extends React.Component {
       labels
     };
 
-    const issue = ghClient.gh.getIssues(this.props.match.params.organisation, this.props.match.params.repo)
+    const issue = ghClient.gh.getIssues(this.props.match.params.organisation, this.props.match.params.repo);
 
-    issue.createIssue(issueData).then(response => {
-      this.props.onIssueCreated()
-      this.context.router.push(`/requests/${this.props.match.params.organisation}/${this.props.match.params.repo}/${this.props.match.params.label}`)
-    }).catch(err => {
-      console.log(err)
-      this.setState({ submissionInProgress: false })
-    })
+    issue
+      .createIssue(issueData)
+      .then(response => {
+        this.props.onIssueCreated();
+        this.context.router.push(
+          `/requests/${this.props.match.params.organisation}/${this.props.match.params.repo}/${this.props.match.params.label}`
+        );
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ submissionInProgress: false });
+      });
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit} disabled={this.state.submissionInProgress}>
-        <FormGroup
-          controlId="formBasicText"
-          bsSize="large"
-          validationState={this.getValidationState()}
-          >
+        <FormGroup controlId="formBasicText" bsSize="large" validationState={this.getValidationState()}>
           <ControlLabel>Request title</ControlLabel>
           <FormControl
             type="text"
             value={this.state.title}
             placeholder="Enter request title"
-            onChange={(e) => this.setState({ title: e.target.value })}
+            onChange={e => this.setState({ title: e.target.value })}
             required
-            />
+          />
           <FormControl.Feedback />
         </FormGroup>
         <FormGroup>
@@ -77,10 +76,14 @@ class NewRequest extends React.Component {
             componentClass="textarea"
             value={this.state.body}
             placeholder="Enter request description"
-            onChange={(e) => this.setState({ body: e.target.value })}
+            onChange={e => this.setState({ body: e.target.value })}
             style={{ height: 200 }}
-            />
-          <HelpBlock className="pull-right">You can format your request using <a target="_blank" href="https://guides.github.com/features/mastering-markdown/">Markdown</a> syntax</HelpBlock>
+          />
+          <HelpBlock className="pull-right">
+            You can format your request using{' '}
+            <a target="_blank" href="https://guides.github.com/features/mastering-markdown/">Markdown</a>
+            {' '}syntax
+          </HelpBlock>
         </FormGroup>
         <FormGroup>
           <ButtonGroup>
@@ -91,16 +94,17 @@ class NewRequest extends React.Component {
         <Button
           bsSize="large"
           disabled={this.state.submissionInProgress}
-          onClick={!this.state.submissionInProgress ? this.handleSubmit : null}>
-          {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}</Button>
+          onClick={!this.state.submissionInProgress ? this.handleSubmit : null}
+        >
+          {this.state.submissionInProgress ? 'Submitting...' : 'Submit request'}
+        </Button>
         <h3>Preview:</h3>
-        {this.props.userProfile && (
+        {this.props.userProfile &&
           <Panel header={this.state.title}>
             <MarkdownBlock body={this.state.body} />
-          </Panel>
-        )}
+          </Panel>}
       </form>
-    )
+    );
   }
 }
 
@@ -108,4 +112,4 @@ NewRequest.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
 
-export default NewRequest
+export default NewRequest;

@@ -1,22 +1,20 @@
-import React from 'react'
-import { Grid, Row, Col, PageHeader } from 'react-bootstrap'
-import SignInButton from './SignInButton'
+import React from 'react';
+import { Grid, Row, Col, PageHeader } from 'react-bootstrap';
+import SignInButton from './SignInButton';
 
 class SignOut extends React.Component {
   state = {
     message: ''
-  }
+  };
 
   componentDidMount() {
-    this.props.onSignOut()
+    this.props.onSignOut();
   }
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
 
-    const content = (
-        <SignInButton message="Your session expired and you have been signed out." from={from} />
-    )
+    const content = <SignInButton message="Your session expired and you have been signed out." from={from} />;
 
     return (
       <Grid>
@@ -27,7 +25,7 @@ class SignOut extends React.Component {
           </Col>
         </Row>
       </Grid>
-    )
+    );
   }
 }
 
@@ -35,4 +33,4 @@ SignOut.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
 
-export default SignOut
+export default SignOut;
