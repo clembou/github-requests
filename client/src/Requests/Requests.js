@@ -203,9 +203,9 @@ const RequestList = props => {
   );
 };
 
-const IssueInfo = props => (
+export const IssueInfo = props => (
   <span>
-    <strong>{props.issue.title} </strong>
+    <strong>{props.issue.title}</strong>
     <small className="text-muted">
       {' '}submitted{' '}
       <i>{moment(props.issue.created_at).fromNow()}</i>
