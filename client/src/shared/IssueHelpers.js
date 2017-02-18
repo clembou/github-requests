@@ -28,9 +28,9 @@ export const Tag = props => {
 export const CreatedBy = props => (
   <span className="text-muted">
     {' '}submitted{' '}
-    <i>{moment(props.issue.created_at).fromNow()}</i>
+    <i>{moment(props.issueOrComment.created_at).fromNow()}</i>
     {' '}by{' '}
-    <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i>
+    <i>{`${getCreator(props.issueOrComment).name || getCreator(props.issueOrComment).login}`}</i>
   </span>
 );
 
