@@ -25,6 +25,7 @@ class AzureAuthorisation extends React.Component {
   }
 
   getFromState() {
+    //eslint-disable-next-line
     return this.props.location.state && this.props.location.state.from || { pathname: '/' };
   }
 
