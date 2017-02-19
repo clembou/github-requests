@@ -26,7 +26,7 @@ export const Tag = props => {
 };
 
 export const CreatedBy = props => (
-  <span className="text-muted">
+  <span>
     {' '}submitted{' '}
     <i>{moment(props.issueOrComment.created_at).fromNow()}</i>
     {' '}by{' '}
