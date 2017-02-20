@@ -20,6 +20,7 @@ class Requests extends React.Component {
     };
     this.findIssue = this.findIssue.bind(this);
     this.toggleShowOpen = this.toggleShowOpen.bind(this);
+    this.handleNewIssue = this.handleNewIssue.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +49,11 @@ class Requests extends React.Component {
         });
       })
       .catch(err => console.log(err));
+  }
+  handleNewIssue(issue) {
+    this.setState({
+      issues: [issue, ...this.state.issues]
+    });
   }
 
   findIssue(issueNumber) {
@@ -126,7 +132,7 @@ class Requests extends React.Component {
                           isAdmin={rest.isAdmin}
                           userProfile={rest.userProfile}
                           project={rest.project}
-                          onIssueCreated={this.getIssues}
+                          onIssueCreated={this.handleNewIssue}
                         />
                       )}
                     />

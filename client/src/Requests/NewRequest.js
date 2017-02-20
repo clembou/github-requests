@@ -45,10 +45,10 @@ class NewRequest extends React.Component {
     issue
       .createIssue(issueData)
       .then(response => {
-        this.props.onIssueCreated();
         this.context.router.push(
           `/requests/${this.props.match.params.organisation}/${this.props.match.params.repo}/${this.props.match.params.label}`
         );
+        this.props.onIssueCreated(response.data);
       })
       .catch(err => {
         console.log(err);
