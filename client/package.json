@@ -18,13 +18,13 @@
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "moment": "^2.17.1",
-    "qs": "^6.3.1",
+    "qs": "^6.4.0",
     "react": "^15.4.2",
-    "react-bootstrap": "^0.30.7",
-    "react-bootstrap-table": "^3.0.0-beta.11",
+    "react-bootstrap": "^0.30.8",
+    "react-bootstrap-table": "^3.1.1",
     "react-dom": "^15.4.2",
     "react-router-bootstrap": "^0.23.1",
-    "react-router-dom": "^4.0.0-beta.6",
+    "react-router-dom": "^4.0.0",
     "string.prototype.startswith": "^0.2.0"
   },
   "scripts": {

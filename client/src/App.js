@@ -39,7 +39,7 @@ class App extends React.Component {
       githubClient.authenticate({ pathname: state });
     } else {
       githubClient.setUpProxy(azureClient.idToken);
-      this.context.router.push(state);
+      this.context.router.history.push(state);
     }
   };
 
@@ -48,7 +48,7 @@ class App extends React.Component {
     if (isAuthenticatedOnGithub) githubClient.gh.getUser().getProfile().then(resp => {
         this.setState({ githubUserProfile: resp.data });
       });
-    this.context.router.push(state);
+    this.context.router.history.push(state);
   };
 
   signOut = () => {
@@ -75,7 +75,7 @@ class App extends React.Component {
     if (this.state.isAuthenticated) {
       // Azure tokens are only valid for an hour.
       // The easiest for now is just to log people out when the token expires
-      setTimeout(() => this.context.router.push('/signout'), azureClient.tokenValidUntil.diff(moment()));
+      setTimeout(() => this.context.router.history.push('/signout'), azureClient.tokenValidUntil.diff(moment()));
 
       azureClient.getUser().then(data => {
         this.setState({ userProfile: data });

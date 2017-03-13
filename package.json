@@ -16,18 +16,18 @@
   },
   "author": "Clément Bouscasse",
   "dependencies": {
-    "body-parser": "^1.16.1",
+    "body-parser": "^1.17.1",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
-    "express": "^4.14.1",
+    "express": "^4.15.2",
     "file-stream-rotator": "0.1.0",
     "foreman": "^2.0.0",
     "lodash": "^4.17.4",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
-    "passport-azure-ad": "^3.0.4",
-    "request": "^2.79.0",
-    "sendgrid": "^4.7.1"
+    "passport-azure-ad": "^3.0.5",
+    "request": "^2.81.0",
+    "sendgrid": "^4.8.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

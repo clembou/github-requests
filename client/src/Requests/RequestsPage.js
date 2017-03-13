@@ -34,7 +34,6 @@ const RequestsPage = ({ match, ...rest }) => rest.projects.length > 0 &&
           />
         )}
       />
-      /&gt;
     </Switch>
   </div>;
 
