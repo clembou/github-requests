@@ -45,7 +45,7 @@ run `npm install` to install the required back end and front end dependencies.
 
 During development, the backend server and the front end dev server can be started in one command using node-foreman.
 
-Install node-foreman if needed (`npm i -g node-foreman`), then run `npm run debug`.
+Install node-foreman if needed (`npm i -g foreman`), then run `npm run debug`.
 
 To start the node server only, run `npm run debug-server` at the repo root.
 To start the front end dev-server only, run `cd client && npm start` at the repo root.
