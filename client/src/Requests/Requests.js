@@ -75,7 +75,7 @@ class Requests extends React.Component {
     const newRequestButton = params &&
       (!params.issueNumber || params.issueNumber !== 'new') &&
       <Button
-        onClick={() => this.props.push(`/requests/${params.organisation}/${params.repo}/${params.label}/new`)}
+        onClick={() => this.props.history.push(`/requests/${params.organisation}/${params.repo}/${params.label}/new`)}
         bsStyle="default"
         bsSize="large"
       >
