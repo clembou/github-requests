@@ -18,6 +18,7 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cors": "^2.8.1",
+    "crypto-js": "3.1.9-1",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "file-stream-rotator": "0.1.0",
@@ -27,6 +28,7 @@
     "passport": "^0.3.2",
     "passport-azure-ad": "^3.0.5",
     "request": "^2.81.0",
+    "secure-compare": "3.0.1",
     "sendgrid": "^4.8.0"
   },
   "devDependencies": {
