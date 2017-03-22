@@ -166,7 +166,11 @@ module.exports = function(app) {
     const actualSignature = 'sha1=' + CryptoJS.HmacSHA1(req.body, config.github.webHookSecret);
     // use secure compare to avoid 'timing atacks'
     if(!compare(actualSignature, expectedSignature)) {
-      res.sendStatus(400);
+        console.log('signature miss match:');
+        console.log(expectedSignature);
+        console.log(actualSignature);
+        console.dir(req.body);
+        res.sendStatus(400);
       return;
     }
 
