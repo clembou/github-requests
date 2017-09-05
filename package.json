@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "^6.9.0"
+    "node": "^8.4.0"
   },
   "description": "Node JS server and api for the github-requests app",
   "main": "server.js",
