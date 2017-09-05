@@ -1,0 +1,23 @@
+.profile-pic-small {
+    height: 32px;
+    width: 32px;
+}
+
+body {
+  /* the fixed navbar is 60px plus 15px margin */
+  padding-top: 75px;
+  overflow-y: scroll;
+}
+
+h1 a {
+    color: black;
+}
+
+span.panel-title a:hover {
+    color: #e87511;
+}
+
+.back-link-container {
+    vertical-align: middle;
+    margin-right: 0.2em
+}
