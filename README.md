@@ -31,8 +31,8 @@ REACT_APP_ADMIN_GROUP_ID=*guid of Azure AD groups containing admins. use semicol
 REACT_APP_GITHUB_BOT_LOGIN=*name of the bot account used to proxy requests*
 REACT_APP_DOMAIN_HINT= *your-domain.com - if known in advance, specifying this environment variable will ensure the Azure log in page automatically select the correct account if a user is logged in in multiple directories*
 # Optional, leave undefined to use the default stylesheets
-REACT_APP_BOOTSTRAP_CSS_PATH='../../app_data/bootstrap.css'
-REACT_APP_APPLICATION_STYLES_PATH='../../app_data/index.css'
+REACT_APP_BOOTSTRAP_CSS_PATH='./app_data/bootstrap.css'
+REACT_APP_APPLICATION_STYLES_PATH='./app_data/index.css'
 # Front end in development only
 HTTPS=true
 ```

@@ -8,7 +8,7 @@
   "description": "Node JS server and api for the github-requests app",
   "main": "server.js",
   "scripts": {
-    "preinstall": "cd client && npm install",
+    "preinstall": "cd client && npm install --no-optional",
     "prestart": "cd client && npm run build",
     "start": "node server.js",
     "debug-server": "set PORT=4000 && nodemon --inspect server.js",
@@ -16,19 +16,19 @@
   },
   "author": "Clément Bouscasse",
   "dependencies": {
+    "@sendgrid/mail": "^6.1.2",
     "body-parser": "^1.17.1",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "file-stream-rotator": "0.1.0",
+    "file-stream-rotator": "0.2.0",
     "foreman": "^2.0.0",
     "lodash": "^4.17.4",
     "morgan": "^1.8.1",
-    "passport": "^0.3.2",
+    "passport": "^0.4.0",
     "passport-azure-ad": "^3.0.5",
     "request": "^2.81.0",
-    "secure-compare": "3.0.1",
-    "sendgrid": "^4.8.0"
+    "secure-compare": "3.0.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

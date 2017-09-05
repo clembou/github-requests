@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FormGroup, FormControl, ControlLabel, ButtonGroup, Button, HelpBlock, Panel } from 'react-bootstrap';
 
 import ghClient from '../shared/githubClient';
@@ -109,7 +110,7 @@ class NewRequest extends React.Component {
 }
 
 NewRequest.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 export default NewRequest;

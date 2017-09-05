@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import moment from 'moment';
 import BacklogPage from './Backlog/BacklogPage';
@@ -148,7 +149,7 @@ class App extends React.Component {
   }
 }
 App.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 export default App;

@@ -6,8 +6,7 @@ const request = require('request');
 const passport = require('passport');
 const config = require('./config');
 const bodyParser = require('body-parser');
-const helper = require('sendgrid').mail;
-const sg = require('sendgrid')(config.app.sendGridApiKey);
+const sgMail = require('@sendgrid/mail');
 const requestUtils = require('./client/src/shared/requestUtils');
 const notifications = require('./notifications');
 const crypto = require('crypto');
@@ -35,19 +34,14 @@ module.exports = function(app) {
 
   // Utility functions
   const sendMail = (to, title, body) => {
-    const from_email = new helper.Email(config.app.emailSender);
-    const to_email = new helper.Email(to);
-    const subject = title;
-    const content = new helper.Content('text/html', body);
-    const mail = new helper.Mail(from_email, subject, to_email, content);
-
-    const request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: mail.toJSON()
-    });
-
-    return sg.API(request);
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: to,
+      from: config.app.emailSender,
+      subject: title,
+      html: body,
+    };
+    return sgMail.send(msg);
   };
 
   const getProxyRequestOptions = url => ({

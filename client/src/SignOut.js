@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col, PageHeader } from 'react-bootstrap';
 import SignInButton from './SignInButton';
 
@@ -30,7 +31,7 @@ class SignOut extends React.Component {
 }
 
 SignOut.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 export default SignOut;
