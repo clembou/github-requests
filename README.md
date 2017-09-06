@@ -51,7 +51,9 @@ To start the node server only, run `npm run debug-server` at the repo root.
 To start the front end dev-server only, run `cd client && npm start` at the repo root.
 
 # Deployment
-Define all the above variables as application settings on your azure web app. Then, you can deploy new versions of the app using azure's git deployment option for example. Azure will automatically install the relevant npm dependencies, build the front end code, and start the node server.
+Define all the above variables as application settings on your azure web app. 
+Then, you can deploy new versions of the app using azure's git deployment option for example. 
+Azure will automatically install the relevant npm dependencies, build the front end code, and start the node server.
 
 **Note**: deployments are currently relatively slow, especially the first time since the `npm install` step needs to fetch all the packages. This is a known issue.
 
