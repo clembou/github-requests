@@ -1,13 +1,19 @@
 {
     "groups": [
         {
-            "name": "group 1",
-            "key": "group1",
-            "description": "These projects are related to each other."
+            "name": "SMART",
+            "key": "smart",
+            "description": "The below applications are part of the SMART suite."
         },
         {
-            "name": "group 2",
-            "key": "group1"
+            "name": "TECSystems",
+            "key": "tecsystems",
+            "description": "The below applications are developed by the TECSystems software team and used throughout the technical team."
+        },
+        {
+            "name": "Test",
+            "key": "test",
+            "description": "These projects can be used to test the new request app."
         }
     ],
     "projects": [
@@ -15,16 +21,7 @@
             "name": "Test 1",
             "label": "test1",
             "groups": [
-                "group1"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 1 with space in label",
-            "label": "test 1",
-            "groups": [
-                "group2"
+                "test"
             ],
             "organisation": "resgroup",
             "repository": "test"
@@ -33,47 +30,110 @@
             "name": "Test 2",
             "label": "test_2",
             "groups": [
-                "group1"
+                "test"
             ],
             "organisation": "resgroup",
             "repository": "test"
         },
         {
-            "name": "Test No tag",
-            "label": "test",
+            "name": "SMART web page",
+            "label": "smart mvc",
             "groups": [
-                "group1"
+                "smart"
             ],
             "organisation": "resgroup",
-            "repository": "test"
+            "repository": "smart"
         },
         {
-            "name": "Test 3",
-            "label": "test 3",
+            "name": "SMART View",
+            "label": "smart-ui",
             "groups": [
-                "group1"
+                "smart"
             ],
             "organisation": "resgroup",
-            "repository": "test"
+            "repository": "smart-ui"
         },
         {
-            "name": "Test 4",
-            "label": "test_4",
+            "name": "SMART 2.0",
+            "label": "smart-2.0",
             "groups": [
-                "group2"
+                "smart"
             ],
             "organisation": "resgroup",
-            "repository": "test"
+            "repository": "smart-2.0"
         },
         {
-            "name": "Project in multiple groups",
-            "label": "test_5",
+            "name": "Scada Analysis",
+            "label": "scada analysis",
             "groups": [
-                "group1",
-                "group2"
+                "smart"
             ],
             "organisation": "resgroup",
-            "repository": "test"
+            "repository": "smart"
+        },
+        {
+            "name": "SCADAM Alarm Log",
+            "label": "alarm log",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "smart"
+        },
+        {
+            "name": "Reporting Engine",
+            "label": "res-reporting-engine",
+            "groups": [
+                "smart",
+                "tecsystems"
+            ],
+            "organisation": "resgroup",
+            "repository": "res-reporting-engine"
+        },
+        {
+            "name": "Safety Incident Database",
+            "label": "sid",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "hsqe"
+        },
+        {
+            "name": "Curtailment",
+            "label": "curtailment",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "curtailment"
+        },
+        {
+            "name": "Control Centre Dashboard",
+            "label": "control-centre-dashboard",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "control-centre-dashboard"
+        },
+        {
+            "name": "Reference Site Manager",
+            "label": "rsm",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "reference-data"
+        },
+        {
+            "name": "Storage",
+            "label": "storage",
+            "groups": [
+                "smart"
+            ],
+            "organisation": "resgroup",
+            "repository": "smart-storage"
         }
     ]
 }
