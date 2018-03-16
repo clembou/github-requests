@@ -6,10 +6,8 @@
     "node": "^8.4.0"
   },
   "author": "Clément Bouscasse",
-  "devDependencies": {
-    "react-scripts": "1.0.13"
-  },
   "dependencies": {
+    "react-scripts": "1.0.13",
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
