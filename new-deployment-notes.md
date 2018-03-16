@@ -83,10 +83,21 @@ And now it works locally, with the environment variables pointing to the newly c
 
 ## Get in working in Azure
 
-created app service
+Follow some instructions: https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-local-git
+- Setup azure cloud shell
+- Set up user for github deployments in cloud shell. Details in the software team password place.
+- Configure App Service for github deployments using cloud shell
+- Add azure remote to repo `git remote add ....`
+- `git push azure`
 
-setup azure cloud shell
+The `git push azure` didn't work, and gave lots of errors related to clems github account (github:clembou/github Host key verification failed). 
 
-set up user for github deployments in cloud shell
+This is because of this line in client\package.json, which looks dodgy, but if I replace it with something better the app stops working locally, and still doesn't deploy to azure.
+    "github-api": "github:clembou/github",
 
-configure app service for github deployments using cloud shell
+I think azure detects node and just calls npm start. This builds the front end code, which I assume Azure can then just serve being as its a web server. And the front end stuff is all static so no problem. The front end stuff then calls the server, by using the proxy in client\package.json. Hopefully this still works in azure .  Npm start also starts the server with `node server.js`. This is how the two things both run in azure I think.
+
+I try just uploading a zip file with all the npm install type commands already run. I then remove these commands from deploy.cmd and upload to azure. The ZipDeploy page is as https://tec-systems-issue-tracker.scm.azurewebsites.net/zipdeploy. You can just drag a zip file in to the file view bit.
+
+This works. woot!
+
