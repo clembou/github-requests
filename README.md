@@ -41,6 +41,7 @@ HTTPS=true
 run `npm install` to install the required back end and front end dependencies.
 
 # Start
+
 `npm start` will build the front end code and start the server.
 
 During development, the backend server and the front end dev server can be started in one command using node-foreman.
@@ -51,11 +52,16 @@ To start the node server only, run `npm run debug-server` at the repo root.
 To start the front end dev-server only, run `cd client && npm start` at the repo root.
 
 # Deployment
+
 Define all the above variables as application settings on your azure web app. 
+
 Then, you can deploy new versions of the app using azure's git deployment option for example. 
+
 Azure will automatically install the relevant npm dependencies, build the front end code, and start the node server.
 
 **Note**: deployments are currently relatively slow, especially the first time since the `npm install` step needs to fetch all the packages. This is a known issue.
 
 If you want to enable email notifications, you will need to setup a web hook on github to send issue related events to the 
 `api/github-webhooks` endpoint, and a valid sendgrid api key.
+
+It can be quite tricky setting everything up for a new deployment (eg creating a new App Service in azure, rather than releasing a new version to an existing one). Please see [Cedd's notes for details](new-deployment-notes.md)
