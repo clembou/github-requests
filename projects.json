@@ -1,139 +1,20 @@
 {
     "groups": [
         {
-            "name": "SMART",
-            "key": "smart",
-            "description": "The below applications are part of the SMART suite."
-        },
-        {
             "name": "TECSystems",
             "key": "tecsystems",
-            "description": "The below applications are developed by the TECSystems software team and used throughout the technical team."
-        },
-        {
-            "name": "Test",
-            "key": "test",
-            "description": "These projects can be used to test the new request app."
+            "description": ""
         }
     ],
     "projects": [
         {
-            "name": "Test 1",
-            "label": "test1",
+            "name": "RAM",
+            "label": "RAM",
             "groups": [
-                "test"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 2",
-            "label": "test_2",
-            "groups": [
-                "test"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "SMART web page",
-            "label": "smart mvc",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart"
-        },
-        {
-            "name": "SMART View",
-            "label": "smart-ui",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart-ui"
-        },
-        {
-            "name": "SMART 2.0",
-            "label": "smart-2.0",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart-2.0"
-        },
-        {
-            "name": "Scada Analysis",
-            "label": "scada analysis",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart"
-        },
-        {
-            "name": "SCADAM Alarm Log",
-            "label": "alarm log",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart"
-        },
-        {
-            "name": "Reporting Engine",
-            "label": "res-reporting-engine",
-            "groups": [
-                "smart",
                 "tecsystems"
             ],
-            "organisation": "resgroup",
-            "repository": "res-reporting-engine"
-        },
-        {
-            "name": "Safety Incident Database",
-            "label": "sid",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "hsqe"
-        },
-        {
-            "name": "Curtailment",
-            "label": "curtailment",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "curtailment"
-        },
-        {
-            "name": "Control Centre Dashboard",
-            "label": "control-centre-dashboard",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "control-centre-dashboard"
-        },
-        {
-            "name": "Reference Site Manager",
-            "label": "rsm",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "reference-data"
-        },
-        {
-            "name": "Storage",
-            "label": "storage",
-            "groups": [
-                "smart"
-            ],
-            "organisation": "resgroup",
-            "repository": "smart-storage"
+            "organisation": "res-tec-systems",
+            "repository": "RAM"
         }
-    ]
+	]
 }
