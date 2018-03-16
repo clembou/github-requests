@@ -83,10 +83,13 @@ And now it works locally, with the environment variables pointing to the newly c
 
 ## Get in working in Azure
 
-created app service
+Follow some instructions: https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-local-git
 
-setup azure cloud shell
+- Setup azure cloud shell
+- Set up user for github deployments in cloud shell. Details in the software team password place.
+- Configure app service for github deployments using cloud shell
+- Add azure remote to repo `git remote add ....`
+- `git push azure`
 
-set up user for github deployments in cloud shell
+The `git push azure` didn't work, and gave lots of errors related to clems github account (github:clembou/github Host key verification failed). I update client\package.json to point at the official github repo instead of clems fork, but I still get the same problem.
 
-configure app service for github deployments using cloud shell
