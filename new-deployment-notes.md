@@ -19,7 +19,7 @@ Set everything in my .env file as it is in the smart azure deployment (from the 
 
 I now get this
 
-AADSTS50011: The reply address 'http://localhost:3000/callback/azure' does not match the reply addresses configured for the application: '7036de4d-5087-445b-be01-898dafed9c25'. More details: not specified
+AADSTS50011: The reply address 'http://localhost:3000/callback/azure' does not match the reply addresses configured for the application: ''. More details: not specified
 
 This is semi expected, I need to set myself up as a callback url for the oauth flow.
 
@@ -67,7 +67,7 @@ Create a new app service in azure for the app. Turn Authentication / Authorizati
 
 The app now stops working and I cant log in, this appears in the address bar / developer tools.
 
-https://localhost:3000/callback/azure#error=unsupported_response_type&error_description=AADSTS70005%3a+response_type+%27token%27+is+not+enabled+for+the+application%0d%0aTrace+ID%3a+c54fd2df-14a7-4c73-b446-a15d1c755a00%0d%0aCorrelation+ID%3a+2d02a875-8bb8-48e5-803a-6eb156977396%0d%0aTimestamp%3a+2018-03-15+17%3a32%3a38Z&state=%2frequests
+https://localhost:3000/callback/azure#error=unsupported_response_type&error_description=AADSTS70005%3a+response_type+%27token%27+is+not+enabled+for+the+application ...
 
 I try clicking the manifest and I make sure that the manifest json files are bascially the same. Still no luck. Although I made `"oauth2AllowImplicitFlow": true`, which I think is required.
 
@@ -100,4 +100,45 @@ I think azure detects node and just calls npm start. This builds the front end c
 I try just uploading a zip file with all the npm install type commands already run. I then remove these commands from deploy.cmd and upload to azure. The ZipDeploy page is as https://tec-systems-issue-tracker.scm.azurewebsites.net/zipdeploy. You can just drag a zip file in to the file view bit.
 
 This works. woot!
+
+But then it stopped working for some strange reason. Literally while me and Polys were looking at it.
+
+This was fixed by changing the 'accept-encoding' header when proxying the GitHub api. The Request app client sends all requests for issues and suchlike to the request app backend. The back end then modifies the url and authorization and sends it on to the GitHub api. I think this is done to keep the client code simple, and using a standard method of authorisation (GitHub uses a slightly non standard oauth, with an "Authorization: "token: ..."' header, whereas the standard uses `Bearer` in place of `token`. When doing this proxying, it seems that the response was being compressed in a way that wasn't working. I don't know the details of this, but changing the 'accept-encoding' header to 'identity' corrects the problem. Identity means don't do any compression, so it will make the data transfer slower. Interesting this worked locally but didn't work on Azure, so maybe there is a different node version on Azure, which didn't support the relevant compression. 
+
+The node version on the Azure AppService is meant to match that in packages.config, but that doesn't seem to work. Instead you can set the `WEBSITE_NODE_DEFAULT_VERSION` in the Application settings in the Azure portal and restart the app. Azure will use an npm version to match the node version.
+
+## Use the res-cloud domain
+
+Went in to App Service and set up a Custom Domain for res-cloud. This allows you to go the an http (eg unsecured) version of the site at the res-cloud domain. Because it is unsecured it won't work.
+
+Set up a certificate for the domain. There already was a certificate but it has to be in the same resource group as the app service. This is very hard to find out, and the error message is all about permissions.
+
+To sort this out need to export the certificate from the res-cloud resource group and then import it in to the App Service (in tec-systems resource group). 
+Followed this articel to do so https://blogs.msdn.microsoft.com/appserviceteam/2017/02/24/creating-a-local-pfx-copy-of-app-service-certificate/
+
+This allowed me to see the website in https, at the custom domain.
+
+However at this point the website stopped being able to talk to GitHub properly, and so no longer works. It remains to no longer work if I go to the azurewebsites.net domain. I delete the domain name and ssl changes that I've made, and the website still doesn't work. hmmmm.
+
+Have set up the log stream in azure, need to add some more logging to the app , redeploy and see what is going on.
+
+## Emails
+
+I added the function app, but it doesn't seem to get called by anything.
+
+The github webhook goes to the main backend thing, and errors with "Service Timeout"
+
+Mon, 19 Mar 2018 18:34:11 GMT express:router dispatching POST /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router query  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router expressInit  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router corsMiddleware  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router initialize  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router logger  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT express:router <anonymous>  : /api/github-webhooks
+Mon, 19 Mar 2018 18:34:11 GMT body-parser:json content-type "application/x-www-form-urlencoded"
+Mon, 19 Mar 2018 18:34:11 GMT body-parser:json skip parsing
+received web hook: issue_comment
+2018-03-19T18:34:11  PID[8152] Verbose     Received request: POST https://tec-systems-issue-tracker.azurewebsites.net/api/github-webhooks
+2018-03-19T18:34:11  PID[8152] Verbose     Received request: POST https://tec-systems-issue-tracker.azurewebsites.net/api/github-webhooks
+then stops ...
 
