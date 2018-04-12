@@ -13,7 +13,7 @@
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
-    "github-api": "github:github-tools/github",
+    "github-api": "github:clembou/github",
     "location-origin": "^1.1.4",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
