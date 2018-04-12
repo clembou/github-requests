@@ -48,12 +48,20 @@ module.exports = function(app) {
     url: GITHUB_API_ROOT + url.replace('/api', ''),
     headers: {
       Authorization: `token ${config.github.botToken}`
+      //,"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"
+      //,"accept-encoding": "identity",
     }
   });
 
   const rewriteResponseHeaders = (request, response) => {
+    console.log(`Request App: Rewriting response headers, request: ${JSON.stringify(request.headers)}`);
+    console.log(`Request App: Rewriting response headers, response: ${JSON.stringify(response)}`);
+    //response.headers['accept-encoding'] = 'identity';
     if (response.headers.link) {
       response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, getlocalAppRootUrl(request) + '/api');
+      console.log(`Request App: Rewritten response.headers.link: ${JSON.stringify(response.headers.link)}`);
+    } else {
+      console.log(`Request App: response.headers.link falsy, nothing to rewrite`);
     }
   };
 
@@ -71,10 +79,12 @@ module.exports = function(app) {
 
   const validateRepository = (organisation, repo, projects) => {
     if (projects.filter(p => p.organisation == organisation && p.repository == repo).length == 0) {
-      console.log(`listing issues on repository ${req.params.organisation}/${req.params.repo}`);
+      console.error(`Request App: Repository not found : ${organisation}/${repo}`);
       return false;
+    } else {
+      console.log(`Request App: Valid repository: ${organisation}/${repo}`);
+      return true;
     }
-    return true;
   };
 
   // App end points
@@ -97,14 +107,35 @@ module.exports = function(app) {
     r.pipe(res);
   });
 
+  const log = (url) => {
+    return function (error, response, body) {
+      console.log(`Request App: fetch error for ${url}: ${error}`); 
+      console.log(`Request App: fetch response for ${url}: ${JSON.stringify(response)}`); 
+    }
+  }
+  
   // proxy to github api end points
   app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+    console.log('Request App received request to: ', req.url);
+
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
-    const r = request(getProxyRequestOptions(req.url));
-    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
-    req.pipe(r, genericErrorHandler).on('response', response => rewriteResponseHeaders(req, response)).pipe(res);
+    console.log(`Request App: Listing issues on repository ${req.params.organisation}/${req.params.repo}`);
+
+    // this actually does a request to github, which is not required
+    const gitHubRequest = request(getProxyRequestOptions(req.url), function (error, response, body) {
+      console.log('error:', error); // Print the error if one occurred
+      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+      console.log('body:', body); // Print the HTML for the Google homepage.
+    }); // add the authorization that github wants
+    
+    console.log('Request App: Proxying request to: ', getProxyRequestOptions(req.url).url);
+    
+    req
+    .pipe(gitHubRequest, genericErrorHandler) // send to git hub
+    .on('response', response => rewriteResponseHeaders(req, response)) // response from github, monkey with the headers for some reason
+    .pipe(res); // pipe response from github back to response from this route / function
   });
 
   app.get('/api/repositories/:repoId/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
