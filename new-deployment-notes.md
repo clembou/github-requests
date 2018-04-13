@@ -101,26 +101,33 @@ I try just uploading a zip file with all the npm install type commands already r
 
 This works. woot!
 
-But then it stopped working for some strange reason. Literally while me and Polys were looking at it.
-
-This was fixed by changing the 'accept-encoding' header when proxying the GitHub api. The Request app client sends all requests for issues and suchlike to the request app backend. The back end then modifies the url and authorization and sends it on to the GitHub api. I think this is done to keep the client code simple, and using a standard method of authorisation (GitHub uses a slightly non standard oauth, with an "Authorization: "token: ..."' header, whereas the standard uses `Bearer` in place of `token`. When doing this proxying, it seems that the response was being compressed in a way that wasn't working. I don't know the details of this, but changing the 'accept-encoding' header to 'identity' corrects the problem. Identity means don't do any compression, so it will make the data transfer slower. Interesting this worked locally but didn't work on Azure, so maybe there is a different node version on Azure, which didn't support the relevant compression. 
-
-The node version on the Azure AppService is meant to match that in packages.config, but that doesn't seem to work. Instead you can set the `WEBSITE_NODE_DEFAULT_VERSION` in the Application settings in the Azure portal and restart the app. Azure will use an npm version to match the node version.
-
 ## Use the res-cloud domain
 
-Went in to App Service and set up a Custom Domain for res-cloud. This allows you to go the an http (eg unsecured) version of the site at the res-cloud domain. Because it is unsecured it won't work.
+Went in to App Service and set up a Custom Domain for res-cloud (by clicking on Add Hostname in Custom Domains blade). This allows you to go the an http (eg unsecured) version of the site at the res-cloud domain. Because it is unsecured it won't work.
 
-Set up a certificate for the domain. There already was a certificate but it has to be in the same resource group as the app service. This is very hard to find out, and the error message is all about permissions.
+Set up a certificate for the domain (SSL Certificates blade under App Service). There already was a certificate listed in Private Certificates bit, but when I click on Add Binding it fails with a permission error. This is because the certificate has to be in the same resource group as the app service. This is very hard to find out, and the error message isn't helpful. So even though it lists a certificate, its not possible to use it.
 
-To sort this out need to export the certificate from the res-cloud resource group and then import it in to the App Service (in tec-systems resource group). 
-Followed this articel to do so https://blogs.msdn.microsoft.com/appserviceteam/2017/02/24/creating-a-local-pfx-copy-of-app-service-certificate/
+To sort this out need to export the certificate from the res-cloud resource group and then import it in to the App Service (in tec-systems resource group). Follow this article to do so https://blogs.msdn.microsoft.com/appserviceteam/2017/02/24/creating-a-local-pfx-copy-of-app-service-certificate/
+
+After importing the certificate, nothing really changes, and when I click on Add Binding there is no hostname to choose. If I wait a while (30 mins or so) then it works. Use "SNI SSL" SSL type.
 
 This allowed me to see the website in https, at the custom domain.
 
 However at this point the website stopped being able to talk to GitHub properly, and so no longer works. It remains to no longer work if I go to the azurewebsites.net domain. I delete the domain name and ssl changes that I've made, and the website still doesn't work. hmmmm.
 
-Have set up the log stream in azure, need to add some more logging to the app , redeploy and see what is going on.
+## Making it work again 
+
+Set up the log stream in azure, add some more logging to the app , redeploy and see what is going on.
+
+This was fixed by changing the 'accept-encoding' header when proxying the GitHub api. The Request app client sends all requests for issues and suchlike to the request app backend. The back end then modifies the url and authorization and sends it on to the GitHub api. I think this is done to keep the client code simple, and using a standard method of authorisation (GitHub uses a slightly non standard oauth, with an "Authorization: "token: ..."' header, whereas the standard uses `Bearer` in place of `token`. When doing this proxying, it seems that the response was being compressed in a way that wasn't working. I don't know the details of this, but changing the 'accept-encoding' header to 'identity' corrects the problem. Identity means don't do any compression, so it will make the data transfer slower. Interesting this worked locally but didn't work on Azure. I made sure that the node and npm versions were similar on azure and locally, so its a mystery to me why it doesn't work.
+
+The node version on the Azure AppService is meant to match that in packages.config, but that doesn't seem to work. Instead you can set the `WEBSITE_NODE_DEFAULT_VERSION` in the Application settings in the Azure portal and restart the app. Azure will use an npm version to match the node version.
+
+## Making it work again again
+
+Whilst I was working on the emails, it mysteriously stopped working again.
+
+The request app logs were showing a permission error, although the personal access token from the tec-systems-bot was definitely correct. I logged in as the bot and it was showing a warning about an unverified email address, so I sorted that out by using cedd.burge@res-group.com as the primary email address and verifying it when the email arrived. It seems that tecsystemssupport@res-group.com is not available external to res, so I couldn't use that. We should probably set up a new email account for the bot.
 
 ## Emails
 
