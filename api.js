@@ -49,14 +49,11 @@ module.exports = function(app) {
     headers: {
       Authorization: `token ${config.github.botToken}`
       //,"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"
-      //,"accept-encoding": "identity",
+      ,"accept-encoding": "identity",
     }
   });
 
   const rewriteResponseHeaders = (request, response) => {
-    console.log(`Request App: Rewriting response headers, request: ${JSON.stringify(request.headers)}`);
-    console.log(`Request App: Rewriting response headers, response: ${JSON.stringify(response)}`);
-    //response.headers['accept-encoding'] = 'identity';
     if (response.headers.link) {
       response.headers.link = response.headers.link.replace(GITHUB_API_ROOT, getlocalAppRootUrl(request) + '/api');
       console.log(`Request App: Rewritten response.headers.link: ${JSON.stringify(response.headers.link)}`);
@@ -107,13 +104,6 @@ module.exports = function(app) {
     r.pipe(res);
   });
 
-  const log = (url) => {
-    return function (error, response, body) {
-      console.log(`Request App: fetch error for ${url}: ${error}`); 
-      console.log(`Request App: fetch response for ${url}: ${JSON.stringify(response)}`); 
-    }
-  }
-  
   // proxy to github api end points
   app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
     console.log('Request App received request to: ', req.url);
@@ -124,17 +114,13 @@ module.exports = function(app) {
     console.log(`Request App: Listing issues on repository ${req.params.organisation}/${req.params.repo}`);
 
     // this actually does a request to github, which is not required
-    const gitHubRequest = request(getProxyRequestOptions(req.url), function (error, response, body) {
-      console.log('error:', error); // Print the error if one occurred
-      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-      console.log('body:', body); // Print the HTML for the Google homepage.
-    }); // add the authorization that github wants
+    const gitHubRequest = request(getProxyRequestOptions(req.url)); // add the authorization that github wants
     
     console.log('Request App: Proxying request to: ', getProxyRequestOptions(req.url).url);
     
     req
     .pipe(gitHubRequest, genericErrorHandler) // send to git hub
-    .on('response', response => rewriteResponseHeaders(req, response)) // response from github, monkey with the headers for some reason
+    .on('response', response => rewriteResponseHeaders(req, response)) // response from github, monkey with the headers for some reason. Looking at the logs it doesn't seem to do anything
     .pipe(res); // pipe response from github back to response from this route / function
   });
 
@@ -181,25 +167,94 @@ module.exports = function(app) {
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-// Calculate the X-Hub-Signature header value.
-function getSignature(buf) {
-  var hmac = crypto.createHmac("sha1", config.github.webHookSecret);
-  hmac.update(buf, "utf-8");
-  return "sha1=" + hmac.digest("hex");
-}
-
-// Verify function compatible with body-parser to retrieve the request payload.
-// Read more: https://github.com/expressjs/body-parser#verify
-function verifyRequest(req, res, buf, encoding) {
-  var expected = req.headers['x-hub-signature'];
-  var calculated = getSignature(buf);
-  console.log("X-Hub-Signature:", expected, "Content:", "-" + buf.toString('utf8') + "-");
-  if (!compare(expected,calculated)) {
-    throw new Error("Invalid signature.");
-  } else {
-    console.log("Valid signature!");
+  // Calculate the X-Hub-Signature header value.
+  function getSignature(buf) {
+    var hmac = crypto.createHmac("sha1", config.github.webHookSecret);
+    hmac.update(buf, "utf-8");
+    return "sha1=" + hmac.digest("hex");
   }
-}
+
+  // Verify function compatible with body-parser to retrieve the request payload.
+  // Read more: https://github.com/expressjs/body-parser#verify
+  function verifyRequest(req, res, buf, encoding) {
+    var expected = req.headers['x-hub-signature'];
+    var calculated = getSignature(buf);
+    console.log("X-Hub-Signature:", expected, "Content:", "-" + buf.toString('utf8') + "-");
+    if (!compare(expected,calculated)) {
+      throw new Error("Invalid signature.");
+    } else {
+      console.log("Valid signature!");
+    }
+  }
+
+  function isGitHubWebHookRequestValid(req)  {
+    const eventType = req.headers['x-github-event'];
+
+    return 
+      eventType &&
+      ['issues', 'issue_comment'].includes(eventType) &&
+      req.body &&
+      req.body.issue &&
+      req.body.issue.user.login === config.github.botLogin;
+  }
+
+  function handleInvalidGitHubWebHookRequest(req, res)  {
+    console.log('RequestApp: The following github webhook was not valid:');
+    console.log(config.github.botLogin);
+    console.log(JSON.stringify(req.headers));
+    console.log(JSON.stringify(req.body));
+
+    res.json({
+      message: 'The github webhook request is not valid',
+      webhook: req.body
+    });
+  }
+
+
+  function sendEmailsForGitHubWebHook(req, res)  {
+    try {
+      sendEmailsForGitHubWebHook(req, res);
+    } catch (error) {
+      handleErrorForEmailsForGitHubWebHook(req, res, error);
+    }
+  }
+    
+  function trySendEmailsForGitHubWebHook(req, res)  {
+    const { email } = requestUtils.getCreator(req.body.issue);
+    const project = notifications.findProject(req.body, appData.projects);
+    const requestUrl = notifications.getRequestUrl(req.body.issue.number, project, getlocalAppRootUrl(req));
+    const eventType = req.headers['x-github-event'];
+    const { subject, content } = notifications.getNotificationText(eventType, req.body, project.name, requestUrl);
+
+    console.log(`Request app: Email notification starting`);
+
+    if (email && subject && content) {
+      sendMail(email, subject, content)
+        .then(response => {
+          console.log(response.statusCode, `Email notification sent successfully to ${email}`);
+        })
+        .catch(error => {
+          //error is an instance of SendGridError
+          //The full response is attached to error.response
+          console.log(error.response);
+        });
+    }
+
+    console.log(`Request app: Email notification returning response`);
+    res.json({ message: 'web hook processed' });
+  }
+    
+  function handleErrorForEmailsForGitHubWebHook(req, res, error)  {
+    console.log('RequestApp: An error occcured while attempting to process the following github webhook:');
+    console.log(error);
+    console.log('RequestApp: webhook data:');
+    console.log(JSON.stringify(req.headers));
+    console.log(JSON.stringify(req.body));
+    res.json({
+      message: 'An error occcured while attempting to process a github webhook',
+      webhook: req.body
+    });
+  }
 
   // handle github web hooks
   app.post('/api/github-webhooks', [bodyParser.json({verify:verifyRequest})], function(req, res) {
@@ -207,45 +262,15 @@ function verifyRequest(req, res, buf, encoding) {
     // this message is unsecured because github doesn't have a token to call us
     // instead we check that this message was generated by our github instance
     // by checking that the signature of the body was created with the correct secret
+    console.log(`RequestApp: received web hook:`);
+    console.log(JSON.stringify(req.headers));
+    console.log(JSON.stringify(req.body));
+    console.log(`RequestApp: received web hook action: ${req.headers['x-github-event']}`);
 
-    console.log(`received web hook: ${req.headers['x-github-event']}`);
-    const eventType = req.headers['x-github-event'];
-    if (
-      eventType &&
-      ['issues', 'issue_comment'].includes(eventType) &&
-      req.body &&
-      req.body.issue &&
-      req.body.issue.user.login === config.github.botLogin
-    ) {
-      const { email } = requestUtils.getCreator(req.body.issue);
-
-      try {
-        const project = notifications.findProject(req.body, appData.projects);
-        const requestUrl = notifications.getRequestUrl(req.body.issue.number, project, getlocalAppRootUrl(req));
-        const { subject, content } = notifications.getNotificationText(eventType, req.body, project.name, requestUrl);
-
-        if (email && subject && content) {
-          sendMail(email, subject, content)
-            .then(response => {
-              console.log(response.statusCode, `Email notification sent successfully to ${email}`);
-            })
-            .catch(error => {
-              //error is an instance of SendGridError
-              //The full response is attached to error.response
-              console.log(error.response);
-            });
-        }
-        res.json({ message: 'web hook processed' });
-      } catch (error) {
-        console.log('An error occcured while attempting to process the following github webhook:');
-        console.log(error);
-        console.log('webhook data:');
-        console.dir(req.body);
-        res.json({
-          message: 'An error occcured while attempting to process a github webhook',
-          webhook: req.body
-        });
-      }
+    if (isGitHubWebHookRequestValid(req)) {
+      sendEmailsForGitHubWebHook(req, res)
+    } else {
+      handleInvalidGitHubWebHookRequest(req, res);
     }
   });
 };
