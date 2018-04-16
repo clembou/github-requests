@@ -138,3 +138,9 @@ I add some logging to the app.
 It can't process the body of the request, so I go the the github webhook and change it to json encoding.
 
 It can't match the config.github.botLogin with the username from the issue, even though they look the same to me.
+
+I install ngrok (https://ngrok.com/) in order to debug the webhook locally. NGrok is excellent.
+
+With some more logging I find out that the emailing tries to match a project with the github issue, and part of the matching requires that the issue have a `label` that matches the `label` property from the projects.json file. This is a problem because the front end code seems to rely on the label property being the same as the repository name. Both these uses of label look like a bad idea. Removing it from the front end code looks like a big job. So I just remove it from the back end code for now.
+
+I then find out 
