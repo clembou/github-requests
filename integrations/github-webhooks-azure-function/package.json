@@ -1,7 +1,0 @@
-{
-  "name": "res-github-request-hooks",
-  "author": "Clément Bouscasse",
-  "dependencies": {
-    "request": "^2.79.0"
-  }
-}
