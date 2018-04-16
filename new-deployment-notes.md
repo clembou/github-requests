@@ -131,21 +131,10 @@ The request app logs were showing a permission error, although the personal acce
 
 ## Emails
 
-I added the function app, but it doesn't seem to get called by anything.
+I added the function app, but it doesn't seem to get called by anything. I'm going to try and turn it off later and see if anything happens.
 
-The github webhook goes to the main backend thing, and errors with "Service Timeout"
+I add some logging to the app.
 
-Mon, 19 Mar 2018 18:34:11 GMT express:router dispatching POST /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router query  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router expressInit  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router corsMiddleware  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router initialize  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router logger  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT express:router <anonymous>  : /api/github-webhooks
-Mon, 19 Mar 2018 18:34:11 GMT body-parser:json content-type "application/x-www-form-urlencoded"
-Mon, 19 Mar 2018 18:34:11 GMT body-parser:json skip parsing
-received web hook: issue_comment
-2018-03-19T18:34:11  PID[8152] Verbose     Received request: POST https://tec-systems-issue-tracker.azurewebsites.net/api/github-webhooks
-2018-03-19T18:34:11  PID[8152] Verbose     Received request: POST https://tec-systems-issue-tracker.azurewebsites.net/api/github-webhooks
-then stops ...
+It can't process the body of the request, so I go the the github webhook and change it to json encoding.
 
+It can't match the config.github.botLogin with the username from the issue, even though they look the same to me.
