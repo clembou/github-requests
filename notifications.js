@@ -103,7 +103,7 @@ const findProject = (payload, projects) => {
   const organisation = payload.organization.login;
   const repo = payload.repository.name;
   const labels = payload.issue.labels.map(issue => issue.name);
-  const project = _.find(projects, p => p.organisation === organisation && p.repository === repo && labels.includes(p.label));
+  const project = _.find(projects, p => p.organisation === organisation && p.repository === repo);
   if (!project) {
     throw new Error(`Unable to find a matching project for issue: ${payload.issue.html_url}, organisation ${organisation}, repo, ${repo}, labels ${JSON.stringify(labels)}. Available projects: ${JSON.stringify(projects)}`);
   }
