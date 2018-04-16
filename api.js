@@ -227,7 +227,7 @@ module.exports = function(app) {
     if (email && subject && content) {
       sendMail(email, subject, content)
         .then(response => {
-          console.log(response.statusCode, `Email notification sent successfully to ${email}`);
+          console.log(`Request app: Email notification sent successfully to ${email}`);
         })
         .catch(error => {
           //error is an instance of SendGridError
