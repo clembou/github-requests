@@ -9,7 +9,7 @@
     "projects": [
         {
             "name": "RAM",
-            "label": "RAM",
+            "label": "user request",
             "groups": [
                 "tecsystems"
             ],
