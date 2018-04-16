@@ -187,33 +187,42 @@ module.exports = function(app) {
     }
   }
 
+  function userLoginFromGitHubRequestBody(body){
+    return 
+      req.body &&
+      req.body.issue &&
+      req.body.issue.user.login;
+  }
+
   function isGitHubWebHookRequestValid(req)  {
     const eventType = req.headers['x-github-event'];
 
     return 
       eventType &&
-      ['issues', 'issue_comment'].includes(eventType) &&
-      req.body &&
-      req.body.issue &&
-      req.body.issue.user.login === config.github.botLogin;
+      ['issues', 'issue_comment'].includes(eventType);// &&
+      //userLoginFromGitHubRequestBody(req.body) === config.github.botLogin;
   }
 
   function handleInvalidGitHubWebHookRequest(req, res)  {
     console.log('RequestApp: The following github webhook was not valid:');
+    console.log(req.headers['x-github-event']);
     console.log(config.github.botLogin);
+    console.log(userLoginFromGitHubRequestBody(req.body));
+    req.body.issue && console.log(`issue ${JSON.stringify(req.body.issue)}`);
+    req.body.issue && req.body.issue.user && console.log(`issue.user: ${JSON.stringify(req.body.issue.user)}`);
+    req.body.issue && req.body.issue.user && req.body.issue.user.login && console.log(`issue.user.login: ${JSON.stringify(req.body.issue.user.login)}`);
     console.log(JSON.stringify(req.headers));
     console.log(JSON.stringify(req.body));
-
-    res.json({
-      message: 'The github webhook request is not valid',
-      webhook: req.body
+    
+    res.status(422).send({
+      message: 'The github webhook request is not valid'
     });
   }
 
 
   function sendEmailsForGitHubWebHook(req, res)  {
     try {
-      sendEmailsForGitHubWebHook(req, res);
+      trySendEmailsForGitHubWebHook(req, res);
     } catch (error) {
       handleErrorForEmailsForGitHubWebHook(req, res, error);
     }
@@ -250,9 +259,8 @@ module.exports = function(app) {
     console.log('RequestApp: webhook data:');
     console.log(JSON.stringify(req.headers));
     console.log(JSON.stringify(req.body));
-    res.json({
+    res.status(500).json({
       message: 'An error occcured while attempting to process a github webhook',
-      webhook: req.body
     });
   }
 
@@ -267,10 +275,10 @@ module.exports = function(app) {
     console.log(JSON.stringify(req.body));
     console.log(`RequestApp: received web hook action: ${req.headers['x-github-event']}`);
 
-    if (isGitHubWebHookRequestValid(req)) {
+    //if (isGitHubWebHookRequestValid(req)) {
       sendEmailsForGitHubWebHook(req, res)
-    } else {
-      handleInvalidGitHubWebHookRequest(req, res);
-    }
+    //} else {
+    // handleInvalidGitHubWebHookRequest(req, res);
+    //}
   });
 };
