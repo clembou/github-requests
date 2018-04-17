@@ -45,13 +45,11 @@ const processComment = (action, issue, comment, projectName, requestLink) => {
   switch (action) {
     case 'created':
       return {
-        subject: `[Request] [New Comment] [${projectName}] - ${issue.title}`,
+        subject: `Re: ${issue.title}`,
         content: (
-          `
-<p>A new comment has been posted on your request for <b>${projectName}</b>:</p>
-<p><a href="${requestLink}">${issue.title}</a></p>
-<p>From <i>${comment.user.login}</i>:</p>
-<p>${comment.body}<p>`
+`<p>${comment.body}</p>
+<p>This message is sent because a new comment was added to an issue you created on RAM.</p>
+<p>Unfortunately the bug reporting system isn’t very clever, so please don’t reply to this email. Please use the web portal to <a href="${requestLink}">add more comments</a>.</p>`
         )
       };
       break;
@@ -97,6 +95,10 @@ const getNotificationText = (eventType, payload, projectName, requestLink) => {
 
 const getRequestUrl = (issueNumber, project, appRootUrl) => {
   return `${appRootUrl}/requests/${project.organisation}/${project.repository}/${encodeURIComponent(project.label)}/${issueNumber}`;
+};
+
+const getAppUrl = (project, appRootUrl) => {
+  return `${appRootUrl}/requests/${project.organisation}/${project.repository}/${encodeURIComponent(project.label)}`;
 };
 
 const findProject = (payload, projects) => {
