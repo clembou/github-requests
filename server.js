@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 
+// set up environment variables from a `client\.env` if it exists (useful when developing)
 const envPath = path.resolve(__dirname, 'client', '.env');
 if (fs.existsSync(envPath)) {
   require('dotenv').config({ path: envPath });

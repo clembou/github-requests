@@ -3,7 +3,7 @@ const qs = require('qs');
 const https = require('https');
 const url = require('url');
 const request = require('request');
-const passport = require('passport');
+//const passport = require('passport');
 const config = require('./config');
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
@@ -85,11 +85,11 @@ module.exports = function(app) {
   };
 
   // App end points
-  app.get('/api/projects', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/projects', /*passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     res.json(appData);
   });
 
-  app.get('/api/authenticate/github/:code', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/authenticate/github/:code', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     const r = request.post(
       {
         url: 'https://github.com/login/oauth/access_token',
@@ -105,7 +105,7 @@ module.exports = function(app) {
   });
 
   // proxy to github api end points
-  app.get('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/repos/:organisation/:repo/issues', /*passport.authenticate('oauth-bearer', { session: false }), */function(req, res) {
     console.log('Request App received request to: ', req.url);
 
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
@@ -113,7 +113,6 @@ module.exports = function(app) {
 
     console.log(`Request App: Listing issues on repository ${req.params.organisation}/${req.params.repo}`);
 
-    // this actually does a request to github, which is not required
     const gitHubRequest = request(getProxyRequestOptions(req.url)); // add the authorization that github wants
     
     console.log('Request App: Proxying request to: ', getProxyRequestOptions(req.url).url);
@@ -124,14 +123,14 @@ module.exports = function(app) {
     .pipe(res); // pipe response from github back to response from this route / function
   });
 
-  app.get('/api/repositories/:repoId/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/repositories/:repoId/issues', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     console.log(`going through pages on repository ${req.params.repoId}`);
     const r = request(getProxyRequestOptions(req.url));
     console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
     req.pipe(r, genericErrorHandler).on('response', response => rewriteResponseHeaders(req, response)).pipe(res);
   });
 
-  app.get('/api/repos/:organisation/:repo/issues/:issueId', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/repos/:organisation/:repo/issues/:issueId', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
@@ -140,7 +139,7 @@ module.exports = function(app) {
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  app.post('/api/repos/:organisation/:repo/issues', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.post('/api/repos/:organisation/:repo/issues', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
@@ -149,7 +148,7 @@ module.exports = function(app) {
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  app.get('/api/repos/:organisation/:repo/issues/:issueId/comments', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.get('/api/repos/:organisation/:repo/issues/:issueId/comments', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
@@ -158,7 +157,7 @@ module.exports = function(app) {
     req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  app.post('/api/repos/:organisation/:repo/issues/:issueId/comments', passport.authenticate('oauth-bearer', { session: false }), function(req, res) {
+  app.post('/api/repos/:organisation/:repo/issues/:issueId/comments', /* passport.authenticate('oauth-bearer', { session: false }), */ function(req, res) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
       res.status(403).send({ error: 'Invalid repository name' });
 
