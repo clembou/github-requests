@@ -103,6 +103,7 @@ const processComment = (action, issue, comment, projectName, requestLink) => {
       };
       break;
     default:
+      console.log(`RequestApp: unsupported action: ${action}`);
       return { }
       break;
   }
