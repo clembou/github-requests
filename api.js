@@ -187,12 +187,15 @@ module.exports = function(app) {
     }
   }
 
-  function userLoginFromGitHubRequestBody(body){
-    return (body && body.issue.user) ? body.issue.user.login : "";
-  }
-
+  // We only send emails for issues that are created from the app. 
+  // People that have created issues directly on GitHub will probably be programmers, and will definitely receive a notification directly from GitHub
+  // Issues that are created through this app use the associated bot account, and hence the original creator needs to get an email.
   function isGitHubWebHookRequestValid(req)  {
     return ['issues', 'issue_comment'].includes(req.headers['x-github-event']) && userLoginFromGitHubRequestBody(req.body) === config.github.botLogin;
+  }
+
+  function userLoginFromGitHubRequestBody(body){
+    return (body && body.issue.user) ? body.issue.user.login : "";
   }
 
   function handleInvalidGitHubWebHookRequest(req, res)  {
