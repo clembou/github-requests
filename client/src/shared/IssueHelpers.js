@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { getCreator } from '../shared/requestUtils';
+import { getCreatedBy } from '../shared/requestUtils';
 import { Label } from 'react-bootstrap';
 
 export const IssueInfo = props => (
@@ -9,7 +9,7 @@ export const IssueInfo = props => (
       {' '}submitted{' '}
       <i>{moment(props.issue.created_at).fromNow()}</i>
       {' '}by{' '}
-      <i>{`${getCreator(props.issue).name || getCreator(props.issue).login}`}</i>
+      <i>{`${getCreatedBy(props.issue)}`}</i>
     </small>
     <span className="text pull-right">{props.issue.labels.map(l => <Tag key={l.name} label={l} />)}</span>
   </span>
@@ -30,7 +30,7 @@ export const CreatedBy = props => (
     {' '}submitted{' '}
     <i>{moment(props.issueOrComment.created_at).fromNow()}</i>
     {' '}by{' '}
-    <i>{`${getCreator(props.issueOrComment).name || getCreator(props.issueOrComment).login}`}</i>
+    <i>{`${getCreatedBy(props.issueOrComment)}`}</i>
   </span>
 );
 
