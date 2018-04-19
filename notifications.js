@@ -10,12 +10,6 @@ const processIssues = (action, issue, projectName, requestLink) => {
       return {
         subject: `RE: ${issue.title}`,
         content: newIssueEmailBody(issue, requestLink)
-//         (
-//           `
-// <p>Thanks for submitting a new request for <b>${projectName}</b>:</p>
-// <p><a href="${requestLink}">${issue.title}</a></p>
-// <p>You will be notified when it is resolved.</p>`
-//         )
       };
       break;
     case 'closed':
