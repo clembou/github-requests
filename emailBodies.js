@@ -9,6 +9,13 @@ const newIssueEmailBody = (issue, requestLink) => {
     requestLink);
 };
 
+const newCommentEmailBody = (issue, comment, requestLink) => {
+  return emailBody(
+    `Your issue "${issue.title}" has a new comment from ${getCreatedBy(comment)}`, 
+    marked(getContent(comment)), 
+    requestLink);
+};
+
 const closedIssueEmailBody = (issue, requestLink) => {
   return emailBody(
     `Your issue "${issue.title}" has now been closed and will be included in the next release`, 
@@ -16,11 +23,10 @@ const closedIssueEmailBody = (issue, requestLink) => {
     requestLink);
 };
 
-
-const newCommentEmailBody = (issue, comment, requestLink) => {
+const reopenedIssueEmailBody = (issue, requestLink) => {
   return emailBody(
-    `Your issue "${issue.title}" has a new comment from ${getCreatedBy(comment)}`, 
-    marked(getContent(comment)), 
+    `Your issue "${issue.title}" has been reopened`, 
+    marked(getContent(issue)), 
     requestLink);
 };
 
@@ -79,5 +85,6 @@ const emailBody = (heading, body, requestLink) => {
 module.exports = {
   newCommentEmailBody,
   newIssueEmailBody,
-  closedIssueEmailBody
+  closedIssueEmailBody,
+  reopenedIssueEmailBody
 };
