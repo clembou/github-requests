@@ -16,12 +16,6 @@ const processIssues = (action, issue, projectName, requestLink) => {
       return {
         subject: `Re: ${issue.title}`,
         content: closedIssueEmailBody(issue, requestLink)
-//         (
-//           `
-// <p>Your request for <b>${projectName}</b>:</p>
-// <p><a href="${requestLink}">${issue.title}</a></p>
-// <p>has been closed. The fix will be included in the next release.</p>`
-//         )
       };
       break;
     case 'reopened':
