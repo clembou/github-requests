@@ -2,25 +2,26 @@ const _ = require('lodash');
 // const marked = require('marked');
 // this file is in the front end part of the code. This We should create a place for code that is required by both the front end and the back end, to avoid me inadvertently breaking this module when working on the frontend
 // const { getCreatedBy, getContent } = require( './client/src/shared/requestUtils');
-const { newCommentEmailBody, newIssueEmailBody } = require( './emailBodies');
+const { newCommentEmailBody, newIssueEmailBody, closedIssueEmailBody } = require( './emailBodies');
 
 const processIssues = (action, issue, projectName, requestLink) => {
   switch (action) {
     case 'opened':
       return {
-        subject: `RE: ${issue.title}`,
+        subject: `Re: ${issue.title}`,
         content: newIssueEmailBody(issue, requestLink)
       };
       break;
     case 'closed':
       return {
-        subject: `[Request] [Closed] [${projectName}] - ${issue.title}`,
-        content: (
-          `
-<p>Your request for <b>${projectName}</b>:</p>
-<p><a href="${requestLink}">${issue.title}</a></p>
-<p>has been closed. The fix will be included in the next release.</p>`
-        )
+        subject: `Re: ${issue.title}`,
+        content: closedIssueEmailBody(issue, requestLink)
+//         (
+//           `
+// <p>Your request for <b>${projectName}</b>:</p>
+// <p><a href="${requestLink}">${issue.title}</a></p>
+// <p>has been closed. The fix will be included in the next release.</p>`
+//         )
       };
       break;
     case 'reopened':

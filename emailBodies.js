@@ -9,6 +9,13 @@ const newIssueEmailBody = (issue, requestLink) => {
     requestLink);
 };
 
+const closedIssueEmailBody = (issue, requestLink) => {
+  return emailBody(
+    `Your issue "${issue.title}" has now been closed and will be included in the next release`, 
+    marked(getContent(issue)), 
+    requestLink);
+};
+
 
 const newCommentEmailBody = (issue, comment, requestLink) => {
   return emailBody(
@@ -71,5 +78,6 @@ const emailBody = (heading, body, requestLink) => {
 
 module.exports = {
   newCommentEmailBody,
-  newIssueEmailBody
+  newIssueEmailBody,
+  closedIssueEmailBody
 };
