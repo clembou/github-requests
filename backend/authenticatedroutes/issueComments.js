@@ -4,8 +4,9 @@ const url = require('url');
 const request = require('request');
 const config = require('../../config');
 
-module.exports = function(appOrRouter) {
-  const GITHUB_API_ROOT = 'https://api.github.com';
+const authenticatedRouter = require('./authenticatedRouter');
+
+const GITHUB_API_ROOT = 'https://api.github.com';
 
   const getlocalAppRootUrl = request => {
     return process.env.NODE_ENV == 'production'
@@ -64,46 +65,21 @@ module.exports = function(appOrRouter) {
     }
   };
 
-  appOrRouter.get('/authenticate/github/:code', function(req, res) {
-    const r = request.post(
-      {
-        url: 'https://github.com/login/oauth/access_token',
-        json: {
-          client_id: config.github.clientID,
-          client_secret: config.github.clientSecret,
-          code: req.params.code
-        }
-      },
-      genericErrorHandler
-    );
-    r.pipe(res);
+  authenticatedRouter.get('/repos/:organisation/:repo/issues/:issueId/comments', function(req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+      res.status(403).send({ error: 'Invalid repository name' });
+
+    const r = request(getProxyRequestOptions(req.url));
+    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
+    req.pipe(r, genericErrorHandler).pipe(res);
   });
 
-  // appOrRouter.get('/repos/:organisation/:repo/issues/:issueId', function(req, res) {
-  //   if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
-  //     res.status(403).send({ error: 'Invalid repository name' });
+  authenticatedRouter.post('/repos/:organisation/:repo/issues/:issueId/comments', function(req, res) {
+    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+      res.status(403).send({ error: 'Invalid repository name' });
 
-  //   const r = request(getProxyRequestOptions(req.url));
-  //   console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
-  //   req.pipe(r, genericErrorHandler).pipe(res);
-  // });
+    console.log(`adding comment on issue in repository ${req.params.organisation}/${req.params.repo}`);
+    const r = request.post(getProxyRequestOptions(req.url));
+    req.pipe(r, genericErrorHandler).pipe(res);
+  });
 
-  // appOrRouter.get('/repos/:organisation/:repo/issues/:issueId/comments', function(req, res) {
-  //   if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
-  //     res.status(403).send({ error: 'Invalid repository name' });
-
-  //   const r = request(getProxyRequestOptions(req.url));
-  //   console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
-  //   req.pipe(r, genericErrorHandler).pipe(res);
-  // });
-
-  // appOrRouter.post('/repos/:organisation/:repo/issues/:issueId/comments', function(req, res) {
-  //   if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
-  //     res.status(403).send({ error: 'Invalid repository name' });
-
-  //   console.log(`adding comment on issue in repository ${req.params.organisation}/${req.params.repo}`);
-  //   const r = request.post(getProxyRequestOptions(req.url));
-  //   req.pipe(r, genericErrorHandler).pipe(res);
-  // });
-
-};

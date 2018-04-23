@@ -9,6 +9,7 @@ const authenticatedRouter = require('./authenticatedRouter')
 require('./projects.js')
 require('./issues.js')
 require('./issue.js')
+require('./issueComments.js')
 require('./api.js')(authenticatedRouter)
 
 // then we use the routes in the main app. The order of this call is not important
