@@ -22,8 +22,5 @@ require('./backend/authenticatedRoutes/authenticatedRoutes');
 
 require('./backend/dangerousOpenRoutes/dangerousOpenRoutes');
 
-const port =  process.env.PORT || 4000;
-
-app.listen(port, () => {
-  console.log(`App listening on port ${port}!`);
-});
+// has to happen last
+require('./backend/app/listen');
