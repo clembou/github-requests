@@ -12,21 +12,21 @@ const app = express();
 
 app.use(cors());
 
-const logDirectory = path.join(__dirname, 'log');
+// const logDirectory = path.join(__dirname, 'log');
 
-// ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+// // ensure log directory exists
+// fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
-// create a rotating write stream
-const accessLogStream = FileStreamRotator.getStream({
-  date_format: 'YYYYMMDD',
-  filename: path.join(logDirectory, 'access-%DATE%.log'),
-  frequency: 'daily',
-  verbose: false
-});
+// // create a rotating write stream
+// const accessLogStream = FileStreamRotator.getStream({
+//   date_format: 'YYYYMMDD',
+//   filename: path.join(logDirectory, 'access-%DATE%.log'),
+//   frequency: 'daily',
+//   verbose: false
+// });
 
-// setup the logger
-app.use(morgan('combined', { stream: accessLogStream }));
+// // setup the logger
+// app.use(morgan('combined', { stream: accessLogStream }));
 
 // remove the automatically added `X-Powered-By` header
 app.disable('x-powered-by');

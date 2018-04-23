@@ -11,12 +11,14 @@ if (fs.existsSync(envPath)) {
 
 const app = require('./app');
 
+require('./logging.js');
+
 require('./backend/authenticatedRoutes/authenticatedRoutes.js');
 
 require('./backend/dangerousOpenRoutes/dangerousOpenRoutes');
 
-const PORT = process.env.PORT || 4000;
+const port =  process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`);
+app.listen(port, () => {
+  console.log(`App listening on port ${port}!`);
 });
