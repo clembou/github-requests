@@ -2,7 +2,7 @@
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
 const requestUtils = require('../../client/src/shared/requestUtils');
-const notifications = require('../../notifications');
+const notifications = require('./notifications');
 const crypto = require('crypto');
 const compare = require('secure-compare');
 const { getProxyRequestOptions, genericErrorHandler } = require( '../gitHubProxyHelpers');

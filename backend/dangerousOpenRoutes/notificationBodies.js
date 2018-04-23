@@ -1,6 +1,6 @@
 const marked = require('marked');
 // this file is in the front end part of the code. This We should create a place for code that is required by both the front end and the back end, to avoid me inadvertently breaking this module when working on the frontend
-const { getCreatedBy, getContent } = require( './client/src/shared/requestUtils');
+const { getCreatedBy, getContent } = require( '../../client/src/shared/requestUtils');
 
 const newIssueEmailBody = (issue, requestLink) => {
   return emailBody(

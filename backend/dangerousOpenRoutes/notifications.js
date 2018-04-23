@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { newCommentEmailBody, newIssueEmailBody, closedIssueEmailBody, reopenedIssueEmailBody } = require( './emailBodies');
+const { newCommentEmailBody, newIssueEmailBody, closedIssueEmailBody, reopenedIssueEmailBody } = require( './notificationBodies');
 
 const processIssues = (action, issue, projectName, requestLink) => {
   switch (action) {
