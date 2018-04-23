@@ -1,6 +1,6 @@
 const passport = require('passport');
 const OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
-const config = require('../config');
+const config = require('../../config');
 
 //const authConfig = require('../config').auth;
 

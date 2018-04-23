@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
 
 // setup authenticated routes
 const router = express.Router();
-const authentication = require('./middleware/authentication')(router);
+const authentication = require('./backend/middleware/authentication')(router);
 router.use(authentication);
 
 require('./backend/authenticatedroutes/api.js')(router);
