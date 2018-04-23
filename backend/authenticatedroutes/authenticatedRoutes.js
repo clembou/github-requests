@@ -5,7 +5,7 @@ const app = require('../../app');
 // this brings in the authenticatedRouter
 const authenticatedRouter = require('./authenticatedRouter')
 
-// these all use the authenticatedRouter, the `require` it themselves to get intellisense and to reduce nesting
+// these all use the authenticatedRouter, they `require` it themselves to get intellisense and to reduce nesting
 require('./projects.js')
 require('./issues.js')
 require('./issue.js')
