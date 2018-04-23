@@ -30,30 +30,18 @@ app.use(function(req, res, next) {
   next();
 });
 
+require('./backend/authenticatedRoutes/authenticatedRoutes.js')(app);
 
-// setup authenticated routes
-const router = express.Router();
-const authentication = require('./backend/middleware/authentication')(router);
-router.use(authentication);
-
-require('./backend/authenticatedroutes/api.js')(router);
-app.use('/api', router);
-
-
-// setup open access routes
+// setup unauthenticated access routes
 const router2 = express.Router(); // does express.router return a singleton?
-require('./github-webhook.js')(router2); 
+require('./githubWebhook.js')(router2); 
 app.use('/webhook', router2);
 
 
-// setup unauthenticated static routes
+// setup unauthenticated static routes.
+// These have to be unauthenticated so that it is possible to show the user a sign in page, so that they can become authenticated
 // this matches all routes so needs to come last
 require('./static.js')(app);
-
-
-
-//const authentication = require('./middleware/authentication')(app);
-
 
 const PORT = process.env.PORT || 4000;
 
