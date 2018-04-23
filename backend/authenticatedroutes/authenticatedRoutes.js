@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express');
-const app = require('../../app');
+const app = require('../app/app');
 
 // this brings in the authenticatedRouter
 const authenticatedRouter = require('./authenticatedRouter')

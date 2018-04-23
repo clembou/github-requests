@@ -9,14 +9,16 @@ if (fs.existsSync(envPath)) {
   require('dotenv').config({ path: envPath });
 }
 
-const app = require('./app');
+const app = require('./backend/app/app');
 
-// this needs to be added first so that headers are added to all subsequent responses
-require('./headers.js');
+require('./backend/app/cors');
 
-require('./logging.js');
+// this needs to be added early so that headers are added to all subsequent responses
+require('./backend/app/headers');
 
-require('./backend/authenticatedRoutes/authenticatedRoutes.js');
+require('./backend/app/logging');
+
+require('./backend/authenticatedRoutes/authenticatedRoutes');
 
 require('./backend/dangerousOpenRoutes/dangerousOpenRoutes');
 
