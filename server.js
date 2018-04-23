@@ -1,13 +1,16 @@
 'use strict';
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
+// set up environment variables from a `client\.env` if it exists (useful when developing)
 const envPath = path.resolve(__dirname, 'client', '.env');
 if (fs.existsSync(envPath)) {
   require('dotenv').config({ path: envPath });
 }
 
 const app = require('./app');
+
 
 // remove the automatically added `X-Powered-By` header
 app.disable('x-powered-by');
@@ -27,8 +30,30 @@ app.use(function(req, res, next) {
   next();
 });
 
-require('./api.js')(app);
+
+// setup authenticated routes
+const router = express.Router();
+const authentication = require('./middleware/authentication')(router);
+router.use(authentication);
+
+require('./api.js')(router);
+app.use('/api', router);
+
+
+// setup open access routes
+//const router2 = express.Router(); // does express.router return a singleton?
+//require('./api.js')(router2); // fix
+//app.use('/webhook', router2); // fix
+
+
+// setup authenticated static routes
+// this matches all routes so needs to come last
 require('./static.js')(app);
+
+
+
+//const authentication = require('./middleware/authentication')(app);
+
 
 const PORT = process.env.PORT || 4000;
 

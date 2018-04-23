@@ -13,11 +13,16 @@ const app = express();
 app.use(cors());
 
 //Load passport and configure it to use Azure AD Bearer auth
-app.use(passport.initialize());
-passport.use(new OIDCBearerStrategy(config.azure, function(token, done) {
-  // console.log(token)
-  return done(null, token, null);
-}));
+//app.use(passport.initialize());
+// passport.use(new OIDCBearerStrategy(config.azure, function(token, done) {
+//   // console.log(token)
+//   return done(null, token, null);
+// }));
+
+
+//require('./middleware/authorization')(router);
+
+//app.use('/', router);
 
 const logDirectory = path.join(__dirname, 'log');
 
