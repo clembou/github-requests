@@ -36,7 +36,7 @@ const router = express.Router();
 const authentication = require('./middleware/authentication')(router);
 router.use(authentication);
 
-require('./api.js')(router);
+require('./backend/authenticatedroutes/api.js')(router);
 app.use('/api', router);
 
 

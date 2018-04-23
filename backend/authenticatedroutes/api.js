@@ -2,7 +2,7 @@ const fs = require('fs');
 const https = require('https');
 const url = require('url');
 const request = require('request');
-const config = require('./config');
+const config = require('../../config');
 
 module.exports = function(appOrRouter) {
   const GITHUB_API_ROOT = 'https://api.github.com';
@@ -19,7 +19,7 @@ module.exports = function(appOrRouter) {
   };
 
   function loadAppData() {
-    return JSON.parse(fs.readFileSync(`${__dirname}/${config.app.groupConfigPath}`, 'utf-8'));
+    return JSON.parse(fs.readFileSync(`${__dirname}/../../${config.app.groupConfigPath}`, 'utf-8'));
   }
 
   const appData = loadAppData();
