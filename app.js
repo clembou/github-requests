@@ -3,9 +3,9 @@ const express = require('express');
 const fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
-//const passport = require('passport');
+const passport = require('passport');
 const cors = require('cors');
-//const OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
+const OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
 const config = require('./config');
 
 const app = express();
@@ -19,10 +19,6 @@ app.use(cors());
 //   return done(null, token, null);
 // }));
 
-//const authentication = require('./middleware/authentication')(app);
-
-//const router = express.Router();
-//router.use(authentication);
 
 //require('./middleware/authorization')(router);
 
