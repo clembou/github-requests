@@ -1,4 +1,4 @@
-const config = require('../../config');
+const config = require('../config');
 const url = require('url');
 
 const GITHUB_API_ROOT = 'https://api.github.com';

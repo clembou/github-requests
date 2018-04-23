@@ -1,7 +1,7 @@
 const request = require('request');
 const config = require('../../config');
-const { getProxyRequestOptions, genericErrorHandler } = require( './gitHubProxyHelpers');
-const validateRepository = require( './configHelpers');
+const { getProxyRequestOptions, genericErrorHandler } = require( '../gitHubProxyHelpers');
+const validateRepository = require( '../configHelpers');
 
 const authenticatedRouter = require('./authenticatedRouter');
 
