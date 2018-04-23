@@ -11,7 +11,7 @@ if (fs.existsSync(envPath)) {
 
 const app = require('./app');
 
-require('./backend/authenticatedRoutes/authenticatedRoutes.js');//(app);
+require('./backend/authenticatedRoutes/authenticatedRoutes.js');
 
 // setup unauthenticated access routes
 const router2 = express.Router(); // does express.router return a singleton?
@@ -22,7 +22,7 @@ app.use('/webhook', router2);
 // setup unauthenticated static routes.
 // These have to be unauthenticated so that it is possible to show the user a sign in page, so that they can become authenticated
 // this matches all routes so needs to come last
-require('./static.js')(app);
+require('./backend/dangerousOpenRoutes/static');
 
 const PORT = process.env.PORT || 4000;
 
