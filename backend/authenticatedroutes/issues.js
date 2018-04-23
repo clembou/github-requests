@@ -2,7 +2,8 @@ const config = require('../../config');
 // const https = require('https');
 // const url = require('url');
 const request = require('request');
-const { validateRepository, getProxyRequestOptions, genericErrorHandler } = require( './gitHubProxyHelpers');
+const { getProxyRequestOptions, genericErrorHandler } = require( './gitHubProxyHelpers');
+const validateRepository = require( './configHelpers');
 
 
 const authenticatedRouter = require('./authenticatedRouter');
