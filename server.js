@@ -41,12 +41,12 @@ app.use('/api', router);
 
 
 // setup open access routes
-//const router2 = express.Router(); // does express.router return a singleton?
-//require('./api.js')(router2); // fix
-//app.use('/webhook', router2); // fix
+const router2 = express.Router(); // does express.router return a singleton?
+require('./github-webhook.js')(router2); 
+app.use('/webhook', router2);
 
 
-// setup authenticated static routes
+// setup unauthenticated static routes
 // this matches all routes so needs to come last
 require('./static.js')(app);
 
