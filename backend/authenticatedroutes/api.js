@@ -64,11 +64,6 @@ module.exports = function(appOrRouter) {
     }
   };
 
-  // App end points
-  appOrRouter.get('/projects', function(req, res) {
-    res.json(appData);
-  });
-
   appOrRouter.get('/authenticate/github/:code', function(req, res) {
     const r = request.post(
       {
