@@ -11,7 +11,7 @@ const GITHUB_API_ROOT = 'https://api.github.com';
 authenticatedRouter.get('/repos/:organisation/:repo/issues', function(req, res) {
   console.log('Request App received request to: ', req.url);
 
-  if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+  if (!validateRepository(req.params.organisation, req.params.repo, config.appData.projects))
     res.status(403).send({ error: 'Invalid repository name' });
 
   console.log(`Request App: Listing issues on repository ${req.params.organisation}/${req.params.repo}`);
@@ -35,7 +35,7 @@ authenticatedRouter.get('/repos/:organisation/:repo/issues', function(req, res) 
 // });
 
 authenticatedRouter.post('/repos/:organisation/:repo/issues', function(req, res) {
-  if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+  if (!validateRepository(req.params.organisation, req.params.repo, config.appData.projects))
     res.status(403).send({ error: 'Invalid repository name' });
 
   console.log(`creating issue on repository ${req.params.organisation}/${req.params.repo}`);
@@ -55,12 +55,6 @@ const getlocalAppRootUrl = request => {
       })
     : 'https://localhost:3000'; // hard coded value in development because the request came through the webpack dev server on a different port and via https.
 };
-
-function loadAppData() {
-  return JSON.parse(fs.readFileSync(`${__dirname}/../../${config.app.groupConfigPath}`, 'utf-8'));
-}
-
-const appData = loadAppData();
 
 const getProxyRequestOptions = url => ({
   url: GITHUB_API_ROOT + url.replace('/api', ''),
