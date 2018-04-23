@@ -79,14 +79,14 @@ module.exports = function(appOrRouter) {
     r.pipe(res);
   });
 
-  appOrRouter.get('/repos/:organisation/:repo/issues/:issueId', function(req, res) {
-    if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
-      res.status(403).send({ error: 'Invalid repository name' });
+  // appOrRouter.get('/repos/:organisation/:repo/issues/:issueId', function(req, res) {
+  //   if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))
+  //     res.status(403).send({ error: 'Invalid repository name' });
 
-    const r = request(getProxyRequestOptions(req.url));
-    console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
-    req.pipe(r, genericErrorHandler).pipe(res);
-  });
+  //   const r = request(getProxyRequestOptions(req.url));
+  //   console.log('Proxied request to: ', getProxyRequestOptions(req.url).url);
+  //   req.pipe(r, genericErrorHandler).pipe(res);
+  // });
 
   appOrRouter.get('/repos/:organisation/:repo/issues/:issueId/comments', function(req, res) {
     if (!validateRepository(req.params.organisation, req.params.repo, appData.projects))

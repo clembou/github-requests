@@ -8,6 +8,7 @@ const authenticatedRouter = require('./authenticatedRouter')
 // these all use the authenticatedRouter, the `require` it themselves to get intellisense and to reduce nesting
 require('./projects.js')
 require('./issues.js')
+require('./issue.js')
 require('./api.js')(authenticatedRouter)
 
 // then we use the routes in the main app. The order of this call is not important
