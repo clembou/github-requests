@@ -11,6 +11,9 @@ if (fs.existsSync(envPath)) {
 
 const app = require('./app');
 
+// this needs to be added first so that headers are added to all subsequent responses
+require('./headers.js');
+
 require('./logging.js');
 
 require('./backend/authenticatedRoutes/authenticatedRoutes.js');
