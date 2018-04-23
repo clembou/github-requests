@@ -12,18 +12,6 @@ const app = express();
 
 app.use(cors());
 
-//Load passport and configure it to use Azure AD Bearer auth
-//app.use(passport.initialize());
-// passport.use(new OIDCBearerStrategy(config.azure, function(token, done) {
-//   // console.log(token)
-//   return done(null, token, null);
-// }));
-
-
-//require('./middleware/authorization')(router);
-
-//app.use('/', router);
-
 const logDirectory = path.join(__dirname, 'log');
 
 // ensure log directory exists
@@ -39,5 +27,23 @@ const accessLogStream = FileStreamRotator.getStream({
 
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }));
+
+// remove the automatically added `X-Powered-By` header
+app.disable('x-powered-by');
+
+// this needs to be added first so that headers are added to all subsequent responses
+app.use(function(req, res, next) {
+  // disable caching
+  res.header('Cache-Control', 'no-cache, must-revalidate, max-age=0');
+  res.header('Pragma', 'no-cache');
+
+  // security headers
+  // see https://www.owasp.org/index.php/OWASP_Secure_Headers_Project
+  res.header('X-XSS-Protection', '1; mode=block');
+  res.header('X-Frame-Options', 'deny');
+  res.header('X-Content-Type-Options', 'nosniff');
+
+  next();
+});
 
 module.exports = app;

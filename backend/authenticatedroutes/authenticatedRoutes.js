@@ -1,12 +1,15 @@
 'use strict';
 const express = require('express');
+const app = require('../../app');
 
-module.exports = function(appOrRouter) {
-  const router = express.Router();
-  const authentication = require('../middleware/authentication')(router);
-  router.use(authentication);
+// this brings in the authenticatedRouter
+const authenticatedRouter = require('./authenticatedRouter')
 
-  require('./projects.js')(router);
-  require('./api.js')(router);
-  appOrRouter.use('/api', router);
-};
+// these all use the authenticatedRouter, the `require` it themselves to get intellisense and to reduce nesting
+require('./projects.js')
+require('./issues.js')
+require('./api.js')(authenticatedRouter)
+
+// then we use the routes in the main app. The order of this call is not important
+app.use('/api', authenticatedRouter)
+
