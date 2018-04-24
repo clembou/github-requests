@@ -45,7 +45,7 @@ run `npm install` to install the required back end and front end dependencies.
 
 ## From vscode
 
-Press F5 in vscode and choose node. This will start the backend server (which can also server the static front end files via static.js), and allows debugging.
+Press F5 in vscode and choose node. This will start the backend server (which can also serve the static front end files via static.js, but doesn't build them), and allows debugging.
 
 ## From console
 
@@ -55,9 +55,11 @@ The backend server and the front end dev server can be started in one command us
 
 This has the benefit the nodemon will check for changes to the website and automatically restart the server if required. This definitely works for the backend api code, I haven't checked if it works for the front end code yet.
 
+The front end server in this case serves the unbuilt source files, so is always up to date. In order to have the front end up to date with other methods, we would need to build the front end first.
+
 ## More esoteric
 
-`npm start` will build the front end code and start the server.
+`npm start` will build the front end code and start the server. If this doesn't work, but `npm run debug` does, then there is a problem with the backend serving the frontend files.
 
 To start the node back end server / api only (which can also serve the front end static files, but doesn't build them), run `npm run debug-server` at the repo root.
 
