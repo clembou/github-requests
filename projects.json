@@ -1,79 +1,20 @@
 {
     "groups": [
         {
-            "name": "group 1",
-            "key": "group1",
-            "description": "These projects are related to each other."
-        },
-        {
-            "name": "group 2",
-            "key": "group1"
+            "name": "TECSystems",
+            "key": "tecsystems",
+            "description": ""
         }
     ],
     "projects": [
         {
-            "name": "Test 1",
-            "label": "test1",
+            "name": "RAM",
+            "label": "RAM",
             "groups": [
-                "group1"
+                "tecsystems"
             ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 1 with space in label",
-            "label": "test 1",
-            "groups": [
-                "group2"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 2",
-            "label": "test_2",
-            "groups": [
-                "group1"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test No tag",
-            "label": "test",
-            "groups": [
-                "group1"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 3",
-            "label": "test 3",
-            "groups": [
-                "group1"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Test 4",
-            "label": "test_4",
-            "groups": [
-                "group2"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
-        },
-        {
-            "name": "Project in multiple groups",
-            "label": "test_5",
-            "groups": [
-                "group1",
-                "group2"
-            ],
-            "organisation": "resgroup",
-            "repository": "test"
+            "organisation": "res-tec-systems",
+            "repository": "RAM"
         }
-    ]
+	]
 }

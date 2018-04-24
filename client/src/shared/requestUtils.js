@@ -21,6 +21,10 @@ const getCreator = function(issueOrComment) {
   }
 };
 
+const getCreatedBy = function(issueOrComment) {
+  return getCreator(issueOrComment).name || getCreator(issueOrComment).login
+};
+
 const getContent = function(issueOrComment) {
   if (issueOrComment.user.login === process.env.REACT_APP_GITHUB_BOT_LOGIN && issueOrComment.body.startsWith('> From')) {
     let lines = issueOrComment.body.split('\n');
@@ -42,6 +46,7 @@ function parseUserInfoFromIssueBody(body) {
 
 module.exports = {
   getCreator,
+  getCreatedBy,
   getContent,
   quoteRequestBody
 };

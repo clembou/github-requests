@@ -38,24 +38,51 @@ HTTPS=true
 ```
 
 # Install
+
 run `npm install` to install the required back end and front end dependencies.
 
-# Start
-`npm start` will build the front end code and start the server.
+# Run
 
-During development, the backend server and the front end dev server can be started in one command using node-foreman.
+## From vscode
 
-Install node-foreman if needed (`npm i -g foreman`), then run `npm run debug`.
+Press F5 in vscode and choose node. This will start the backend server (which can also serve the static front end files via static.js, but doesn't build them), and allows debugging.
 
-To start the node server only, run `npm run debug-server` at the repo root.
+## From console
+
+`npm run debug`
+
+The backend server and the front end dev server can be started in one command using node-foreman. Install node-foreman if needed (`npm i -g foreman`). procfile tells foreman what to do.
+
+This has the benefit the nodemon will check for changes to the website and automatically restart the server if required. This definitely works for the backend api code, I haven't checked if it works for the front end code yet.
+
+The front end server in this case serves the unbuilt source files, so is always up to date. In order to have the front end up to date with other methods, we would need to build the front end first.
+
+## More esoteric
+
+`npm start` will build the front end code and start the server. If this doesn't work, but `npm run debug` does, then there is a problem with the backend serving the frontend files.
+
+To start the node back end server / api only (which can also serve the front end static files, but doesn't build them), run `npm run debug-server` at the repo root.
+
 To start the front end dev-server only, run `cd client && npm start` at the repo root.
 
+# Code
+
+Cedd has made some [notes on some the code](cedd-code-notes.md).
+
 # Deployment
+
+It can be quite tricky setting everything up for a new deployment (eg creating a new App Service in azure, rather than releasing a new version to an existing one). Please see [Cedd's notes for details](new-deployment-notes.md)
+
 Define all the above variables as application settings on your azure web app. 
-Then, you can deploy new versions of the app using azure's git deployment option for example. 
-Azure will automatically install the relevant npm dependencies, build the front end code, and start the node server.
 
-**Note**: deployments are currently relatively slow, especially the first time since the `npm install` step needs to fetch all the packages. This is a known issue.
+## Deployment options
 
-If you want to enable email notifications, you will need to setup a web hook on github to send issue related events to the 
-`api/github-webhooks` endpoint, and a valid sendgrid api key.
+Azure's git deployment option (https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-local-git). Azure will automatically install the relevant npm dependencies, build the front end code, and start the node server. This might be a bit flaky though, and doesn't work for Cedd (the npm commands failed).
+
+Zip Deploy. You can zip up the website, and go to the `Advanced Tools` of the App Service in Azure, and then click on `Tools - Zip push deploy`. Then drag the zip file on to the page. This can also be flaky with npm commands, but you can remove the npm commands from `deploy.cmd`, run them yourself locally and then zip and upload the results. This seems foolproof so far.
+
+## Sending emails
+
+If you want to enable email notifications, you will need to setup a web hook on github to send issue related events to the `api/github-webhooks` endpoint, and setup a valid sendgrid api key. 
+
+You can use [ngrok](https://ngrok.com/) to debug this locally (ngrok gives you a publicly available url that you can put in to the github webhook, and then it forwards all the traffic to your local server, and its dead easy to use).

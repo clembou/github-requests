@@ -1,37 +1,27 @@
 'use strict';
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
+// This doesn't work if moved in to a separate file, I don't know why
+// set up environment variables from a `client\.env` if it exists (useful when developing)
 const envPath = path.resolve(__dirname, 'client', '.env');
 if (fs.existsSync(envPath)) {
   require('dotenv').config({ path: envPath });
 }
 
-const app = require('./app');
+const app = require('./backend/app/app');
 
-// remove the automatically added `X-Powered-By` header
-app.disable('x-powered-by');
+require('./backend/app/cors');
 
-// this needs to be added first so that headers are added to all subsequent responses
-app.use(function(req, res, next) {
-  // disable caching
-  res.header('Cache-Control', 'no-cache, must-revalidate, max-age=0');
-  res.header('Pragma', 'no-cache');
+// this needs to be added early so that headers are added to all subsequent responses
+require('./backend/app/headers');
 
-  // security headers
-  // see https://www.owasp.org/index.php/OWASP_Secure_Headers_Project
-  res.header('X-XSS-Protection', '1; mode=block');
-  res.header('X-Frame-Options', 'deny');
-  res.header('X-Content-Type-Options', 'nosniff');
+// I think this has to be added before the routes, so that the routes get logged, but I'm not sure
+require('./backend/app/logging');
 
-  next();
-});
+require('./backend/authenticatedRoutes/authenticatedRoutes');
+require('./backend/dangerousOpenRoutes/dangerousOpenRoutes');
 
-require('./api.js')(app);
-require('./static.js')(app);
-
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`);
-});
+// this has to happen last
+require('./backend/app/listen');

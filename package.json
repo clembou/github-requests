@@ -1,5 +1,5 @@
 {
-  "name": "github-requests-server",
+  "name": "tec-systems-issue-tracker-server",
   "private": true,
   "version": "0.1.0",
   "engines": {
@@ -24,6 +24,7 @@
     "file-stream-rotator": "0.2.0",
     "foreman": "^2.0.0",
     "lodash": "^4.17.4",
+    "marked": "^0.3.19",
     "morgan": "^1.8.1",
     "passport": "^0.4.0",
     "passport-azure-ad": "^3.0.5",

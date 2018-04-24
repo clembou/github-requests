@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const azure = {
   identityMetadata: process.env.IDENTITY_METADATA,
   clientID: process.env.REACT_APP_CLIENT_ID,
@@ -24,12 +26,19 @@ function validateConfig(configObject) {
   }
 }
 
+function loadAppData() {
+  return JSON.parse(fs.readFileSync(`${__dirname}/${app.groupConfigPath}`, 'utf-8'));
+}
+
 validateConfig(azure);
 validateConfig(github);
 validateConfig(app);
 
+const appData = loadAppData();
+
 module.exports = {
   azure,
   github,
-  app
+  app,
+  appData
 };
